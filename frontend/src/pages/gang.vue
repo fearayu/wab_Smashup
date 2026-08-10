@@ -1,5 +1,11 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/use-auth-store'
+
+const authStore = useAuthStore()
+const isAdmin = computed(() => authStore.owner?.role === 'admin')
+
 const showCreate = ref(false)
+const editMode = ref(false)
 const newGang = ref({ name: '', date: '', time: '18:00', level: 'กลาง', maxPlayers: 8 })
 
 const upcomingGangs = [
@@ -49,11 +55,25 @@ function createGang() {
         <div class="hero-icon">
           <VIcon icon="ri-group-line" size="36" color="white" />
         </div>
-        <div>
+        <div class="flex-grow-1">
           <h1 class="text-h4 font-weight-bold text-white mb-1">ตีก๊วน</h1>
           <p class="text-body-1 text-white opacity-80">จัดกลุ่ม จับคู่ แชร์ค่าคอร์ท — ตีสนุกกว่าเล่นคนเดียว</p>
         </div>
+        <VBtn
+          v-if="isAdmin"
+          :icon="editMode ? 'ri-close-line' : 'ri-edit-line'"
+          :color="editMode ? 'white' : undefined"
+          :variant="editMode ? 'outlined' : 'flat'"
+          size="large"
+          @click="editMode = !editMode"
+        >
+          <VIcon :icon="editMode ? 'ri-close-line' : 'ri-edit-line'" class="mr-0 mr-sm-2" />
+          <span class="d-none d-sm-inline">{{ editMode ? 'ปิดแก้ไข' : 'แก้ไข' }}</span>
+        </VBtn>
       </div>
+      <VChip v-if="editMode" color="warning" variant="flat" size="small" class="mt-3">
+        <VIcon icon="ri-pencil-line" size="14" class="mr-1" /> โหมดแก้ไข — Admin เท่านั้น
+      </VChip>
     </VSheet>
 
     <VRow>
@@ -134,10 +154,29 @@ function createGang() {
           </VCardTitle>
           <VCardText class="pa-4">
             <VCard
-              v-for="gang in upcomingGangs.filter(g => !g.joined)"
+              v-for="(gang, idx) in upcomingGangs.filter(g => !g.joined)"
               :key="gang.id" variant="outlined"
-              class="gang-card mb-3"
+              :class="['gang-card mb-3', { 'gang-editing': editMode }]"
             >
+              <template v-if="editMode">
+                <VCardText class="pb-0">
+                  <div class="d-flex justify-end mb-2">
+                    <VBtn icon size="x-small" color="error" variant="text" @click="upcomingGangs.splice(upcomingGangs.findIndex(g => g.id === gang.id), 1)">
+                      <VIcon icon="ri-delete-bin-line" size="14" />
+                    </VBtn>
+                  </div>
+                  <div class="admin-grid">
+                    <VTextField v-model="gang.name" label="ชื่อก๊วน" variant="outlined" density="compact" hide-details />
+                    <VTextField v-model="gang.host" label="โฮสต์" variant="outlined" density="compact" hide-details />
+                    <VTextField v-model="gang.time" label="วัน/เวลา" variant="outlined" density="compact" hide-details />
+                    <VTextField v-model="gang.court" label="คอร์ท" variant="outlined" density="compact" hide-details />
+                    <VSelect v-model="gang.level" :items="['เริ่มต้น', 'กลาง', 'สูง']" label="ระดับ" variant="outlined" density="compact" hide-details />
+                    <VTextField v-model.number="gang.players" label="ผู้เล่นปัจจุบัน" type="number" variant="outlined" density="compact" hide-details />
+                    <VTextField v-model.number="gang.max" label="สูงสุด" type="number" variant="outlined" density="compact" hide-details />
+                  </div>
+                </VCardText>
+              </template>
+              <template v-else>
               <VCardItem>
                 <template #prepend>
                   <div class="gang-avatar" :style="{ background: gang.level === 'สูง' ? 'linear-gradient(135deg, #FF6F00, #FF9800)' : gang.level === 'กลาง' ? 'linear-gradient(135deg, #FFB400, #FFC107)' : 'linear-gradient(135deg, #1B5E20, #43A047)' }">
@@ -172,6 +211,7 @@ function createGang() {
                   </VBtn>
                 </div>
               </VCardText>
+            </template>
             </VCard>
           </VCardText>
         </VCard>
@@ -209,5 +249,8 @@ function createGang() {
 .info-card { border-radius: 16px; background: #F8FAFC; border: 1px solid #E2E8F0; }
 .gang-card { border-radius: 14px; transition: all 0.2s; }
 .gang-card:hover { border-color: #1565C0; }
+.gang-editing { border-style: dashed; border-color: #FFB400; background: #FFFDE7; }
+.gang-editing:hover { border-color: #FFB400; }
+.admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
 .gang-avatar { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; }
 </style>

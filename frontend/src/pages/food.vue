@@ -1,7 +1,13 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/use-auth-store'
+
+const authStore = useAuthStore()
+const isAdmin = computed(() => authStore.owner?.role === 'admin')
+
 const cart = ref<Record<string, number>>({})
 const foodOrdered = ref(false)
 const tableNumber = ref('A1')
+const editMode = ref(false)
 
 const foodCategories = [
   { name: 'เครื่องดื่ม', icon: 'ri-cup-line' },
@@ -10,7 +16,7 @@ const foodCategories = [
   { name: 'ขนมหวาน', icon: 'ri-cake-3-line' },
 ]
 
-const foodMenu = [
+const foodMenu = ref([
   { id: 'f1', name: 'น้ำเปล่า', price: 10, cat: 'เครื่องดื่ม', icon: 'ri-drop-line' },
   { id: 'f2', name: 'น้ำอัดลม', price: 20, cat: 'เครื่องดื่ม', icon: 'ri-drinks-line' },
   { id: 'f3', name: 'เกเตอเรด', price: 30, cat: 'เครื่องดื่ม', icon: 'ri-flashlight-line' },
@@ -25,7 +31,7 @@ const foodMenu = [
   { id: 'f12', name: 'ข้าวผัดปู', price: 75, cat: 'อาหารจานเดียว', icon: 'ri-bowl-line' },
   { id: 'f13', name: 'ไอศครีม', price: 35, cat: 'ขนมหวาน', icon: 'ri-cake-3-line' },
   { id: 'f14', name: 'ขนมปังสังขยา', price: 40, cat: 'ขนมหวาน', icon: 'ri-cake-line' },
-]
+])
 
 function addToCart(foodId: string) {
   cart.value[foodId] = (cart.value[foodId] || 0) + 1
@@ -38,13 +44,13 @@ function removeFromCart(foodId: string) {
 
 const cartTotal = computed(() => {
   return Object.entries(cart.value).reduce((sum, [id, qty]) => {
-    const item = foodMenu.find(f => f.id === id)
+    const item = foodMenu.value.find(f => f.id === id)
     return sum + (item?.price || 0) * qty
   }, 0)
 })
 
 const cartItems = computed(() => {
-  return Object.entries(cart.value).map(([id, qty]) => ({ ...foodMenu.find(f => f.id === id)!, qty }))
+  return Object.entries(cart.value).map(([id, qty]) => ({ ...foodMenu.value.find(f => f.id === id)!, qty }))
 })
 
 function submitOrder() {
@@ -61,11 +67,25 @@ function submitOrder() {
         <div class="hero-icon">
           <VIcon icon="ri-restaurant-line" size="36" color="white" />
         </div>
-        <div>
+        <div class="flex-grow-1">
           <h1 class="text-h4 font-weight-bold text-white mb-1">สั่งอาหาร</h1>
           <p class="text-body-1 text-white opacity-80">สั่งอาหารและเครื่องดื่ม ส่งตรงถึงคอร์ท ไม่ต้องเดินมาเคาน์เตอร์</p>
         </div>
+        <VBtn
+          v-if="isAdmin"
+          :icon="editMode ? 'ri-close-line' : 'ri-edit-line'"
+          :color="editMode ? 'white' : undefined"
+          :variant="editMode ? 'outlined' : 'flat'"
+          size="large"
+          @click="editMode = !editMode"
+        >
+          <VIcon :icon="editMode ? 'ri-close-line' : 'ri-edit-line'" class="mr-0 mr-sm-2" />
+          <span class="d-none d-sm-inline">{{ editMode ? 'ปิดแก้ไข' : 'แก้ไข' }}</span>
+        </VBtn>
       </div>
+      <VChip v-if="editMode" color="warning" variant="flat" size="small" class="mt-3">
+        <VIcon icon="ri-pencil-line" size="14" class="mr-1" /> โหมดแก้ไข — Admin เท่านั้น
+      </VChip>
     </VSheet>
 
     <VRow>
@@ -90,10 +110,24 @@ function submitOrder() {
               </div>
               <div class="food-grid">
                 <div
-                  v-for="item in foodMenu.filter(f => f.cat === cat.name)"
+                  v-for="(item, idx) in foodMenu.filter(f => f.cat === cat.name)"
                   :key="item.id"
                   class="food-card"
+                  :class="{ 'food-editing': editMode }"
                 >
+                  <template v-if="editMode">
+                    <div class="d-flex justify-end mb-2">
+                      <VBtn icon size="x-small" color="error" variant="text" @click="foodMenu.splice(foodMenu.findIndex(f => f.id === item.id), 1)">
+                        <VIcon icon="ri-delete-bin-line" size="14" />
+                      </VBtn>
+                    </div>
+                    <div class="admin-grid-food">
+                      <VTextField v-model="item.name" label="ชื่อ" variant="outlined" density="compact" hide-details />
+                      <VTextField v-model.number="item.price" label="ราคา (฿)" type="number" variant="outlined" density="compact" hide-details />
+                      <VSelect v-model="item.cat" :items="foodCategories.map(c => c.name)" label="หมวดหมู่" variant="outlined" density="compact" hide-details />
+                    </div>
+                  </template>
+                  <template v-else>
                   <div class="d-flex align-center gap-3">
                     <div class="food-icon">
                       <VIcon :icon="item.icon" size="22" color="#1B5E20" />
@@ -115,8 +149,18 @@ function submitOrder() {
                       />
                     </div>
                   </div>
+                  </template>
                 </div>
               </div>
+            </div>
+            <!-- Add new food item (edit mode) -->
+            <div
+              v-if="editMode"
+              class="food-card food-add d-flex align-center justify-center py-3 mb-4"
+              @click="foodMenu.push({ id: `f${Date.now()}`, name: 'เมนูใหม่', price: 50, cat: foodCategories[0].name, icon: 'ri-bowl-line' })"
+            >
+              <VIcon icon="ri-add-circle-line" size="28" color="#1B5E20" class="mr-2" />
+              <span class="text-body-2 font-weight-medium text-primary">เพิ่มเมนู</span>
             </div>
           </VCardText>
         </VCard>
@@ -209,6 +253,11 @@ function submitOrder() {
   background: white;
 }
 .food-card:hover { border-color: #1B5E20; background: #FAFFF8; }
+.food-editing { border-style: dashed; border-color: #FFB400; background: #FFFDE7; }
+.food-editing:hover { border-color: #FFB400; background: #FFFDE7; }
+.food-add { border-style: dashed; border-color: #C8E6C9; background: #FAFFF8; cursor: pointer; }
+.food-add:hover { border-color: #1B5E20; background: #E8F5E9; }
+.admin-grid-food { display: grid; grid-template-columns: 1fr 110px 160px; gap: 8px; }
 
 .food-icon {
   width: 40px; height: 40px; border-radius: 10px;

@@ -1,17 +1,23 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/use-auth-store'
+
+const authStore = useAuthStore()
+const isAdmin = computed(() => authStore.owner?.role === 'admin')
+
 const selectedPackage = ref<string | null>(null)
 const playerCount = ref(2)
 const selectedDate = ref(new Date().toISOString().split('T')[0])
 const showSuccess = ref(false)
 const isBooking = ref(false)
+const editMode = ref(false)
 
-const buffetPackages = [
+const buffetPackages = ref([
   { id: 'morning', name: 'Buffet เช้า', time: '08:00 - 12:00', price: 199, desc: 'เล่นไม่อั้น 4 ชั่วโมง', icon: 'ri-sun-line', color: '#FFB400', perks: ['เล่นได้ทุกคอร์ท', 'น้ำดื่มฟรี', 'เปลี่ยนคู่เล่นได้ตลอด'] },
   { id: 'noon', name: 'Buffet กลางวัน', time: '12:00 - 16:00', price: 249, desc: 'เล่นไม่อั้น 4 ชั่วโมง', icon: 'ri-sun-foggy-line', color: '#FF6F00', perks: ['เล่นได้ทุกคอร์ท', 'น้ำดื่ม + ขนมฟรี', 'เปลี่ยนคู่เล่นได้ตลอด', 'รวมค่าลูกขนไก่ 1 หลอด'] },
   { id: 'evening', name: 'Buffet เย็น', time: '16:00 - 21:00', price: 299, desc: 'เล่นไม่อั้น 5 ชั่วโมง', icon: 'ri-moon-line', color: '#1B5E20', perks: ['เล่นได้ทุกคอร์ท', 'น้ำดื่ม + ขนมฟรี', 'เปลี่ยนคู่เล่นได้ตลอด', 'รวมค่าลูกขนไก่ 2 หลอด', 'อาหารว่าง 1 ชุด'] },
-]
+])
 
-const selected = computed(() => buffetPackages.find(p => p.id === selectedPackage.value))
+const selected = computed(() => buffetPackages.value.find(p => p.id === selectedPackage.value))
 
 function getTotal() {
   if (!selected.value) return 0
@@ -44,11 +50,25 @@ function formatDate(d: string) {
         <div class="hero-icon">
           <VIcon icon="ri-vip-crown-line" size="36" color="white" />
         </div>
-        <div>
+        <div class="flex-grow-1">
           <h1 class="text-h4 font-weight-bold text-white mb-1">ตีบุฟเฟ่ต์</h1>
           <p class="text-body-1 text-white opacity-80">เหมาจ่ายราคาเดียว เล่นไม่อั้นในเวลาที่กำหนด</p>
         </div>
+        <VBtn
+          v-if="isAdmin"
+          :icon="editMode ? 'ri-close-line' : 'ri-edit-line'"
+          :color="editMode ? 'white' : undefined"
+          :variant="editMode ? 'outlined' : 'flat'"
+          size="large"
+          @click="editMode = !editMode"
+        >
+          <VIcon :icon="editMode ? 'ri-close-line' : 'ri-edit-line'" class="mr-0 mr-sm-2" />
+          <span class="d-none d-sm-inline">{{ editMode ? 'ปิดแก้ไข' : 'แก้ไข' }}</span>
+        </VBtn>
       </div>
+      <VChip v-if="editMode" color="warning" variant="flat" size="small" class="mt-3">
+        <VIcon icon="ri-pencil-line" size="14" class="mr-1" /> โหมดแก้ไข — Admin เท่านั้น
+      </VChip>
     </VSheet>
 
     <VRow>
@@ -75,24 +95,55 @@ function formatDate(d: string) {
             <label class="text-body-2 font-weight-medium mb-3 d-block">📦 เลือกแพ็กเกจ</label>
             <div class="package-grid">
               <div
-                v-for="pkg in buffetPackages" :key="pkg.id"
+                v-for="(pkg, idx) in buffetPackages" :key="pkg.id"
                 class="package-card"
-                :class="{ 'package-selected': selectedPackage === pkg.id }"
-                @click="selectedPackage = pkg.id"
+                :class="{ 'package-selected': selectedPackage === pkg.id, 'package-editing': editMode }"
+                @click="!editMode && (selectedPackage = pkg.id)"
               >
                 <div class="package-badge" :class="{ 'd-block': selectedPackage === pkg.id }">เลือกแล้ว 🔥</div>
-                <VIcon :icon="pkg.icon" :color="pkg.color" size="48" class="mb-3" />
-                <div class="text-h6 font-weight-bold mb-1">{{ pkg.name }}</div>
-                <div class="text-caption text-medium-emphasis mb-2">{{ pkg.time }}</div>
-                <div class="text-h3 font-weight-bold mb-3" :style="{ color: pkg.color }">
-                  {{ pkg.price }} <span class="text-caption">฿/คน</span>
-                </div>
-                <div class="text-body-2 mb-3 text-medium-emphasis">{{ pkg.desc }}</div>
-                <div class="perks">
-                  <div v-for="perk in pkg.perks" :key="perk" class="perk-item">
-                    <VIcon icon="ri-check-line" :color="pkg.color" size="14" class="mr-1" /> {{ perk }}
+                <template v-if="editMode">
+                  <div class="admin-edit-bar mb-3">
+                    <VBtn icon size="x-small" color="error" variant="text" class="ms-auto" @click="buffetPackages.splice(idx, 1)">
+                      <VIcon icon="ri-delete-bin-line" size="14" />
+                    </VBtn>
                   </div>
-                </div>
+                  <VTextField v-model="pkg.name" label="ชื่อแพ็กเกจ" variant="outlined" density="compact" class="mb-2" hide-details />
+                  <VTextField v-model="pkg.time" label="เวลา" variant="outlined" density="compact" class="mb-2" hide-details />
+                  <VTextField v-model.number="pkg.price" label="ราคา (฿)" type="number" variant="outlined" density="compact" class="mb-2" hide-details />
+                  <VTextField v-model="pkg.desc" label="คำอธิบาย" variant="outlined" density="compact" class="mb-2" hide-details />
+                  <VTextarea
+                    :model-value="pkg.perks.join('\n')"
+                    label="สิทธิพิเศษ (บรรทัดละ 1 รายการ)"
+                    variant="outlined"
+                    density="compact"
+                    rows="3"
+                    hide-details
+                    @update:model-value="(v: string) => pkg.perks = v.split('\n').filter(Boolean)"
+                  />
+                </template>
+                <template v-else>
+                  <VIcon :icon="pkg.icon" :color="pkg.color" size="48" class="mb-3" />
+                  <div class="text-h6 font-weight-bold mb-1">{{ pkg.name }}</div>
+                  <div class="text-caption text-medium-emphasis mb-2">{{ pkg.time }}</div>
+                  <div class="text-h3 font-weight-bold mb-3" :style="{ color: pkg.color }">
+                    {{ pkg.price }} <span class="text-caption">฿/คน</span>
+                  </div>
+                  <div class="text-body-2 mb-3 text-medium-emphasis">{{ pkg.desc }}</div>
+                  <div class="perks">
+                    <div v-for="perk in pkg.perks" :key="perk" class="perk-item">
+                      <VIcon icon="ri-check-line" :color="pkg.color" size="14" class="mr-1" /> {{ perk }}
+                    </div>
+                  </div>
+                </template>
+              </div>
+              <!-- Add new package button (edit mode only) -->
+              <div
+                v-if="editMode"
+                class="package-card package-add d-flex flex-column align-center justify-center"
+                @click="buffetPackages.push({ id: `p${Date.now()}`, name: 'แพ็กเกจใหม่', time: '00:00 - 00:00', price: 199, desc: 'คำอธิบาย', icon: 'ri-vip-crown-line', color: '#1B5E20', perks: ['น้ำฟรี'] })"
+              >
+                <VIcon icon="ri-add-circle-line" size="36" color="#1B5E20" class="mb-2" />
+                <span class="text-body-2 font-weight-medium text-primary">เพิ่มแพ็กเกจ</span>
               </div>
             </div>
 
@@ -180,6 +231,11 @@ function formatDate(d: string) {
 }
 .package-card:hover { border-color: #FF6F00; transform: translateY(-3px); box-shadow: 0 6px 20px rgba(255,111,0,0.12); }
 .package-selected { border-color: #FF6F00; background: linear-gradient(135deg, #FFF3E0, #FFF8E1); box-shadow: 0 6px 24px rgba(255,111,0,0.2); }
+.package-editing { border-style: dashed; border-color: #FFB400; background: #FFFDE7; cursor: default !important; }
+.package-editing:hover { border-color: #FFB400; transform: none !important; }
+.package-add { border-style: dashed; border-color: #C8E6C9; background: #FAFFF8; cursor: pointer; }
+.package-add:hover { border-color: #1B5E20; background: #E8F5E9; }
+.admin-edit-bar { display: flex; justify-content: flex-end; }
 
 .package-badge { display: none; position: absolute; top: -12px; right: 16px; background: #FF6F00; color: white; padding: 3px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; }
 
