@@ -1,7 +1,27 @@
 export async function request<T>(url: string, init?: RequestInit): Promise<T> {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('smashup_token') : null
+
+  const baseHeaders: Record<string, string> = {
+    'Content-Type': 'application/json',
+  }
+
+  if (token)
+    baseHeaders.Authorization = `Bearer ${token}`
+
+  // merge init headers on top of base headers
+  const mergedHeaders: Record<string, string> = { ...baseHeaders }
+  if (init?.headers) {
+    Object.entries(init.headers).forEach(([k, v]) => {
+      if (v !== undefined && v !== null)
+        mergedHeaders[k] = String(v)
+      else
+        delete mergedHeaders[k]
+    })
+  }
+
   const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json' },
     ...init,
+    headers: mergedHeaders,
   })
 
   const contentType = res.headers.get('content-type') ?? ''
