@@ -114,7 +114,6 @@ onMounted(() => {
           density="comfortable"
           class="mb-4 login-field"
           required
-          placeholder="owner@example.com"
           color="primary"
           base-color="primary"
         />
@@ -152,7 +151,6 @@ onMounted(() => {
           class="mb-4 login-field"
           color="primary"
           base-color="primary"
-          placeholder="0812345678"
         />
 
         <VBtn
