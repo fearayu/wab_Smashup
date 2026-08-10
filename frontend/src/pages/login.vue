@@ -130,6 +130,6 @@ onMounted(() => {
 <style scoped>
 .login-wrapper {
   min-height: 100dvh;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #030213 0%, #02010e 100%);
 }
 </style>

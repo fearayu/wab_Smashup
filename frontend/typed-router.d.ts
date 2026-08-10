@@ -41,7 +41,15 @@ declare module 'vue-router/auto/routes' {
   export interface RouteNamedMap {
     'root': RouteRecordInfo<'root', '/', Record<never, never>, Record<never, never>>,
     '$error': RouteRecordInfo<'$error', '/:error(.*)', { error: ParamValue<true> }, { error: ParamValue<false> }>,
+    'dashboard': RouteRecordInfo<'dashboard', '/dashboard', Record<never, never>, Record<never, never>>,
+    'dashboard-bookings': RouteRecordInfo<'dashboard-bookings', '/dashboard/bookings', Record<never, never>, Record<never, never>>,
+    'dashboard-bookings-id': RouteRecordInfo<'dashboard-bookings-id', '/dashboard/bookings/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    'dashboard-courts': RouteRecordInfo<'dashboard-courts', '/dashboard/courts', Record<never, never>, Record<never, never>>,
+    'dashboard-payments': RouteRecordInfo<'dashboard-payments', '/dashboard/payments', Record<never, never>, Record<never, never>>,
+    'dashboard-settings': RouteRecordInfo<'dashboard-settings', '/dashboard/settings', Record<never, never>, Record<never, never>>,
+    'dashboard-venues': RouteRecordInfo<'dashboard-venues', '/dashboard/venues', Record<never, never>, Record<never, never>>,
     'login': RouteRecordInfo<'login', '/login', Record<never, never>, Record<never, never>>,
+    'onboarding': RouteRecordInfo<'onboarding', '/onboarding', Record<never, never>, Record<never, never>>,
     'user-page': RouteRecordInfo<'user-page', '/user-page', Record<never, never>, Record<never, never>>,
   }
 }

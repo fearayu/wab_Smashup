@@ -19,7 +19,7 @@ const venueForm = ref({
   address: '',
   phone: '',
   email: '',
-  primary_color: '#10b981',
+  primary_color: '#030213',
 })
 
 const courts = ref([{ name: 'Court A', type: 'standard' as const, hourly_rate: 250 }])

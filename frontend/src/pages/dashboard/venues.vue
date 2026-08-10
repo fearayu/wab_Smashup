@@ -18,12 +18,12 @@ const form = ref<CreateVenueBody & UpdateVenueBody>({
   address: '',
   phone: '',
   email: '',
-  primary_color: '#10b981',
+  primary_color: '#030213',
 })
 
 function openCreate() {
   editingVenue.value = null
-  form.value = { name: '', slug: '', description: '', address: '', phone: '', email: '', primary_color: '#10b981' }
+  form.value = { name: '', slug: '', description: '', address: '', phone: '', email: '', primary_color: '#030213' }
   dialog.value = true
 }
 
@@ -36,7 +36,7 @@ function openEdit(venue: Venue) {
     address: venue.address ?? '',
     phone: venue.phone ?? '',
     email: venue.email ?? '',
-    primary_color: venue.primary_color ?? '#10b981',
+    primary_color: venue.primary_color ?? '#030213',
   }
   dialog.value = true
 }

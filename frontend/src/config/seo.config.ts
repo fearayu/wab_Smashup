@@ -45,7 +45,7 @@ export const defaultSEO: SEOConfig = {
   siteName: 'Smashup',
   twitterHandle: import.meta.env.VITE_TWITTER_HANDLE || '@smashupth',
   locale: 'th_TH',
-  themeColor: '#10b981',
+  themeColor: '#030213',
   ogImage: '/og-image.png',
   twitterImage: '/twitter-image.png',
 }
