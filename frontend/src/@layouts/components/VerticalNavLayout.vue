@@ -148,7 +148,7 @@ export default defineComponent({
     transition: padding-inline-start 0.2s ease-in-out;
     will-change: padding-inline-start;
 
-    @media screen and (width >= 1280px) {
+    @media screen and (width >= 976px) {
       padding-inline-start: variables.$layout-vertical-nav-width;
     }
   }
