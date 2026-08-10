@@ -103,7 +103,7 @@ function submitOrder() {
 
     <VRow>
       <VCol cols="12" lg="8">
-        <VCard elevation="1" class="section-card mb-4">
+        <VCard elevation="1" color="white" class="section-card mb-4">
           <VCardText class="pa-6">
             <!-- Location -->
             <div class="d-flex align-center gap-3 mb-4">
@@ -181,7 +181,7 @@ function submitOrder() {
 
       <!-- Cart Sidebar -->
       <VCol cols="12" lg="4">
-        <VCard elevation="1" class="cart-card pa-4" style="position: sticky; top: 16px;">
+        <VCard elevation="1" color="white" class="cart-card pa-4" style="position: sticky; top: 16px;">
           <div class="d-flex align-center gap-2 mb-4">
             <VIcon icon="ri-shopping-cart-2-line" size="24" color="primary" />
             <h3 class="text-h6 font-weight-bold text-primary">🛒 ตะกร้า</h3>
@@ -228,7 +228,7 @@ function submitOrder() {
 </template>
 
 <style scoped>
-.page-wrapper { padding: 4px 0; }
+.page-wrapper { padding: 4px 0; background: #F8FAFC; color: #1E293B; }
 .page-hero {
   background: linear-gradient(135deg, #C62828 0%, #B71C1C 100%);
   border-radius: 18px;
@@ -239,11 +239,12 @@ function submitOrder() {
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.section-card { border-radius: 18px; }
-.cart-card { border-radius: 18px; border: 2px solid #E8F5E9; }
+.section-card { border-radius: 18px; background: white; color: #1E293B; }
+.cart-card { border-radius: 18px; border: 2px solid #E8F5E9; color: #1E293B; background: white; }
 
 .category-header {
   background: linear-gradient(135deg, #E8F5E9, #F0FDF4);
+  color: #1E293B;
 }
 
 .cat-icon {
@@ -264,6 +265,7 @@ function submitOrder() {
   padding: 14px;
   transition: all 0.2s;
   background: white;
+  color: #1E293B;
 }
 .food-card:hover { border-color: #1B5E20; background: #FAFFF8; }
 .food-editing { border-style: dashed; border-color: #FFB400; background: #FFFDE7; }
