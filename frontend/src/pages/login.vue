@@ -100,8 +100,10 @@ onMounted(() => {
           prepend-inner-icon="ri-user-line"
           variant="outlined"
           density="comfortable"
-          class="mb-4"
+          class="mb-4 login-field"
           required
+          color="primary"
+          base-color="primary"
         />
         <VTextField
           v-model="form.email"
@@ -110,9 +112,11 @@ onMounted(() => {
           prepend-inner-icon="ri-mail-line"
           variant="outlined"
           density="comfortable"
-          class="mb-4"
+          class="mb-4 login-field"
           required
           placeholder="owner@example.com"
+          color="primary"
+          base-color="primary"
         />
         <VTextField
           v-model="form.password"
@@ -121,9 +125,12 @@ onMounted(() => {
           prepend-inner-icon="ri-lock-line"
           variant="outlined"
           density="comfortable"
-          class="mb-1"
+          class="mb-1 login-field"
           required
-          :rules="[v => (v?.length >= 8) || 'อย่างน้อย 8 ตัวอักษร']"
+          color="primary"
+          base-color="primary"
+          :hint="isRegister ? 'อย่างน้อย 8 ตัวอักษร' : ''"
+          persistent-hint
         >
           <template #append-inner>
             <VBtn
@@ -134,9 +141,6 @@ onMounted(() => {
             />
           </template>
         </VTextField>
-        <div class="text-caption text-medium-emphasis mb-4" v-if="isRegister">
-          อย่างน้อย 8 ตัวอักษร
-        </div>
 
         <VTextField
           v-if="isRegister"
@@ -145,7 +149,9 @@ onMounted(() => {
           prepend-inner-icon="ri-phone-line"
           variant="outlined"
           density="comfortable"
-          class="mb-4"
+          class="mb-4 login-field"
+          color="primary"
+          base-color="primary"
           placeholder="0812345678"
         />
 
@@ -156,8 +162,8 @@ onMounted(() => {
           type="submit"
           :loading="isLoading"
           :disabled="!isValid"
-          class="mb-4 mt-2"
-          elevation="2"
+          class="mb-4 mt-2 login-btn"
+          elevation="3"
         >
           <VIcon :icon="isRegister ? 'ri-user-add-line' : 'ri-login-box-line'" class="mr-2" />
           {{ isRegister ? 'สร้างบัญชี' : 'เข้าสู่ระบบ' }}
@@ -227,6 +233,36 @@ onMounted(() => {
   border-radius: 20px;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(27, 94, 32, 0.1);
+}
+
+/* Fix Vuetify text field default red colors */
+.login-field :deep(.v-field__outline) {
+  --v-field-border-opacity: 0.6;
+  color: rgb(var(--v-theme-primary));
+}
+
+.login-field :deep(.v-field) {
+  color: #1E293B;
+}
+
+.login-field :deep(.v-label) {
+  color: #475569;
+}
+
+.login-field :deep(.v-field__append-inner .v-icon),
+.login-field :deep(.v-field__prepend-inner .v-icon) {
+  color: #64748B;
+  opacity: 1;
+}
+
+/* Fix hint text */
+.login-field :deep(.v-messages__message) {
+  color: #64748B;
+}
+
+/* Fix button */
+.login-btn :deep(.v-btn__overlay) {
+  opacity: 0;
 }
 
 .logo-wrapper {
