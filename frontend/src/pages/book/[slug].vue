@@ -81,18 +81,17 @@ async function loadVenue() {
   isLoading.value = true
   error.value = null
   try {
-    const slug = route.params.slug as string
+    const slug = (route.params as any).slug as string
     // Try real API first
     venue.value = MOCK_VENUES[slug] || MOCK_VENUES['sompron']
     courts.value = DEFAULT_COURTS
     selectedCourt.value = courts.value[0]?.id || null
 
     try {
-      const res = await venueStore.fetchVenueBySlug(slug)
+      const res = await (venueStore as any).fetchVenueBySlug?.(slug)
       if (res) {
         venue.value = { ...venue.value, ...res }
-        const courtRes = await courtStore.fetchCourts(res.id)
-        if (courtRes) courts.value = courtRes
+        await courtStore.fetchCourts(res.id)
       }
     }
     catch {

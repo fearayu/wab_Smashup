@@ -80,6 +80,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
     isLoading,
     error,
     isAuthenticated,
+    _initialized,
     login,
     register,
     fetchMe,

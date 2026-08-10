@@ -7,7 +7,7 @@ const bookingStore = useBookingStore()
 
 const { currentBooking, isLoading, error } = storeToRefs(bookingStore)
 
-const bookingId = computed(() => route.params.id as string)
+const bookingId = computed(() => (route.params as any).id as string)
 
 const confirmDialog = ref(false)
 const cancelDialog = ref(false)

@@ -37,7 +37,7 @@ export class AuthHandler {
 
   // Admin: update owner role
   updateRole = async (c: Context) => {
-    const id = c.req.param('id')
+    const id = c.req.param('id')!
     const body = await this.parseJson<{ role: 'admin' | 'member' | 'user' }>(c)
     if (!['admin', 'member', 'user'].includes(body.role)) {
       throw new ValidationError('role ต้องเป็น admin, member หรือ user')

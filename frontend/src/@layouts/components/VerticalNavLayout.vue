@@ -24,7 +24,7 @@ export default defineComponent({
     const toggleIsOverlayNavActive = useToggle(isOverlayNavActive)
 
     // Auto-show sidebar on non-mobile screens (above overlay breakpoint)
-    watch(configStore.isLessThanOverlayNavBreakpoint, (isLess) => {
+    watch(() => configStore.isLessThanOverlayNavBreakpoint, (isLess) => {
       if (!isLess) {
         isOverlayNavActive.value = true
       }
