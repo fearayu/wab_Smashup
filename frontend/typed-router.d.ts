@@ -57,6 +57,7 @@ declare module 'vue-router/auto/routes' {
     'dashboard-settings': RouteRecordInfo<'dashboard-settings', '/dashboard/settings', Record<never, never>, Record<never, never>>,
     'dashboard-venues': RouteRecordInfo<'dashboard-venues', '/dashboard/venues', Record<never, never>, Record<never, never>>,
     'demo': RouteRecordInfo<'demo', '/demo', Record<never, never>, Record<never, never>>,
+    'features': RouteRecordInfo<'features', '/features', Record<never, never>, Record<never, never>>,
     'login': RouteRecordInfo<'login', '/login', Record<never, never>, Record<never, never>>,
     'onboarding': RouteRecordInfo<'onboarding', '/onboarding', Record<never, never>, Record<never, never>>,
     'user-page': RouteRecordInfo<'user-page', '/user-page', Record<never, never>, Record<never, never>>,

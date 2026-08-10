@@ -14,8 +14,8 @@ function goToDashboard() {
 const features = [
   { icon: 'ri-shuttle-line', title: 'สร้างใน 5 นาที', desc: 'ไม่ต้องเขียนโค้ด แค่กรอกข้อมูลสนามแล้วเปิดใช้งานทันที' },
   { icon: 'ri-calendar-check-line', title: 'จองเรียลไทม์', desc: 'ผู้เล่นจองได้ตลอด 24 ชั่วโมง ไม่ต้องรับสายหรือตอบแชท' },
-  { icon: 'ri-bank-card-line', title: 'ตรวจสอบการชำระเงิน', desc: 'อัปโหลดสลิป ระบบตรวจสอบอัตโนมัติ สำหรับแผน Pro' },
-  { icon: 'ri-bar-chart-line', title: 'แดชบอร์ดเจ้าของสนาม', desc: 'ติดตามรายได้ ช่วงเวลายอดนิยม และอัตราการเข้าพัก' },
+  { icon: 'ri-vip-crown-line', title: 'ตีบุฟเฟ่ต์ & ตีก๊วน', desc: 'ระบบเหมาจ่ายรายชั่วโมงและจัดการก๊วนผู้เล่นในที่เดียว' },
+  { icon: 'ri-restaurant-line', title: 'สั่งอาหารถึงคอร์ท', desc: 'เมนูอาหารและเครื่องดื่ม สั่งผ่านมือถือ ส่งตรงถึงสนาม' },
 ]
 
 const pricing = [
@@ -54,11 +54,11 @@ const pricing = [
             size="large"
             color="white"
             variant="outlined"
-            to="/demo"
+            to="/features"
             class="px-6"
           >
-            <VIcon icon="ri-eye-line" class="mr-2" />
-            ดูตัวอย่าง
+            <VIcon icon="ri-apps-line" class="mr-2" />
+            ดูฟีเจอร์ทั้งหมด
           </VBtn>
         </div>
       </div>
