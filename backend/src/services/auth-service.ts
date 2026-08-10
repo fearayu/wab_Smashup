@@ -81,7 +81,7 @@ export class AuthService {
 
 export async function verifyJwt(token: string, _secret: string): Promise<AuthTokenPayload> {
   const parts = token.split('.')
-  if (parts.length !== 3) throw new UnauthorizedError('Invalid token')
+  if (parts.length !== 3 || !parts[1]) throw new UnauthorizedError('Invalid token')
   try {
     const payload = JSON.parse(atob(parts[1]))
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {

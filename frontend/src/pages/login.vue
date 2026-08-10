@@ -1,119 +1,135 @@
 <script setup lang="ts">
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
-import { themeConfig } from '@themeConfig'
-
-import miscMaskDark from '@images/misc/misc-mask-dark.png'
-import miscMaskLight from '@images/misc/misc-mask-light.png'
-import tree1 from '@images/misc/tree1.png'
-import tree3 from '@images/misc/tree3.png'
-
-import { VForm } from 'vuetify/components'
-
-definePage({
-  meta: {
-    layout: 'blank',
-    unauthenticatedOnly: true,
-  },
-})
+import { useAuthStore } from '@/stores/use-auth-store'
 
 const router = useRouter()
-const authThemeMask = useGenerateImageVariant(miscMaskLight, miscMaskDark)
+const authStore = useAuthStore()
 
-const isProcessing = ref(false)
-const refLoginForm = ref<VForm>()
-const isPasswordVisible = ref(false)
-const email = ref('')
-const password = ref('')
+const isRegister = ref(false)
+const isLoading = ref(false)
+const error = ref<string | null>(null)
 
-async function onClickLogin() {
-  const isFormValid = await refLoginForm?.value?.validate()
-  if (!isFormValid?.valid)
-    return
-  // TODO: implement login
-  router.push('/')
+const form = ref({
+  email: '',
+  password: '',
+  name: '',
+  phone: '',
+})
+
+watch(() => authStore.isAuthenticated, (v) => {
+  if (v)
+    router.push('/dashboard')
+})
+
+async function submit() {
+  error.value = null
+  isLoading.value = true
+  try {
+    if (isRegister.value) {
+      await authStore.register({
+        email: form.value.email,
+        password: form.value.password,
+        name: form.value.name,
+        phone: form.value.phone || undefined,
+      })
+    }
+    else {
+      await authStore.login({
+        email: form.value.email,
+        password: form.value.password,
+      })
+    }
+  }
+  catch (e: any) {
+    error.value = e.message
+  }
+  finally {
+    isLoading.value = false
+  }
 }
+
+onMounted(() => {
+  if (authStore.isAuthenticated)
+    router.push('/dashboard')
+})
 </script>
 
 <template>
-  <div class="auth-wrapper d-flex align-center justify-center pa-4">
-    <VCard class="auth-card pa-sm-4 pa-md-7 pa-0" min-width="500">
-      <VCardText>
-        <div class="d-flex align-center gap-x-3 justify-center mb-6">
-          <VNodeRenderer :nodes="themeConfig.app.logo" />
-
-          <h1 class="auth-title">
-            {{ themeConfig.app.title.toLocaleUpperCase() }}
-          </h1>
-        </div>
-        <p class="mb-0 text-center">
-          Standard System
+  <div class="login-wrapper d-flex align-center justify-center pa-4">
+    <VCard max-width="420" width="100%" class="pa-6" elevation="4">
+      <div class="text-center mb-6">
+        <h1 class="text-h4 font-weight-bold text-primary mb-2">
+          Smashup
+        </h1>
+        <p class="text-body-2 text-medium-emphasis">
+          {{ isRegister ? 'Create your account' : 'Sign in to your account' }}
         </p>
-      </VCardText>
+      </div>
 
-      <VCardText>
-        <VForm ref="refLoginForm" @submit.prevent="onClickLogin">
-          <VRow>
-            <VCol cols="12">
-              <VTextField
-                v-model="email"
-                autofocus
-                label="Email"
-                type="email"
-                :rules="[requiredValidator, emailValidator]"
-                placeholder="your@email.com"
-              />
-            </VCol>
+      <VAlert
+        v-if="error"
+        type="error"
+        class="mb-4"
+        :text="error"
+        closable
+      />
 
-            <VCol cols="12">
-              <VTextField
-                v-model="password"
-                label="Password"
-                placeholder="············"
-                :rules="[requiredValidator]"
-                :type="isPasswordVisible ? 'text' : 'password'"
-                :append-inner-icon="isPasswordVisible ? 'ri-eye-off-line' : 'ri-eye-line'"
-                @click:append-inner="isPasswordVisible = !isPasswordVisible"
-              />
+      <VForm @submit.prevent="submit">
+        <VTextField
+          v-if="isRegister"
+          v-model="form.name"
+          label="Full Name"
+          prepend-inner-icon="ri-user-line"
+          class="mb-4"
+          required
+        />
+        <VTextField
+          v-model="form.email"
+          label="Email"
+          type="email"
+          prepend-inner-icon="ri-mail-line"
+          class="mb-4"
+          required
+        />
+        <VTextField
+          v-model="form.password"
+          label="Password"
+          type="password"
+          prepend-inner-icon="ri-lock-line"
+          class="mb-4"
+          required
+        />
+        <VTextField
+          v-if="isRegister"
+          v-model="form.phone"
+          label="Phone (optional)"
+          prepend-inner-icon="ri-phone-line"
+          class="mb-4"
+        />
 
-              <div class="d-flex align-center flex-wrap justify-space-between my-5 gap-4" />
+        <VBtn
+          color="primary"
+          block
+          size="large"
+          type="submit"
+          :loading="isLoading"
+          class="mb-4"
+        >
+          {{ isRegister ? 'Create Account' : 'Sign In' }}
+        </VBtn>
+      </VForm>
 
-              <VBtn block type="submit" :loading="isProcessing">
-                Login
-              </VBtn>
-            </VCol>
-          </VRow>
-        </VForm>
-      </VCardText>
+      <div class="text-center">
+        <VBtn variant="text" @click="isRegister = !isRegister">
+          {{ isRegister ? 'Already have an account? Sign in' : "Don't have an account? Register" }}
+        </VBtn>
+      </div>
     </VCard>
-
-    <div class="d-flex gap-x-2 auth-footer-start-tree">
-      <img class="d-none d-md-block" :src="tree3" :height="120" :width="67">
-      <img
-        class="d-none d-md-block align-self-end"
-        :src="tree3"
-        :height="70"
-        :width="40"
-      >
-    </div>
-
-    <img
-      :src="tree1"
-      class="auth-footer-end-tree d-none d-md-block"
-      :width="97"
-      :height="210"
-    >
-
-    <!-- bg img -->
-    <img
-      class="auth-footer-mask d-none d-md-block"
-      :src="authThemeMask"
-      height="172"
-    >
-
-    <!-- Snackbar Message -->
   </div>
 </template>
 
-<style lang="scss">
-@use "@core/scss/template/pages/page-auth.scss";
+<style scoped>
+.login-wrapper {
+  min-height: 100dvh;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
 </style>

@@ -68,10 +68,10 @@ export class D1TimeSlotRepository implements TimeSlotRepository {
 
     if (!courts || courts.length === 0) return 0
 
-    const openH = parseInt(input.openTime.split(':')[0], 10)
-    const openM = parseInt(input.openTime.split(':')[1], 10)
-    const closeH = parseInt(input.closeTime.split(':')[0], 10)
-    const closeM = parseInt(input.closeTime.split(':')[1], 10)
+    const openH = parseInt(input.openTime.split(':')[0]!, 10)
+    const openM = parseInt(input.openTime.split(':')[1]!, 10)
+    const closeH = parseInt(input.closeTime.split(':')[0]!, 10)
+    const closeM = parseInt(input.closeTime.split(':')[1]!, 10)
     const slotDur = input.slotDurationMinutes
 
     const openMinutes = openH * 60 + openM
@@ -87,6 +87,7 @@ export class D1TimeSlotRepository implements TimeSlotRepository {
       const isWeekend = d.getUTCDay() === 0 || d.getUTCDay() === 6
 
       for (const court of courts) {
+        if (!court) continue
         // Check if any slots already exist for this court/date
         const { results: existing } = await this.db
           .prepare('SELECT id FROM time_slots WHERE court_id = ? AND slot_date = ? LIMIT 1')

@@ -30,15 +30,29 @@ export function createApp(containerFactory: (env: Partial<Bindings>) => Containe
     openAPIRouteHandler(app, {
       documentation: {
         info: {
-          title: 'Starter API',
+          title: 'Smashup API',
           version: '1.0.0',
-          description: 'Hono backend running on Cloudflare Workers (D1 + KV) and AWS Lambda',
+          description: 'Badminton court booking platform API running on Cloudflare Workers (D1 + KV)',
         },
-        tags: [{ name: 'Users', description: 'User management' }],
+        tags: [
+          { name: 'Users', description: 'User management' },
+          { name: 'Auth', description: 'Owner authentication' },
+          { name: 'Venues', description: 'Venue management' },
+          { name: 'Courts', description: 'Court management' },
+          { name: 'Slots', description: 'Time slot generation & management' },
+          { name: 'Slots (Public)', description: 'Public slot availability' },
+          { name: 'Bookings', description: 'Owner booking management' },
+          { name: 'Bookings (Public)', description: 'Player booking creation' },
+          { name: 'Payments', description: 'Payment slip upload & verification' },
+          { name: 'Site Config', description: 'Owner site customization' },
+          { name: 'Site Config (Public)', description: 'Public site configuration' },
+          { name: 'Dashboard', description: 'Analytics & summary' },
+          { name: 'Demo', description: 'Demo data seeding' },
+        ],
       },
     })
   )
-  app.get('/docs', Scalar({ url: '/openapi.json', pageTitle: 'Starter API Docs' }))
+  app.get('/docs', Scalar({ url: '/openapi.json', pageTitle: 'Smashup API Docs' }))
 
   app.notFound((c) => c.json({ error: { code: 'NOT_FOUND', message: 'Route not found' } }, 404))
 

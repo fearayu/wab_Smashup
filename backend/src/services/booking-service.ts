@@ -37,8 +37,10 @@ export class BookingService {
     // Verify slots are consecutive
     const sorted = slots.sort((a, b) => a.slotTime.localeCompare(b.slotTime))
     for (let i = 1; i < sorted.length; i++) {
-      const prevEnd = parseInt(sorted[i - 1].slotTime.split(':')[0]) * 60 + parseInt(sorted[i - 1].slotTime.split(':')[1]) + sorted[i - 1].durationMinutes
-      const currStart = parseInt(sorted[i].slotTime.split(':')[0]) * 60 + parseInt(sorted[i].slotTime.split(':')[1])
+      const prev = sorted[i - 1]!
+      const curr = sorted[i]!
+      const prevEnd = parseInt(prev.slotTime.split(':')[0]!) * 60 + parseInt(prev.slotTime.split(':')[1]!) + prev.durationMinutes
+      const currStart = parseInt(curr.slotTime.split(':')[0]!) * 60 + parseInt(curr.slotTime.split(':')[1]!)
       if (prevEnd !== currStart) throw new ValidationError('slots must be consecutive')
     }
 
