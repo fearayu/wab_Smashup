@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "starter-backend",
+  "name": "wab_Smashup-backend",
   "main": "src/server.ts",
   "compatibility_date": "2026-07-01",
   "observability": {
@@ -9,7 +9,7 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "starter-db",
+      "database_name": "wab_Smashup-db",
       "database_id": "<REPLACE_WITH_D1_DATABASE_ID>",
       "migrations_dir": "migrations"
     }

@@ -1,5 +1,5 @@
 {
-  "name": "starter-backend",
+  "name": "wab_Smashup-backend",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -8,8 +8,8 @@
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
     "build:lambda": "esbuild src/lambda.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/lambda/index.mjs",
-    "db:migrate:local": "wrangler d1 migrations apply starter-db --local",
-    "db:migrate:remote": "wrangler d1 migrations apply starter-db --remote",
+    "db:migrate:local": "wrangler d1 migrations apply wab_Smashup-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply wab_Smashup-db --remote",
     "cf-typegen": "wrangler types"
   },
   "dependencies": {

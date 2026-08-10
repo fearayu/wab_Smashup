@@ -6,7 +6,7 @@ import { useUserStore } from '@/stores/use-user-store'
 useSEO({
   title: 'Dashboard - Starter',
   description: 'Starter template overview.',
-  keywords: ['dashboard', 'starter', 'template'],
+  keywords: ['badminton', 'court booking', 'smashup', 'sports venue', 'booking system'],
 })
 
 const userStore = useUserStore()
