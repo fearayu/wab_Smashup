@@ -185,7 +185,6 @@ function formatDate(dateStr: string) {
                 <VBtnToggle
                   v-model="selectedCourt"
                   mandatory
-                  divided
                   class="court-toggle"
                 >
                   <VBtn
@@ -363,11 +362,11 @@ function formatDate(dateStr: string) {
 <style scoped>
 .demo-wrapper {
   min-height: 100dvh;
-  background: linear-gradient(135deg, #F8FAFC 0%, #FFFFFF 100%);
+  background: #F8FAFC;
 }
 
 .hero-section {
-  background: linear-gradient(135deg, #1B5E20 0%, #124d18 50%, #0D2818 100%);
+  background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 60%, #1B5E20 100%);
   position: relative;
   overflow: hidden;
 }
@@ -404,14 +403,17 @@ function formatDate(dateStr: string) {
 
 .court-toggle {
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
+  justify-content: center;
 }
 
 .court-btn {
-  min-width: 120px;
+  min-width: 140px;
+  max-width: calc(50% - 5px);
   height: auto !important;
-  padding: 12px !important;
+  padding: 16px 12px !important;
   border-radius: 12px !important;
+  flex: 0 1 auto;
 }
 
 .court-btn.v-btn--active {
@@ -420,10 +422,15 @@ function formatDate(dateStr: string) {
 }
 
 .slot-btn {
-  min-width: 100px;
+  min-width: 110px;
   height: auto !important;
-  padding: 8px 12px !important;
+  padding: 10px 14px !important;
   border-radius: 10px !important;
+  position: relative;
+}
+
+.slot-btn .v-chip {
+  margin-top: 4px !important;
 }
 
 .slot-btn.v-btn--disabled {
