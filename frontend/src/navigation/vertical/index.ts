@@ -17,17 +17,17 @@ export default [
   },
   {
     title: 'ตีบุฟเฟ่ต์',
-    to: { name: 'features' },
+    to: { name: 'buffet' },
     icon: { icon: 'ri-vip-crown-line' },
   },
   {
     title: 'ตีก๊วน',
-    to: { name: 'features' },
+    to: { name: 'gang' },
     icon: { icon: 'ri-group-line' },
   },
   {
     title: 'สั่งอาหาร',
-    to: { name: 'features' },
+    to: { name: 'food' },
     icon: { icon: 'ri-restaurant-line' },
   },
   {

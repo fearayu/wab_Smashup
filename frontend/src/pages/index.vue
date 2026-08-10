@@ -6,9 +6,9 @@ const router = useRouter()
 
 const quickLinks = [
   { to: '/demo', icon: 'ri-calendar-check-line', title: 'จองคอร์ท', desc: 'เลือกวัน เลือกคอร์ท จองได้ทันที', color: '#1B5E20' },
-  { to: '/features', icon: 'ri-vip-crown-line', title: 'ตีบุฟเฟ่ต์', desc: 'เหมาจ่าย 199-299฿ เล่นไม่อั้น', color: '#FF6F00' },
-  { to: '/features', icon: 'ri-group-line', title: 'ตีก๊วน', desc: 'จัดกลุ่ม แชร์ค่าคอร์ท', color: '#1565C0' },
-  { to: '/features', icon: 'ri-restaurant-line', title: 'สั่งอาหาร', desc: 'เมนูส่งตรงถึงคอร์ท', color: '#C62828' },
+  { to: '/buffet', icon: 'ri-vip-crown-line', title: 'ตีบุฟเฟ่ต์', desc: 'เหมาจ่าย 199-299฿ เล่นไม่อั้น', color: '#FF6F00' },
+  { to: '/gang', icon: 'ri-group-line', title: 'ตีก๊วน', desc: 'จัดกลุ่ม แชร์ค่าคอร์ท', color: '#1565C0' },
+  { to: '/food', icon: 'ri-restaurant-line', title: 'สั่งอาหาร', desc: 'เมนูส่งตรงถึงคอร์ท', color: '#C62828' },
 ]
 
 const stats = [
