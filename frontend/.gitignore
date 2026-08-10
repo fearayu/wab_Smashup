@@ -58,4 +58,4 @@ Thumbs.db
 .claude/*
 .codex/*
 .unlighthouse/*
-lighthouse-reports/
+lighthouse-reports/.wrangler/
