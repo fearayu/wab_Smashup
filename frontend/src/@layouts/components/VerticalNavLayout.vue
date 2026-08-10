@@ -23,6 +23,13 @@ export default defineComponent({
     const isLayoutOverlayVisible = ref(false)
     const toggleIsOverlayNavActive = useToggle(isOverlayNavActive)
 
+    // Auto-show sidebar on non-mobile screens (above overlay breakpoint)
+    watch(configStore.isLessThanOverlayNavBreakpoint, (isLess) => {
+      if (!isLess) {
+        isOverlayNavActive.value = true
+      }
+    }, { immediate: true })
+
     // ℹ️ This is alternative to below two commented watcher
     // We want to show overlay if overlay nav is visible and want to hide overlay if overlay is hidden and vice versa.
     syncRef(isOverlayNavActive, isLayoutOverlayVisible)
