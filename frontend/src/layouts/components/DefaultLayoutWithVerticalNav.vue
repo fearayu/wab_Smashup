@@ -13,6 +13,12 @@ import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 // @layouts plugin
 
 const authStore = useAuthStore()
+const router = useRouter()
+
+function handleLogout() {
+  authStore.logout()
+  router.push('/login')
+}
 
 // SECTION: Loading Indicator
 const isFallbackStateActive = ref(false)
@@ -50,7 +56,25 @@ watch([isFallbackStateActive, refLoadingIndicator], () => {
         >
           <span class="text-body-2 text-medium-emphasis d-none d-sm-inline">{{ authStore.owner.name }}</span>
           <RoleBadge :role="authStore.owner.role" size="small" />
+          <VDivider vertical class="mx-1" />
+          <VBtn
+            icon="ri-logout-box-line"
+            size="small"
+            variant="text"
+            color="error"
+            @click="handleLogout"
+          />
         </div>
+
+        <VBtn
+          v-else
+          variant="text"
+          size="small"
+          to="/login"
+          class="me-2"
+        >
+          <VIcon icon="ri-login-box-line" class="mr-1" /> เข้าสู่ระบบ
+        </VBtn>
 
         <NavBarI18n
           v-if="themeConfig.app.i18n.enable && themeConfig.app.i18n.langConfig?.length"

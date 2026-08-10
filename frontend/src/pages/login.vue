@@ -2,11 +2,13 @@
 import { useAuthStore } from '@/stores/use-auth-store'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
 const isRegister = ref(false)
 const isLoading = ref(false)
 const error = ref<string | null>(null)
+const showPassword = ref(false)
 
 const form = ref({
   email: '',
@@ -16,8 +18,10 @@ const form = ref({
 })
 
 watch(() => authStore.isAuthenticated, (v) => {
-  if (v)
-    router.push('/dashboard')
+  if (v) {
+    const redirect = (route.query.redirect as string) || '/dashboard'
+    router.push(redirect)
+  }
 })
 
 async function submit() {
@@ -31,82 +35,118 @@ async function submit() {
         name: form.value.name,
         phone: form.value.phone || undefined,
       })
-    }
-    else {
+    } else {
       await authStore.login({
         email: form.value.email,
         password: form.value.password,
       })
     }
-  }
-  catch (e: any) {
+    // Router redirect handled by watcher above
+  } catch (e: any) {
     error.value = e.message
-  }
-  finally {
+  } finally {
     isLoading.value = false
   }
 }
 
+const isValid = computed(() => {
+  if (isRegister.value) {
+    return form.value.email && form.value.password.length >= 8 && form.value.name.trim()
+  }
+  return form.value.email && form.value.password
+})
+
 onMounted(() => {
-  if (authStore.isAuthenticated)
+  if (authStore.isAuthenticated) {
     router.push('/dashboard')
+  }
 })
 </script>
 
 <template>
   <div class="login-wrapper d-flex align-center justify-center pa-4">
-    <VCard max-width="420" width="100%" class="pa-8 login-card" elevation="0">
+    <VCard max-width="440" width="100%" class="pa-8 login-card" elevation="0">
+      <!-- Logo -->
       <div class="text-center mb-8">
         <div class="logo-wrapper mb-4 mx-auto">
-          <VIcon icon="ri-shuttle-line" size="48" color="white" />
+          <div class="shuttlecock-icon">🏸</div>
         </div>
-        <h1 class="text-h4 font-weight-bold text-primary mb-2">
+        <h1 class="text-h4 font-weight-bold text-primary mb-1">
           Smashup
         </h1>
         <p class="text-body-2 text-medium-emphasis">
-          {{ isRegister ? 'สร้างบัญชีใหม่' : 'เข้าสู่ระบบ' }}
+          {{ isRegister ? 'สร้างบัญชีใหม่' : 'เข้าสู่ระบบจัดการสนามแบดมินตัน' }}
         </p>
       </div>
 
+      <!-- Error -->
       <VAlert
         v-if="error"
         type="error"
+        variant="tonal"
         class="mb-4"
-        :text="error"
         closable
-      />
+        @click:close="error = null"
+      >
+        {{ error }}
+      </VAlert>
 
+      <!-- Form -->
       <VForm @submit.prevent="submit">
         <VTextField
           v-if="isRegister"
           v-model="form.name"
-          label="Full Name"
+          label="ชื่อ-นามสกุล"
           prepend-inner-icon="ri-user-line"
+          variant="outlined"
+          density="comfortable"
           class="mb-4"
           required
         />
         <VTextField
           v-model="form.email"
-          label="Email"
+          label="อีเมล"
           type="email"
           prepend-inner-icon="ri-mail-line"
+          variant="outlined"
+          density="comfortable"
           class="mb-4"
           required
+          placeholder="owner@example.com"
         />
         <VTextField
           v-model="form.password"
-          label="Password"
-          type="password"
+          label="รหัสผ่าน"
+          :type="showPassword ? 'text' : 'password'"
           prepend-inner-icon="ri-lock-line"
-          class="mb-4"
+          variant="outlined"
+          density="comfortable"
+          class="mb-1"
           required
-        />
+          :rules="[v => (v?.length >= 8) || 'อย่างน้อย 8 ตัวอักษร']"
+        >
+          <template #append-inner>
+            <VBtn
+              :icon="showPassword ? 'ri-eye-off-line' : 'ri-eye-line'"
+              size="x-small"
+              variant="text"
+              @click="showPassword = !showPassword"
+            />
+          </template>
+        </VTextField>
+        <div class="text-caption text-medium-emphasis mb-4" v-if="isRegister">
+          อย่างน้อย 8 ตัวอักษร
+        </div>
+
         <VTextField
           v-if="isRegister"
           v-model="form.phone"
-          label="Phone (optional)"
+          label="เบอร์โทรศัพท์ (ไม่บังคับ)"
           prepend-inner-icon="ri-phone-line"
+          variant="outlined"
+          density="comfortable"
           class="mb-4"
+          placeholder="0812345678"
         />
 
         <VBtn
@@ -115,6 +155,7 @@ onMounted(() => {
           size="large"
           type="submit"
           :loading="isLoading"
+          :disabled="!isValid"
           class="mb-4 mt-2"
           elevation="2"
         >
@@ -123,13 +164,16 @@ onMounted(() => {
         </VBtn>
       </VForm>
 
-      <VDivider class="my-4" />
+      <VDivider class="my-4">
+        <span class="text-caption text-medium-emphasis px-2">หรือ</span>
+      </VDivider>
 
       <div class="text-center">
         <VBtn
           variant="text"
           color="primary"
-          @click="isRegister = !isRegister"
+          size="small"
+          @click="isRegister = !isRegister; error = null"
           class="text-none"
         >
           {{ isRegister ? 'มีบัญชีอยู่แล้ว? เข้าสู่ระบบ' : 'ยังไม่มีบัญชี? สมัครสมาชิก' }}
@@ -152,39 +196,57 @@ onMounted(() => {
   position: absolute;
   top: -20%;
   right: -10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255, 111, 0, 0.2) 0%, transparent 70%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 111, 0, 0.15) 0%, transparent 70%);
   border-radius: 50%;
+  animation: pulse-glow 8s ease-in-out infinite;
 }
 
 .login-wrapper::after {
   content: '';
   position: absolute;
-  bottom: -20%;
-  left: -10%;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(27, 94, 32, 0.3) 0%, transparent 70%);
+  bottom: -30%;
+  left: -15%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(27, 94, 32, 0.4) 0%, transparent 70%);
   border-radius: 50%;
+  animation: pulse-glow 10s ease-in-out infinite 2s;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
 }
 
 .login-card {
   position: relative;
   z-index: 1;
   background: rgba(255, 255, 255, 0.98);
-  border-radius: 16px;
+  border-radius: 20px;
   backdrop-filter: blur(10px);
+  border: 1px solid rgba(27, 94, 32, 0.1);
 }
 
 .logo-wrapper {
-  width: 72px;
-  height: 72px;
-  border-radius: 16px;
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
   background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3);
+  box-shadow: 0 8px 24px rgba(27, 94, 32, 0.3);
+}
+
+.shuttlecock-icon {
+  font-size: 42px;
+  animation: shuttle-float 2s ease-in-out infinite;
+}
+
+@keyframes shuttle-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 </style>
