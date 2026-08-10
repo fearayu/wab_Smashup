@@ -83,7 +83,7 @@ export function createContainer(repos: Repositories): Container {
 
   return {
     userHandler: new UserHandler(userService),
-    authHandler: new AuthHandler(authService),
+    authHandler: new AuthHandler(authService, repos.ownerRepository),
     venueHandler: new VenueHandler(venueService),
     courtHandler: new CourtHandler(courtService),
     timeSlotHandler: new TimeSlotHandler(timeSlotService, courtService),

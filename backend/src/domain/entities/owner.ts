@@ -6,6 +6,7 @@ export interface Owner {
   plan: 'free' | 'pro'
   planExpiresAt: string | null
   onboardingCompleted: boolean
+  role: 'admin' | 'member' | 'user'
   createdAt: string
   updatedAt: string
 }

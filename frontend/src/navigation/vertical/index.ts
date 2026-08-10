@@ -43,4 +43,9 @@ export default [
     to: { name: 'login' },
     icon: { icon: 'ri-login-box-line' },
   },
+  {
+    title: 'จัดการยศ (Admin)',
+    to: { name: 'admin-roles' },
+    icon: { icon: 'ri-admin-line' },
+  },
 ]

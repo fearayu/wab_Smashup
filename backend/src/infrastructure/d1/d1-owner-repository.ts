@@ -10,6 +10,7 @@ interface OwnerRow {
   plan: string
   plan_expires_at: string | null
   onboarding_completed: number
+  role: string
   created_at: string
   updated_at: string
 }
@@ -23,6 +24,7 @@ function toOwner(row: OwnerRow): Owner {
     plan: row.plan as 'free' | 'pro',
     planExpiresAt: row.plan_expires_at,
     onboardingCompleted: row.onboarding_completed === 1,
+    role: (row.role as 'admin' | 'member' | 'user') || 'member',
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   }
@@ -33,7 +35,7 @@ export class D1OwnerRepository implements OwnerRepository {
 
   async findById(id: string): Promise<Owner | null> {
     const row = await this.db
-      .prepare('SELECT id, email, password_hash, name, phone, plan, plan_expires_at, onboarding_completed, created_at, updated_at FROM owners WHERE id = ?')
+      .prepare('SELECT id, email, password_hash, name, phone, plan, plan_expires_at, onboarding_completed, role, created_at, updated_at FROM owners WHERE id = ?')
       .bind(id)
       .first<OwnerRow>()
     return row ? toOwner(row) : null
@@ -41,7 +43,7 @@ export class D1OwnerRepository implements OwnerRepository {
 
   async findByEmail(email: string): Promise<Owner | null> {
     const row = await this.db
-      .prepare('SELECT id, email, password_hash, name, phone, plan, plan_expires_at, onboarding_completed, created_at, updated_at FROM owners WHERE email = ?')
+      .prepare('SELECT id, email, password_hash, name, phone, plan, plan_expires_at, onboarding_completed, role, created_at, updated_at FROM owners WHERE email = ?')
       .bind(email)
       .first<OwnerRow>()
     return row ? toOwner(row) : null
@@ -51,8 +53,8 @@ export class D1OwnerRepository implements OwnerRepository {
     const id = crypto.randomUUID()
     const now = new Date().toISOString()
     await this.db
-      .prepare('INSERT INTO owners (id, email, password_hash, name, phone, plan, onboarding_completed, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
-      .bind(id, input.email, input.passwordHash, input.name, input.phone ?? null, 'free', 0, now, now)
+      .prepare('INSERT INTO owners (id, email, password_hash, name, phone, plan, onboarding_completed, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+      .bind(id, input.email, input.passwordHash, input.name, input.phone ?? null, 'free', 0, 'member', now, now)
       .run()
     return {
       id,
@@ -62,6 +64,7 @@ export class D1OwnerRepository implements OwnerRepository {
       plan: 'free',
       planExpiresAt: null,
       onboardingCompleted: false,
+      role: 'member',
       createdAt: now,
       updatedAt: now,
     }
@@ -97,5 +100,23 @@ export class D1OwnerRepository implements OwnerRepository {
   async delete(id: string): Promise<boolean> {
     const result = await this.db.prepare('DELETE FROM owners WHERE id = ?').bind(id).run()
     return result.meta.changes > 0
+  }
+
+  async findAll(): Promise<Owner[]> {
+    const result = await this.db
+      .prepare('SELECT id, email, password_hash, name, phone, plan, plan_expires_at, onboarding_completed, role, created_at, updated_at FROM owners ORDER BY created_at DESC')
+      .all<OwnerRow>()
+    return (result.results ?? []).map(toOwner)
+  }
+
+  async updateRole(id: string, role: 'admin' | 'member' | 'user'): Promise<Owner | null> {
+    const existing = await this.findById(id)
+    if (!existing) return null
+    const now = new Date().toISOString()
+    await this.db
+      .prepare('UPDATE owners SET role = ?, updated_at = ? WHERE id = ?')
+      .bind(role, now, id)
+      .run()
+    return { ...existing, role, updatedAt: now }
   }
 }

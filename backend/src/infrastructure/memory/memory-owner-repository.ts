@@ -1,5 +1,5 @@
 import type { CreateOwnerInput, Owner, UpdateOwnerInput } from '../../domain/entities/owner'
-import type { OwnerRepository } from '../../domain/repositories/owner-repository'
+import type { OwnerRepository, OwnerRole } from '../../domain/repositories/owner-repository'
 
 export class MemoryOwnerRepository implements OwnerRepository {
   private readonly owners = new Map<string, Owner & { passwordHash: string }>()
@@ -18,6 +18,10 @@ export class MemoryOwnerRepository implements OwnerRepository {
     return owner
   }
 
+  async findAll(): Promise<Owner[]> {
+    return [...this.owners.values()].map(({ passwordHash: _, ...owner }) => owner)
+  }
+
   async getPasswordHash(id: string): Promise<string | null> {
     return this.owners.get(id)?.passwordHash ?? null
   }
@@ -33,6 +37,7 @@ export class MemoryOwnerRepository implements OwnerRepository {
       plan: 'free',
       planExpiresAt: null,
       onboardingCompleted: false,
+      role: 'member',
       createdAt: now,
       updatedAt: now,
       passwordHash: input.passwordHash,
@@ -50,6 +55,14 @@ export class MemoryOwnerRepository implements OwnerRepository {
     this.owners.set(id, updated)
     const { passwordHash: _, ...result } = updated
     return result
+  }
+
+  async updateRole(id: string, role: OwnerRole): Promise<Owner | null> {
+    const existing = this.owners.get(id)
+    if (!existing) return null
+    existing.role = role
+    existing.updatedAt = new Date().toISOString()
+    return existing
   }
 
   async delete(id: string): Promise<boolean> {

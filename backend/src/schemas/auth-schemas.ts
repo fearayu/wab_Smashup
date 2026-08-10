@@ -18,6 +18,7 @@ export const ownerSchema = z.object({
   name: z.string(),
   plan: z.enum(['free', 'pro']),
   onboardingCompleted: z.boolean(),
+  role: z.enum(['admin', 'member', 'user']),
   createdAt: z.iso.datetime(),
 })
 
@@ -30,6 +31,14 @@ export const loginResponseSchema = z.object({
 
 export const ownerResponseSchema = z.object({
   data: ownerSchema,
+})
+
+export const ownerListResponseSchema = z.object({
+  data: z.array(ownerSchema),
+})
+
+export const updateRoleSchema = z.object({
+  role: z.enum(['admin', 'member', 'user']),
 })
 
 export const errorResponseSchema = z.object({

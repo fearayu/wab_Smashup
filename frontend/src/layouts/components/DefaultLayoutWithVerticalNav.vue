@@ -3,12 +3,16 @@ import { themeConfig } from '@themeConfig'
 import NavBarI18n from '@core/components/I18n.vue'
 import { VerticalNavLayout } from '@layouts'
 import navItems from '@/navigation/vertical'
+import { useAuthStore } from '@/stores/use-auth-store'
+import RoleBadge from '@/components/RoleBadge.vue'
 
 // Components
 import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 
 // @layouts plugin
+
+const authStore = useAuthStore()
 
 // SECTION: Loading Indicator
 const isFallbackStateActive = ref(false)
@@ -39,6 +43,14 @@ watch([isFallbackStateActive, refLoadingIndicator], () => {
         </IconBtn>
 
         <VSpacer />
+
+        <div
+          v-if="authStore.isAuthenticated && authStore.owner"
+          class="d-flex align-center gap-2 me-3"
+        >
+          <span class="text-body-2 text-medium-emphasis d-none d-sm-inline">{{ authStore.owner.name }}</span>
+          <RoleBadge :role="authStore.owner.role" size="small" />
+        </div>
 
         <NavBarI18n
           v-if="themeConfig.app.i18n.enable && themeConfig.app.i18n.langConfig?.length"

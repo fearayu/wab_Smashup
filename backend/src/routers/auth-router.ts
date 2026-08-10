@@ -1,11 +1,14 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
+import { authMiddleware, requireRole } from '../middleware/auth'
 import {
   errorResponseSchema,
   loginResponseSchema,
   loginSchema,
+  ownerListResponseSchema,
   ownerResponseSchema,
   registerSchema,
+  updateRoleSchema,
 } from '../schemas/auth-schemas'
 import type { AppEnv } from '../types'
 
@@ -55,8 +58,43 @@ export function createAuthRouter() {
         401: { description: 'Unauthorized', content: jsonContent(errorResponseSchema) },
       },
     }),
+    authMiddleware,
     (c) => c.get('container').authHandler.me(c)
   )
+
+  // Admin routes — require 'admin' role
+  const admin = new Hono<AppEnv>()
+  admin.use('*', authMiddleware, requireRole('admin'))
+
+  admin.get(
+    '/owners',
+    describeRoute({
+      tags: ['Auth'],
+      summary: 'List all owners (admin only)',
+      responses: {
+        200: { description: 'Owner list', content: jsonContent(ownerListResponseSchema) },
+        403: { description: 'Forbidden', content: jsonContent(errorResponseSchema) },
+      },
+    }),
+    (c) => c.get('container').authHandler.listOwners(c)
+  )
+
+  admin.patch(
+    '/owners/:id/role',
+    describeRoute({
+      tags: ['Auth'],
+      summary: 'Update owner role (admin only)',
+      responses: {
+        200: { description: 'Role updated', content: jsonContent(ownerResponseSchema) },
+        400: { description: 'Invalid input', content: jsonContent(errorResponseSchema) },
+        403: { description: 'Forbidden', content: jsonContent(errorResponseSchema) },
+      },
+    }),
+    validator('json', updateRoleSchema),
+    (c) => c.get('container').authHandler.updateRole(c)
+  )
+
+  router.route('/admin', admin)
 
   return router
 }

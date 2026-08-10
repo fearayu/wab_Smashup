@@ -5,6 +5,7 @@ export interface Owner {
   phone?: string
   plan: 'free' | 'pro'
   onboarding_completed: boolean
+  role: 'admin' | 'member' | 'user'
   created_at: string
 }
 
@@ -20,6 +21,10 @@ export interface LoginBody {
   password: string
 }
 
+export interface UpdateRoleBody {
+  role: 'admin' | 'member' | 'user'
+}
+
 export interface AuthResponse {
   data: {
     token: string
@@ -29,4 +34,8 @@ export interface AuthResponse {
 
 export interface OwnerResponse {
   data: Owner
+}
+
+export interface OwnerListResponse {
+  data: Owner[]
 }

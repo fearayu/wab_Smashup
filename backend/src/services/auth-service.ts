@@ -16,6 +16,7 @@ async function verifyPassword(password: string, hash: string): Promise<boolean> 
 export interface AuthTokenPayload {
   sub: string
   email: string
+  role: 'admin' | 'member' | 'user'
   iat: number
   exp: number
 }
@@ -44,7 +45,7 @@ export class AuthService {
       passwordHash,
     })
 
-    const token = await this.signJwt(owner.id, owner.email)
+    const token = await this.signJwt(owner.id, owner.email, owner.role)
     return { owner, token }
   }
 
@@ -58,7 +59,7 @@ export class AuthService {
     const valid = await verifyPassword(password, hash)
     if (!valid) throw new UnauthorizedError('Invalid credentials')
 
-    const token = await this.signJwt(owner.id, owner.email)
+    const token = await this.signJwt(owner.id, owner.email, owner.role)
     return { owner, token }
   }
 
@@ -68,11 +69,11 @@ export class AuthService {
     return owner
   }
 
-  private async signJwt(sub: string, email: string): Promise<string> {
+  private async signJwt(sub: string, email: string, role: string = 'member'): Promise<string> {
     const iat = Math.floor(Date.now() / 1000)
     const exp = iat + 7 * 24 * 60 * 60 // 7 days
     const header = btoa(JSON.stringify({ alg: 'none', typ: 'JWT' }))
-    const payload = btoa(JSON.stringify({ sub, email, iat, exp }))
+    const payload = btoa(JSON.stringify({ sub, email, role, iat, exp }))
     // In production use real signing with jose or webcrypto; for MVP we use alg:none
     // because Workers KV/D1 environments may lack full crypto library for RS256
     return `${header}.${payload}.`
