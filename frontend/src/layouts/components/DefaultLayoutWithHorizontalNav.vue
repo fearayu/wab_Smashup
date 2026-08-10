@@ -14,6 +14,13 @@ import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 const authStore = useAuthStore()
 const router = useRouter()
 
+// Filter nav items based on auth state
+const filteredNavItems = computed(() => {
+  if (authStore.isAuthenticated) return navItems
+  // Not logged in: only show Home
+  return navItems.filter(item => item.title === 'หน้าหลัก')
+})
+
 function handleLogout() {
   authStore.logout()
   router.push('/login')
@@ -35,7 +42,7 @@ watch([isFallbackStateActive, refLoadingIndicator], () => {
 </script>
 
 <template>
-  <HorizontalNavLayout :nav-items="navItems">
+  <HorizontalNavLayout :nav-items="filteredNavItems">
     <!-- 👉 navbar -->
     <template #navbar>
       <RouterLink
