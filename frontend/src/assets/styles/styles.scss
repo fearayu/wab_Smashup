@@ -1,0 +1,11 @@
+@use './tokens';
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+.v-application {
+  font-family: var(--font-body);
+}

@@ -1,0 +1,11 @@
+node_modules
+dist
+public
+.shared
+.agent
+.claude
+.codex
+.storybook
+auto-imports.d.ts
+components.d.ts
+typed-router.d.ts

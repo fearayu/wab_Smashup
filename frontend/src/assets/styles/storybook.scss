@@ -1,0 +1,10 @@
+.sb-main {
+  padding: var(--space-2xl);
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-block-size: 100vh;
+}
+
+.sb-main .v-application__wrap {
+  min-block-size: auto;
+}
