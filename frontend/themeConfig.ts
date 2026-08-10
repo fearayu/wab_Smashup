@@ -23,7 +23,7 @@ export const { themeConfig, layoutConfig } = defineThemeConfig({
       style: 'line-height:0; color: rgb(var(--v-global-theme-primary))',
     }),
     contentWidth: ContentWidth.Boxed,
-    contentLayoutNav: AppContentLayoutNav.Horizontal,
+    contentLayoutNav: AppContentLayoutNav.Vertical,
     overlayNavFromBreakpoint: breakpointsVuetify.md + 16, // 16 for scrollbar. Docs: https://next.vuetifyjs.com/en/features/display-and-platform/
     i18n: {
       enable: false,
