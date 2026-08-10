@@ -1,6 +1,6 @@
 export default [
   {
-    heading: '🏸 หน้าหลัก',
+    heading: '🏸 เมนู',
   },
   {
     title: 'หน้าหลัก',

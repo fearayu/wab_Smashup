@@ -21,10 +21,10 @@ const recentBookings = [
 ]
 
 const quickActions = [
-  { to: '/demo', icon: 'ri-calendar-line', title: 'ดู Demo จอง', color: 'primary' },
-  { to: '/buffet', icon: 'ri-vip-crown-line', title: 'ตีบุฟเฟ่ต์', color: '#FF6F00' },
-  { to: '/gang', icon: 'ri-group-line', title: 'ตีก๊วน', color: '#1565C0' },
-  { to: '/food', icon: 'ri-restaurant-line', title: 'สั่งอาหาร', color: '#C62828' },
+  { to: '/demo', icon: 'ri-calendar-line', title: 'Demo จอง', color: 'primary' },
+  { to: '/buffet', icon: 'ri-vip-crown-line', title: 'บุฟเฟ่ต์', color: '#FF6F00' },
+  { to: '/gang', icon: 'ri-group-line', title: 'ก๊วน', color: '#1565C0' },
+  { to: '/food', icon: 'ri-restaurant-line', title: 'อาหาร', color: '#C62828' },
 ]
 </script>
 
