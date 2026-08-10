@@ -4,7 +4,7 @@ import { useSiteConfigStore } from '@/stores/use-site-config-store'
 const siteStore = useSiteConfigStore()
 const venue = computed(() => siteStore.publicSite?.venue)
 
-const primaryColor = computed(() => venue.value?.primary_color ?? '#030213')
+const primaryColor = computed(() => venue.value?.primary_color ?? '#1B5E20')
 </script>
 
 <template>
