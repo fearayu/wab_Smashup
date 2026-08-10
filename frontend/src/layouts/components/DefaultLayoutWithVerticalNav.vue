@@ -2,7 +2,7 @@
 import { themeConfig } from '@themeConfig'
 import NavBarI18n from '@core/components/I18n.vue'
 import { VerticalNavLayout } from '@layouts'
-import navItems from '@/navigation/vertical'
+import allNavItems from '@/navigation/vertical'
 import { useAuthStore } from '@/stores/use-auth-store'
 import RoleBadge from '@/components/RoleBadge.vue'
 
@@ -19,6 +19,17 @@ function handleLogout() {
   authStore.logout()
   router.push('/login')
 }
+
+// Filter nav items based on auth state
+const navItems = computed(() => {
+  return allNavItems.filter(item => {
+    // Auth-required items hidden when not logged in
+    if ((item as any).auth && !authStore.isAuthenticated) return false
+    // Admin-only items hidden when not admin
+    if ((item as any).admin && authStore.owner?.role !== 'admin') return false
+    return true
+  })
+})
 
 // SECTION: Loading Indicator
 const isFallbackStateActive = ref(false)
