@@ -48,6 +48,7 @@ declare module 'vue-router/auto/routes' {
     'dashboard-settings': RouteRecordInfo<'dashboard-settings', '/dashboard/settings', Record<never, never>, Record<never, never>>,
     'dashboard-venues': RouteRecordInfo<'dashboard-venues', '/dashboard/venues', Record<never, never>, Record<never, never>>,
     '$error': RouteRecordInfo<'$error', '/:error(.*)', { error: ParamValue<true> }, { error: ParamValue<false> }>,
+    'book-slug': RouteRecordInfo<'book-slug', '/book/:slug', { slug: ParamValue<true> }, { slug: ParamValue<false> }>,
     'dashboard': RouteRecordInfo<'dashboard', '/dashboard', Record<never, never>, Record<never, never>>,
     'dashboard-bookings': RouteRecordInfo<'dashboard-bookings', '/dashboard/bookings', Record<never, never>, Record<never, never>>,
     'dashboard-bookings-id': RouteRecordInfo<'dashboard-bookings-id', '/dashboard/bookings/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
