@@ -73,10 +73,12 @@ watch([isFallbackStateActive, refLoadingIndicator], () => {
       </div>
       <VBtn
         v-else
-        variant="text"
+        color="primary"
+        variant="flat"
         size="small"
         to="/login"
-        class="me-2"
+        class="me-2 font-weight-bold"
+        elevation="1"
       >
         <VIcon icon="ri-login-box-line" class="mr-1" /> เข้าสู่ระบบ
       </VBtn>
