@@ -19,7 +19,7 @@ const form = ref({
 
 watch(() => authStore.isAuthenticated, (v) => {
   if (v) {
-    const redirect = (route.query.redirect as string) || '/dashboard'
+    const redirect = (route.query.redirect as string) || '/'
     router.push(redirect)
   }
 })
@@ -58,7 +58,7 @@ const isValid = computed(() => {
 
 onMounted(() => {
   if (authStore.isAuthenticated) {
-    router.push('/dashboard')
+    router.push('/')
   }
 })
 </script>
