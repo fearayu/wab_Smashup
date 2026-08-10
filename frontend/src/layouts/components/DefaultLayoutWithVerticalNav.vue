@@ -25,6 +25,8 @@ const navItems = computed(() => {
   return allNavItems.filter(item => {
     // Auth-required items hidden when not logged in
     if ((item as any).auth && !authStore.isAuthenticated) return false
+    // Guest-only items hidden when logged in
+    if ((item as any).guest && authStore.isAuthenticated) return false
     // Admin-only items hidden when not admin
     if ((item as any).admin && authStore.owner?.role !== 'admin') return false
     return true

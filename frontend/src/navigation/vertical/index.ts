@@ -11,6 +11,7 @@ export default [
     title: 'สมัคร/เข้าสู่ระบบ',
     to: { name: 'login' },
     icon: { icon: 'ri-login-box-line' },
+    guest: true,
   },
   // Below items only visible when authenticated
   {
