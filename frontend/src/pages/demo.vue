@@ -363,7 +363,7 @@ function formatDate(dateStr: string) {
 <style scoped>
 .demo-wrapper {
   min-height: 100dvh;
-  background: linear-gradient(135deg, #F0F7F0 0%, #FFFFFF 100%);
+  background: linear-gradient(135deg, #F8FAFC 0%, #FFFFFF 100%);
 }
 
 .hero-section {

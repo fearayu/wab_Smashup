@@ -276,12 +276,14 @@ const pricing = [
 .stat-item {
   padding: 1.5rem;
   border-radius: 12px;
-  background: #F0F7F0;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
   transition: transform 0.3s ease;
 }
 
 .stat-item:hover {
   transform: translateY(-2px);
   background: #E8F5E9;
+  border-color: #1B5E20;
 }
 </style>

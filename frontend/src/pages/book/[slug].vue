@@ -348,7 +348,7 @@ onMounted(loadVenue)
 <style scoped>
 .book-wrapper {
   min-height: 100dvh;
-  background: linear-gradient(180deg, #F0F7F0 0%, #FFFFFF 50%);
+  background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 50%);
 }
 
 .book-header {

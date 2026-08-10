@@ -198,7 +198,7 @@ onMounted(() => {
 <style scoped>
 .onboarding-wrapper {
   min-height: 100dvh;
-  background: linear-gradient(135deg, #F0F7F0 0%, #E8F5E9 100%);
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
 }
 
 .onboarding-card {
