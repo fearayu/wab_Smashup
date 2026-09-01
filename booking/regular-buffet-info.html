@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ข้อมูลตีบุฟเฟต์ | SMASHUP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="topic.css">
+  <link rel="stylesheet" href="regular-buffet-info.css">
+  <link rel="stylesheet" href="regular-buffet-info-hero.css">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a><a class="back" href="court-booking.html">← หน้าจองสนาม</a></header>
+  <main class="topic-main buffet-info-page">
+    <div class="info-heading"><div><p class="eyebrow">04 / BUFFET INFORMATION</p><h1>ข้อมูลตี<br><em>บุฟเฟต์</em></h1><p>ตรวจสอบผู้ลงชื่อ รอบเล่น ระดับ และสถานะก่อนจัดคิวลงสนาม</p></div><a href="regular-buffet-booking.html">+ ลงชื่อบุฟเฟต์</a></div>
+    <section class="info-tools"><label>วันที่เล่น<input id="infoDate" type="date"></label><label>ค้นหาชื่อผู้เล่น<input id="infoSearch" type="search" placeholder="พิมพ์ชื่อเล่น"></label><button id="clearInfo" type="button">ล้างตัวกรอง</button></section>
+    <section class="buffet-stats"><article><span>ผู้ลงชื่อ</span><strong id="totalPlayers">0</strong><small>ตามวันที่เลือก</small></article><article><span>ยืนยันแล้ว</span><strong id="confirmedPlayers">0</strong><small>พร้อมจัดคิว</small></article><article><span>รอยืนยัน</span><strong id="pendingPlayers">0</strong><small>รอตรวจสอบรายการ</small></article></section>
+    <section class="player-list"><div class="list-heading"><div><h2>รายชื่อผู้ลงทะเบียน</h2><p id="infoMessage" role="status"></p></div><a class="queue-link" href="regular-buffet-queue.html">ไปจัดคิว ↗</a></div><div class="table-scroll"><table><thead><tr><th>#</th><th>ชื่อผู้เล่น</th><th>รอบเวลา</th><th>ระดับ</th><th>ค่าลูก</th><th>สถานะ</th><th>ยอด</th></tr></thead><tbody id="buffetRows"></tbody></table></div><p id="buffetEmpty" class="empty-state" hidden>ยังไม่มีผู้ลงชื่อในรอบนี้</p></section>
+  </main>
+  <script src="topic-nav.js"></script>
+  <script src="regular-buffet-info.js"></script>
+</body>
+</html>

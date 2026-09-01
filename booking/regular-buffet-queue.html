@@ -8,10 +8,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="topic.css">
-  <link rel="stylesheet" href="buffet-queue.css">
-</head>
+  <link rel="stylesheet" href="regular-buffet-queue.css">
+  <link rel="stylesheet" href="regular-buffet-queue-hero.css">
+<style>/* mobile queue card */@media(max-width:760px){.queue-labels{display:none}.queue-list{gap:10px}.queue-row{border-radius:10px;display:grid;grid-template-columns:42px 1fr;gap:8px;min-height:0;padding:11px}.queue-number{grid-row:1/3;height:100%}.queue-player{font-size:14px;font-weight:600}.queue-shuttle,.queue-court{height:34px;text-align:center}.queue-shuttle,.queue-court{grid-column:2;width:100%}}</style></head>
 <body>
-  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a><a class="back" href="index.html">← หน้าจองสนาม</a></header>
+  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a><a class="back" href="court-booking.html">← หน้าจองสนาม</a></header>
   <main class="topic-main queue-page">
     <div class="queue-heading"><div><p class="eyebrow">05 / BUFFET QUEUE</p><h1>จัดคิวตี<br><em>บุฟเฟต์</em></h1><p>เลือกผู้เล่นจากรายการรอ แล้วจัดเข้าคิวลงสนามได้ทันที</p></div><button class="refresh-button" id="refreshQueue" type="button">↻ รีเฟรช</button></div>
     <section class="queue-layout" aria-label="ระบบจัดคิวตีบุฟเฟต์">
@@ -23,6 +24,6 @@
     </section>
   </main>
   <script src="topic-nav.js"></script>
-  <script src="buffet-queue.js"></script>
+  <script src="regular-buffet-queue.js"></script>
 </body>
 </html>

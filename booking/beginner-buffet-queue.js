@@ -1,4 +1,5 @@
 const QUEUE_STORAGE_KEY = 'smashup_buffet_queue_v1';
+const BUFFET_BOOKING_STORAGE_KEY = 'smashup_buffet_bookings_v1';
 const queueList = document.querySelector('#queueList');
 const waitingList = document.querySelector('#waitingList');
 const historyList = document.querySelector('#historyList');
@@ -15,6 +16,18 @@ function loadState() {
     if (!saved || !Array.isArray(saved.slots) || saved.slots.length !== 30) return initialState();
     return { slots: saved.slots, waiting: saved.waiting || [], history: saved.history || [] };
   } catch { return initialState(); }
+}
+
+function syncRegisteredPlayers() {
+  let registrations = [];
+  try { registrations = JSON.parse(localStorage.getItem(BUFFET_BOOKING_STORAGE_KEY)) || []; } catch { registrations = []; }
+  const knownIds = new Set([...state.waiting, ...state.slots.filter(Boolean)].map((player) => player.registrationId).filter(Boolean));
+  registrations.filter((booking) => booking.status === 'ยืนยันแล้ว').forEach((booking, index) => {
+    const registrationId = booking.id || booking.createdAt || `${booking.date}-${booking.session}-${booking.name}-${index}`;
+    if (!knownIds.has(registrationId)) {
+      state.waiting.push({ name: booking.name, shuttle: Number(booking.shuttle) ? 1 : 0, level: booking.level, session: booking.session, registrationId });
+    }
+  });
 }
 
 function saveState() { localStorage.setItem(QUEUE_STORAGE_KEY, JSON.stringify(state)); }
@@ -62,5 +75,7 @@ queueList.addEventListener('click', event => {
   saveState(); render();
 });
 
-document.querySelector('#refreshQueue').addEventListener('click', render);
+document.querySelector('#refreshQueue').addEventListener('click', () => { syncRegisteredPlayers(); saveState(); render(); });
+syncRegisteredPlayers();
+saveState();
 render();

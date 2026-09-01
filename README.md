@@ -41,7 +41,7 @@
 
 ### เปิดด้วยเว็บเบราว์เซอร์โดยตรง
 
-เปิดไฟล์ `index.html` ด้วยเว็บเบราว์เซอร์ได้เลย หน้าแรกจะลิงก์ไปยัง `booking/index.html`
+เปิดไฟล์ `index.html` ด้วยเว็บเบราว์เซอร์ได้เลย หน้าแรกจะลิงก์ไปยัง `booking/court-booking.html`
 
 ### เปิดผ่าน local server
 
@@ -66,7 +66,7 @@ python -m http.server 4173
 
 - แก้เนื้อหาและลิงก์หน้าแรกได้ใน `index.html`
 - แก้สี ฟอนต์ และ responsive ของหน้าแรกได้ใน `home/home.css`
-- แก้หน้าและฟอร์มจองสนามได้ใน `booking/index.html`
+- แก้หน้าและฟอร์มจองสนามได้ใน `booking/court-booking.html`
 - แก้สไตล์และพฤติกรรมฟอร์มได้ใน `booking/booking.css` และ `booking/booking.js`
 - หน้าเนื้อหาแต่ละหัวข้อใช้ไฟล์ HTML แยกใน `booking/` และใช้ `booking/topic.css` ร่วมกัน
 - ภาพสนามและฟอนต์โหลดจาก Google Fonts และ Unsplash จึงต้องเชื่อมต่ออินเทอร์เน็ตเพื่อให้แสดงผลครบถ้วน

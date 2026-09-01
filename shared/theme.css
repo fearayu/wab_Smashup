@@ -1,0 +1,50 @@
+/* SMASHUP — Sport Modern theme */
+:root{--navy:#0b3a5b;--navy-deep:#062b45;--blue:#1683b4;--blue-light:#e8f5fb;--orange:#f4511e;--orange-bright:#ff6b35;--cream:#f7f5f1;--ink:#12212b;--muted:#62717b;--line:#d7e1e7}
+body{background:var(--cream);color:var(--ink)}
+.site-header,.booking-header,.topbar{background:rgba(255,255,255,.97);border-bottom:3px solid var(--blue);box-shadow:0 5px 18px rgba(6,43,69,.08)}
+.brand-mark{background:var(--orange)!important;border-radius:3px;box-shadow:3px 3px 0 var(--navy)}
+.brand strong{color:var(--navy);letter-spacing:.1em}.brand small{color:var(--muted)}
+.main-nav a:hover,.main-nav .active,.back,.back-link{color:var(--orange)}
+.button,.topic-button,.auth-card button[type=submit],.primary{background:var(--orange)!important;border-radius:5px;box-shadow:0 4px 0 #bf3613;transition:transform .18s ease,box-shadow .18s ease}
+.button:hover,.topic-button:hover,.auth-card button[type=submit]:hover,.primary:hover{box-shadow:0 2px 0 #bf3613;transform:translateY(2px)}
+.topic-sidebar{background:linear-gradient(180deg,var(--navy),#0d5279)!important;box-shadow:4px 0 22px rgba(6,43,69,.2)!important}
+.topic-sidebar .group-title{background:rgba(3,34,57,.58)!important}.topic-sidebar .group-title:hover,.topic-sidebar .group-title:focus-visible,.topic-sidebar .sidebar-group.is-open .group-title{background:#075b92!important}
+.topic-sidebar .sidebar-submenu a.active,.topic-sidebar .sidebar-submenu a:hover,.topic-sidebar .sidebar-submenu a:focus-visible{background:#1e8bc0!important}
+.topic-sidebar>a:hover,.topic-sidebar>a:focus-visible,.topic-sidebar>a.active{background:#075b92!important}
+.topic-intro,.matching-main .hero{background:linear-gradient(135deg,var(--navy-deep),var(--navy))!important}.topic-intro h1 em,.matching-main .hero h1 em{color:var(--orange-bright)}
+.topic-content,.panel,.auth-card{border-color:var(--orange)!important;box-shadow:0 12px 28px rgba(6,43,69,.08)}
+.court-schedule th,.reservation-board th{background:#dceaf2!important;color:var(--navy)}
+.free,.reservation-board td.free{background:#2588bd!important}.date-tabs button.selected{background:var(--navy)!important}
+.queue-panel{background:var(--blue-light)!important;border-color:var(--blue)!important}.panel-title,.assign-button{background:var(--navy)!important}
+input:focus,select:focus{border-color:var(--blue)!important;outline:3px solid rgba(22,131,180,.16)!important}
+footer{background:var(--navy)!important}.status-dot{background:#68d391}
+
+/* Readable text contrast across light and dark SMASHUP sections. */
+body{color:#14232d}.topic-main>p,.topic-content p,.topic-content li,.panel p,.panel label,.save-note{color:#425764!important}
+.topic-intro h1,.matching-main .hero h1,.buffet-hero h1{color:#fff!important}
+.topic-intro p:last-child,.matching-main .hero p:not(.eyebrow),.buffet-hero>p:last-child{color:#d7e5ed!important}
+.topic-main h1,.topic-content h2,.panel h2,.panel-head p{color:#14232d}
+.booking-header,.topbar{color:#14232d}
+
+/* Visual polish: spacing, surfaces, and small interactive feedback. */
+body{background:radial-gradient(circle at 100% 0,#e6f4fa 0,transparent 28%),var(--cream)}
+.site-header,.booking-header,.topbar{backdrop-filter:blur(12px);min-height:70px}
+.site-header .brand,.booking-header .brand,.topbar .brand{position:relative;z-index:1}
+.topic-sidebar{border-right:1px solid rgba(255,255,255,.12)}
+.topic-sidebar>a,.topic-sidebar .group-title{letter-spacing:.01em}
+.topic-sidebar .sidebar-submenu a{border:1px solid transparent}
+.topic-sidebar .sidebar-submenu a.active{border-color:rgba(255,255,255,.12)}
+.topic-content,.panel,.auth-card,.booking-list,.player-list,.my-list,.service-form,.buffet-form{border-radius:10px}
+.topic-content,.panel,.auth-card{box-shadow:0 14px 36px rgba(6,43,69,.09)!important}
+.booking-summary article,.buffet-stats article,.service-note,.info-card{box-shadow:0 8px 20px rgba(6,43,69,.06)}
+.booking-summary article,.buffet-stats article{border-radius:8px}
+input,select,textarea{transition:border-color .18s ease,box-shadow .18s ease,background-color .18s ease}
+input:hover,select:hover,textarea:hover{border-color:#8bb7ce!important}
+button,a.button,.topic-button,.new-booking,.info-heading>a,.queue-link{transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+button:hover,a.button:hover,.topic-button:hover,.new-booking:hover,.info-heading>a:hover,.queue-link:hover{filter:brightness(1.04);transform:translateY(-1px)}
+table tr:not(:first-child):hover td{background:#f1f8fb}
+.table-scroll{border-radius:8px}
+@media(max-width:760px){.topic-content,.panel,.auth-card,.booking-list,.player-list,.my-list,.service-form,.buffet-form{border-radius:7px}.topic-sidebar{border-right:0}.site-header,.booking-header,.topbar{min-height:64px}}
+.topbar{gap:26px;justify-content:flex-start}.topbar .back{border-left:1px solid #d9e2e6;color:#0b5f88;font-size:14px;padding-left:26px}.topbar .auth-link{margin-left:auto}@media(max-width:760px){.topbar{gap:12px}.topbar .back{display:none}}
+.booking-header{gap:26px;justify-content:flex-start}.booking-header .back-link{border-left:1px solid #d9e2e6;color:#0b5f88;font-size:14px;padding-left:26px}.booking-header .auth-link{margin-left:auto}@media(max-width:760px){.booking-header{gap:12px}.booking-header .back-link{display:none}}
+.intro.section-pad{padding-bottom:78px;padding-top:78px}.intro-grid{align-items:center;gap:clamp(44px,6vw,90px);margin-top:34px}.intro-copy{max-width:540px}.intro-copy>p{margin-top:0}.stats{gap:0;justify-content:space-between}.stats>div{min-width:100px}.home-cta{gap:48px}.home-cta>div:last-child{align-items:center;display:flex;flex-wrap:wrap;gap:12px;justify-content:flex-start}.home-cta .button{justify-content:center;min-width:168px}@media(max-width:760px){.intro.section-pad{padding-bottom:64px;padding-top:64px}.intro-grid{margin-top:28px}.stats>div{min-width:0}.home-cta{gap:26px}.home-cta>div:last-child{width:100%}.home-cta .button{flex:1;min-width:0}}
