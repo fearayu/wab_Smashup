@@ -33,6 +33,19 @@ if (form && date && courts && estimate && success) {
   // init
   estimate.textContent = `฿ ${(Number(courts.value) * 130).toLocaleString('th-TH')}`;
 
+  // pre-bind dialog buttons (so they work even if submit fails early)
+  const dialogEarly=document.getElementById('bookingSuccessDialog');
+  const stayEarly=document.getElementById('bookingStayBtn');
+  const backEarly=document.getElementById('bookingBackBtn');
+  if(dialogEarly && stayEarly && !stayEarly.dataset.bound){
+    stayEarly.dataset.bound='1';
+    stayEarly.addEventListener('click',()=> dialogEarly.close());
+    backEarly.addEventListener('click',()=>{ dialogEarly.close(); location.href='../index.html'; });
+    dialogEarly.addEventListener('click',(e)=>{ const r=dialogEarly.getBoundingClientRect(); if(e.clientY<r.top||e.clientY>r.bottom||e.clientX<r.left||e.clientX>r.right) dialogEarly.close(); });
+    // expose for manual test
+    window.testBookingDialog=()=>{ const cur=getSession(); const el=document.getElementById('successUserId'); if(el) el.textContent=cur?cur.id:'ทดสอบ'; dialogEarly.showModal(); };
+  }
+
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     const cur=getSession();
@@ -77,17 +90,12 @@ if (form && date && courts && estimate && success) {
     const detailEl=document.getElementById('bookingSuccessDetail');
     if(userIdEl) userIdEl.textContent = cur.id || cur.name;
     if(detailEl) detailEl.textContent = `${booking.id} • ${booking.dateThai} ${timeVal} • ${courtsVal} คอร์ต • ฿${price}`;
-    if(dialog && typeof dialog.showModal==='function') dialog.showModal();
-    else alert(`จองเสร็จสิ้น รับข้อมูลแล้ว คุณ ${cur.id} ทีมงานจะติดต่อกลับเพื่อยืนยันการจองเร็ว ๆ นี้`);
-
-    // dialog buttons
-    const stayBtn=document.getElementById('bookingStayBtn');
-    const backBtn=document.getElementById('bookingBackBtn');
-    if(stayBtn && !stayBtn.dataset.bound){
-      stayBtn.dataset.bound='1';
-      stayBtn.addEventListener('click',()=>{ dialog.close(); });
-      backBtn.addEventListener('click',()=>{ dialog.close(); location.href='../index.html'; });
-      dialog.addEventListener('click',(e)=>{ const rect=dialog.getBoundingClientRect(); if(e.clientY<rect.top||e.clientY>rect.bottom||e.clientX<rect.left||e.clientX>rect.right) dialog.close(); });
+    // ensure dialog is in DOM and visible
+    if(dialog){
+      try{ if(typeof dialog.showModal==='function'){ if(!dialog.open) dialog.showModal(); } else { dialog.setAttribute('open',''); } }catch(e){ console.error('dialog error',e); alert(`จองเสร็จสิ้น รับข้อมูลแล้ว คุณ ${cur.id} ทีมงานจะติดต่อกลับเพื่อยืนยันการจองเร็ว ๆ นี้`); }
+      console.log('booking success dialog shown for',cur.id);
+    } else {
+      alert(`จองเสร็จสิ้น รับข้อมูลแล้ว คุณ ${cur.id} ทีมงานจะติดต่อกลับเพื่อยืนยันการจองเร็ว ๆ นี้`);
     }
   });
   // also allow closing via backdrop handled above
