@@ -22,12 +22,22 @@ form.addEventListener('submit', async event => {
   const username = document.querySelector('#username').value.trim();
   const email = document.querySelector('#email').value.trim().toLowerCase();
   const password = document.querySelector('#password').value;
+  const DEMO_CUSTOMERS = { 'customer01': '123456', 'player01': 'player123' };
   const isAdminAttempt = username === 'admin' && password === '12345';
-  if (!username || (!isAdminAttempt && password.length < 6) || (registerMode && !email)) { setFeedback('กรุณากรอกข้อมูลให้ครบ และรหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร', 'error'); return; }
+  const isDemoCustomer = !registerMode && DEMO_CUSTOMERS[username] === password;
+  if (!username || (!isAdminAttempt && !isDemoCustomer && password.length < 6) || (registerMode && !email)) { setFeedback('กรุณากรอกข้อมูลให้ครบ และรหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร', 'error'); return; }
   if (!registerMode && isAdminAttempt) {
     localStorage.setItem(SESSION_KEY, JSON.stringify({ id: 'admin', name: 'admin', email: 'admin@smashup.local', role: 'admin' }));
     setFeedback('เข้าสู่ระบบผู้ดูแลสำเร็จ กำลังพาไปแดชบอร์ด…', 'success');
     setTimeout(() => { const next = new URLSearchParams(location.search).get('next'); location.href = next && next.includes('admin') ? next : '../admin/index.html'; }, 500);
+    return;
+  }
+  if (isDemoCustomer) {
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ id: username, name: username, email: username + '@smashup.local', role: 'user' }));
+    // seed into users list for admin view if not exists
+    const usersSeed=getUsers(); if(!usersSeed.some(u=>u.username===username)){ usersSeed.push({id:username,username,name:username,email:username+'@smashup.local',passwordHash:'demo',role:'user',createdAt:new Date().toISOString()}); localStorage.setItem(USERS_KEY, JSON.stringify(usersSeed)); }
+    setFeedback('เข้าสู่ระบบสำเร็จ กำลังพาไปหน้าแรก…', 'success');
+    setTimeout(() => { location.href = nextPage(); }, 500);
     return;
   }
   const users = getUsers(); const passwordHash = await hashPassword(password); if (registerMode) { if (users.some(user => user.username === username || user.email === email)) { setFeedback('username หรืออีเมลนี้มีบัญชีอยู่แล้ว', 'error'); return; } const user = { id: crypto.randomUUID(), username, name: username, email, passwordHash, createdAt: new Date().toISOString() }; users.push(user); localStorage.setItem(USERS_KEY, JSON.stringify(users)); localStorage.setItem(SESSION_KEY, JSON.stringify({ id: user.id, name: user.username, email: user.email, role: 'user' })); setFeedback('สร้างบัญชีเรียบร้อย กำลังพาไปหน้าแรก…', 'success'); } else { const user = users.find(item => (item.username === username || (!item.username && item.email === username)) && item.passwordHash === passwordHash); if (!user) { setFeedback('username หรือรหัสผ่านไม่ถูกต้อง', 'error'); return; } localStorage.setItem(SESSION_KEY, JSON.stringify({ id: user.id, name: user.username || user.name || user.email, email: user.email, role: user.role || 'user' })); setFeedback('เข้าสู่ระบบสำเร็จ กำลังพาไปต่อ…', 'success'); } setTimeout(() => { location.href = nextPage(); }, 500); });
