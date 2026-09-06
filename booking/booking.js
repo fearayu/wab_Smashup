@@ -64,12 +64,31 @@ if (form && date && courts && estimate && success) {
     const list=getBookings();
     list.unshift(booking);
     saveBookings(list);
-    // also update legacy queue for demo
-    success.innerHTML = `✅ รับคำขอจองแล้ว <strong>${booking.id}</strong> — คุณ ${nameVal} วันที่ ${booking.dateThai} เวลา ${timeVal} (${courtsVal} คอร์ต • ฿${price}) <br>สถานะ <span style="color:#b7790f">รอยืนยัน</span> — ติดตามได้ที่หลังบ้าน Admin จะอนุมัติภายใน 15 นาที <a href="../admin/index.html" style="color:var(--orange)">ดูสถานะ →</a>`;
-    success.style.color='#0f2f4a';
+    // clear inputs
     form.reset();
     date.min = new Date().toISOString().split('T')[0];
     estimate.textContent = `฿ ${(Number(courts.value||1) * 130).toLocaleString('th-TH')}`;
-    if(cur && form.elements.name) form.elements.name.value=cur.name;
+    if(cur && form.elements.name) form.elements.name.value='';
+    if(form.elements.phone) form.elements.phone.value='';
+    success.textContent='';
+    // show dialog: จองเสร็จสิ้น รับข้อมูลแล้ว คุณ ..(id ลูกค้า) ทีมงานจะติดต่อกลับ...
+    const dialog=document.getElementById('bookingSuccessDialog');
+    const userIdEl=document.getElementById('successUserId');
+    const detailEl=document.getElementById('bookingSuccessDetail');
+    if(userIdEl) userIdEl.textContent = cur.id || cur.name;
+    if(detailEl) detailEl.textContent = `${booking.id} • ${booking.dateThai} ${timeVal} • ${courtsVal} คอร์ต • ฿${price}`;
+    if(dialog && typeof dialog.showModal==='function') dialog.showModal();
+    else alert(`จองเสร็จสิ้น รับข้อมูลแล้ว คุณ ${cur.id} ทีมงานจะติดต่อกลับเพื่อยืนยันการจองเร็ว ๆ นี้`);
+
+    // dialog buttons
+    const stayBtn=document.getElementById('bookingStayBtn');
+    const backBtn=document.getElementById('bookingBackBtn');
+    if(stayBtn && !stayBtn.dataset.bound){
+      stayBtn.dataset.bound='1';
+      stayBtn.addEventListener('click',()=>{ dialog.close(); });
+      backBtn.addEventListener('click',()=>{ dialog.close(); location.href='../index.html'; });
+      dialog.addEventListener('click',(e)=>{ const rect=dialog.getBoundingClientRect(); if(e.clientY<rect.top||e.clientY>rect.bottom||e.clientX<rect.left||e.clientX>rect.right) dialog.close(); });
+    }
   });
+  // also allow closing via backdrop handled above
 }

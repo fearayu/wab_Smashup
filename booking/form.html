@@ -70,6 +70,19 @@
       </section>
     </main>
   </div>
+  <dialog id="bookingSuccessDialog" style="border:0;border-radius:16px;padding:0;max-width:480px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,.2)">
+    <div style="padding:28px 24px;text-align:center">
+      <div style="width:56px;height:56px;border-radius:50%;background:#e6f6ea;color:var(--green, #16a34a);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px">✓</div>
+      <h3 style="margin:0 0 8px;font:700 20px 'Space Grotesk',sans-serif;color:#0f2f4a">จองเสร็จสิ้น</h3>
+      <p id="bookingSuccessText" style="margin:0;color:#5e5a56;font-size:15px;line-height:1.7">รับข้อมูลแล้ว คุณ <strong id="successUserId">-</strong> ทีมงานจะติดต่อกลับเพื่อยืนยันการจองเร็ว ๆ นี้</p>
+      <p id="bookingSuccessDetail" style="margin:10px 0 0;color:#77736f;font-size:13px"></p>
+      <div style="display:flex;gap:10px;margin-top:20px">
+        <button id="bookingStayBtn" type="button" style="flex:1;background:var(--orange,#f4511e);color:#fff;border:0;border-radius:10px;padding:12px;font:600 14px 'Kanit',sans-serif;cursor:pointer">ตกลง</button>
+        <button id="bookingBackBtn" type="button" style="flex:1;background:#fff;color:#0f2f4a;border:1.5px solid #e8e3dd;border-radius:10px;padding:12px;font:600 14px 'Kanit',sans-serif;cursor:pointer">ย้อนกลับหน้าแรก</button>
+      </div>
+    </div>
+  </dialog>
+  <style>#bookingSuccessDialog::backdrop{background:rgba(15,47,74,.45)}#bookingSuccessDialog[open]{animation:pop .18s ease}@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}</style>
   <script>document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));</script>
   <script src="booking.js"></script>
 </body>
