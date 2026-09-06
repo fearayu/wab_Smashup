@@ -22,9 +22,12 @@ form.addEventListener('submit', async event => {
   const username = document.querySelector('#username').value.trim();
   const email = document.querySelector('#email').value.trim().toLowerCase();
   const password = document.querySelector('#password').value;
-  const DEMO_CUSTOMERS = { 'customer01': '123456', 'player01': 'player123' };
-  const isAdminAttempt = username === 'admin' && password === '12345';
-  const isDemoCustomer = !registerMode && DEMO_CUSTOMERS[username] === password;
+  const DEMO_CUSTOMERS = { 'customer01': '123456', 'player01': 'player123', 'customer': '123456' };
+  const DEMO_CUSTOMERS_NORM = Object.fromEntries(Object.entries(DEMO_CUSTOMERS).map(([k,v])=>[k.toLowerCase().trim(), v.trim()]));
+  const userKey = username.toLowerCase().trim();
+  const passKey = password.trim();
+  const isAdminAttempt = userKey === 'admin' && passKey === '12345';
+  const isDemoCustomer = !registerMode && DEMO_CUSTOMERS_NORM[userKey] === passKey;
   if (!username || (!isAdminAttempt && !isDemoCustomer && password.length < 6) || (registerMode && !email)) { setFeedback('กรุณากรอกข้อมูลให้ครบ และรหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร', 'error'); return; }
   if (!registerMode && isAdminAttempt) {
     localStorage.setItem(SESSION_KEY, JSON.stringify({ id: 'admin', name: 'admin', email: 'admin@smashup.local', role: 'admin' }));
@@ -33,9 +36,10 @@ form.addEventListener('submit', async event => {
     return;
   }
   if (isDemoCustomer) {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ id: username, name: username, email: username + '@smashup.local', role: 'user' }));
+    const normUsername = userKey;
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ id: normUsername, name: normUsername, email: normUsername + '@smashup.local', role: 'user' }));
     // seed into users list for admin view if not exists
-    const usersSeed=getUsers(); if(!usersSeed.some(u=>u.username===username)){ usersSeed.push({id:username,username,name:username,email:username+'@smashup.local',passwordHash:'demo',role:'user',createdAt:new Date().toISOString()}); localStorage.setItem(USERS_KEY, JSON.stringify(usersSeed)); }
+    const usersSeed=getUsers(); if(!usersSeed.some(u=>u.username.toLowerCase()===normUsername)){ usersSeed.push({id:normUsername,username:normUsername,name:normUsername,email:normUsername+'@smashup.local',passwordHash:'demo',role:'user',createdAt:new Date().toISOString()}); localStorage.setItem(USERS_KEY, JSON.stringify(usersSeed)); }
     setFeedback('เข้าสู่ระบบสำเร็จ กำลังพาไปหน้าแรก…', 'success');
     setTimeout(() => { location.href = nextPage(); }, 500);
     return;
