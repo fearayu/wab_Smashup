@@ -1,1 +1,76 @@
-<!doctype html><html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>จองสนามแบดมินตัน | SMASHUP</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="booking.css"></head><body class="form-page"><header class="booking-header"><a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a><a class="back-link" href="index.html">← หน้าจองสนาม</a></header><aside class="topic-sidebar" aria-label="หัวข้อการใช้งาน"><a href="rules.html"><span>▱</span>กฎการใช้สนาม</a><div class="sidebar-group is-open"><button class="group-title" type="button" aria-expanded="true"><span>⌄</span>จองสนาม</button><div class="sidebar-submenu"><a class="active" href="form.html"><i>▣</i>จองสนามแบดมินตัน</a><a href="booking-info.html"><i>▦</i>ข้อมูลการจอง</a><a href="buffet-booking.html"><i>＋</i>จองตีบุฟเฟต์</a><a href="buffet-info.html"><i>▤</i>ข้อมูลตีบุฟเฟต์</a><a href="buffet-queue.html"><i>≡</i>คิวตีบุฟเฟต์</a></div></div><div class="sidebar-group"><button class="group-title" type="button" aria-expanded="false"><span>⌄</span>บุฟเฟ่ต์สำหรับมือใหม่</button><div class="sidebar-submenu"><a href="buffet-booking.html"><i>＋</i>จองตีบุฟเฟต์</a><a href="buffet-info.html"><i>▤</i>ข้อมูลตีบุฟเฟต์</a><a href="buffet-queue.html"><i>≡</i>คิวตีบุฟเฟต์</a></div></div><div class="sidebar-group"><button class="group-title" type="button" aria-expanded="false"><span>⌄</span>การสมัครแข่งขัน</button><div class="sidebar-submenu"><a href="tournament.html"><i>🏆</i>สมัครแข่งขัน</a></div></div><div class="sidebar-group"><button class="group-title" type="button" aria-expanded="false"><span>⌄</span>จองสนามซ้อม</button><div class="sidebar-submenu"><a href="practice.html"><i>▣</i>จองสนามซ้อม</a></div></div><div class="sidebar-group"><button class="group-title" type="button" aria-expanded="false"><span>⌄</span>ลงชื่อซื้อของ</button><div class="sidebar-submenu"><a href="shop.html"><i>＋</i>ลงทะเบียน/ซื้อของ</a></div></div><a href="../matching/index.html"><span>🏸</span>หาคู่เล่น</a></aside><main><section class="topic-intro"><p class="eyebrow">BOOK A COURT</p><h1>จองสนาม<br><em>แบดมินตัน</em></h1><p>เลือกรอบเวลา 11:00–23:00 และคอร์ตที่ต้องการ แล้วส่งคำขอจอง</p></section><section class="court-schedule"><div class="schedule-heading"><h2>ตารางคอร์ตตัวอย่าง</h2><span>คอร์ต 1–11, A และ B</span></div><div class="schedule-scroll"><table><thead><tr><th>เวลา / คอร์ต</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>A</th><th>B</th></tr></thead><tbody><tr><th>11:00–12:00</th><td class="free">130 ฿</td><td class="free">130 ฿</td><td class="free">130 ฿</td><td class="free">130 ฿</td><td class="free">130 ฿</td><td class="free">130 ฿</td><td class="free">130 ฿</td><td class="free">130 ฿</td><td class="free">130 ฿</td><td class="free">130 ฿</td><td class="free">130 ฿</td><td class="free">130 ฿</td><td class="free">130 ฿</td></tr></tbody></table></div><p class="schedule-note"><span class="legend free"></span> ว่างสำหรับจอง · อัตราตัวอย่าง 130 บาท/คอร์ต/ชั่วโมง</p></section><section class="booking-panel"><div class="booking-photo" aria-label="ภาพสนามแบดมินตัน"></div><form id="booking-form"><div class="form-heading"><span>รายละเอียดการจอง</span><small>* จำเป็น</small></div><label>วันที่ <b>*</b><input id="date" name="date" type="date" required></label><div class="form-row"><label>เวลาเริ่ม <b>*</b><select name="time" required><option value="">เลือกเวลา</option><option>11:00</option><option>13:00</option><option>15:00</option><option>17:00</option><option>19:00</option><option>21:00</option></select></label><label>จำนวนคอร์ต <b>*</b><select id="courts" name="courts"><option value="1">1 คอร์ต</option><option value="2">2 คอร์ต</option><option value="3">3 คอร์ต</option><option value="4">4 คอร์ต</option></select></label></div><div class="form-row"><label>ชื่อผู้จอง <b>*</b><input name="name" placeholder="ชื่อ - นามสกุล" required></label><label>เบอร์โทรศัพท์ <b>*</b><input name="phone" type="tel" placeholder="08X-XXX-XXXX" required></label></div><div class="estimate"><span>ค่าบริการโดยประมาณ</span><strong id="estimate">฿ 130</strong><small>฿ 130 / คอร์ต / ชั่วโมง</small></div><button type="submit">ยืนยันการจอง <span>↗</span></button><p class="note">รายการตัวอย่าง: โปรดแนบหลักฐานการชำระเงินภายใน 15 นาที</p><p id="success" role="status"></p></form></section></main><script src="booking.js"></script><script>const sidebar=document.querySelector('.topic-sidebar');sidebar.querySelectorAll('.group-title').forEach(button=>button.addEventListener('click',()=>{const group=button.closest('.sidebar-group'),isOpen=!group.classList.contains('is-open');sidebar.querySelectorAll('.sidebar-group.is-open').forEach(openGroup=>{openGroup.classList.remove('is-open');openGroup.querySelector('.group-title').setAttribute('aria-expanded','false')});group.classList.toggle('is-open',isOpen);button.setAttribute('aria-expanded',String(isOpen))}));</script></body></html>
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>จองสนามแบดมินตัน | SMASHUP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <link rel="stylesheet" href="booking.css">
+  <style>
+    html,body{height:auto;overflow:auto}
+    .app-shell main{height:auto;overflow:visible;margin-left:0}
+    .content.booking-content{padding:0;background:transparent}
+    .topic-intro{background:var(--ink);color:#fff;padding:56px clamp(24px,5vw,56px)}
+    .topic-intro h1{font:700 clamp(40px,6vw,72px)/.9 'Space Grotesk',sans-serif;letter-spacing:-.04em;margin:12px 0}
+    .topic-intro h1 em{color:var(--orange);font-style:normal}
+    .court-schedule,.booking-panel{max-width:none;margin:0}
+    .booking-panel{margin:0}
+    .form-page main{overflow-y:visible}
+    @media(max-width:860px){.topic-intro{padding:40px 20px}}
+  </style>
+</head>
+<body class="form-page">
+  <header class="app-topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
+    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a class="active" href="index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a href="../appointments/index.html">นัดหมาย</a></nav>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>SMASHUP</strong><span>จองสนาม • Booking</span></div>
+      <nav>
+        <a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a>
+        <a class="active" href="index.html"><i class="icon">▦</i> จองสนาม</a>
+        <a href="../matching/index.html"><i class="icon">◎</i> หาคู่เล่น</a>
+        <a href="../appointments/index.html"><i class="icon">◈</i> นัดหมายของฉัน</a>
+        <a href="buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a>
+      </nav>
+      <div class="section-label">ช่วยเหลือ</div>
+      <nav>
+        <a href="rules.html"><i class="icon">▱</i> กฎการใช้สนาม</a>
+        <a href="shop.html"><i class="icon">♡</i> ร้านค้า</a>
+      </nav>
+    </aside>
+    <main class="content booking-content">
+      <section class="topic-intro">
+        <p class="eyebrow">BOOK A COURT</p>
+        <h1>จองสนาม<br><em>แบดมินตัน</em></h1>
+        <p>เลือกวันที่ เวลา และจำนวนคอร์ตที่ต้องการ — ระบบจะคำนวณราคาและสถานะการจองให้ทันที</p>
+      </section>
+      <section class="court-schedule">
+        <div class="schedule-heading"><h2>ตารางคอร์ตว่าง</h2><span>คอร์ต 1–11, A และ B</span></div>
+        <div class="schedule-scroll"><table><thead><tr><th>เวลา / คอร์ต</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>A</th><th>B</th></tr></thead><tbody><tr><th>11:00–12:00</th><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td></tr><tr><th>19:00–20:00</th><td class="reserved">จองแล้ว</td><td class="reserved">จองแล้ว</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td></tr></tbody></table></div>
+        <p class="schedule-note"><span class="legend free"></span> ว่าง <span class="legend reserved"></span> จองแล้ว — ราคา 130 บาท / คอร์ต / ชั่วโมง</p>
+      </section>
+      <section class="booking-panel">
+        <div class="booking-photo" aria-label="สนามแบดมินตัน"></div>
+        <form id="booking-form">
+          <div class="form-heading"><span>กรอกข้อมูลการจอง</span><small>* จำเป็น</small></div>
+          <label>วันที่ต้องการ <b>*</b><input id="date" name="date" type="date" required></label>
+          <div class="form-row"><label>เวลาเริ่มต้น <b>*</b><select name="time" required><option value="">เลือกเวลา</option><option>11:00</option><option>13:00</option><option>15:00</option><option>17:00</option><option>19:00</option><option>21:00</option></select></label><label>จำนวนคอร์ต <b>*</b><select id="courts" name="courts"><option value="1">1 คอร์ต</option><option value="2">2 คอร์ต</option><option value="3">3 คอร์ต</option><option value="4">4 คอร์ต</option></select></label></div>
+          <div class="form-row"><label>ชื่อผู้จอง <b>*</b><input name="name" placeholder="เช่น สมชาย" required></label><label>เบอร์โทรศัพท์ <b>*</b><input name="phone" type="tel" placeholder="08X-XXX-XXXX" required></label></div>
+          <div class="estimate"><span>ยอดโดยประมาณ</span><strong id="estimate">฿ 130</strong><small>฿ 130 / คอร์ต / ชั่วโมง</small></div>
+          <button type="submit">ยืนยันการจอง <span>→</span></button>
+          <p class="note">ต้องเข้าสู่ระบบก่อนส่งคำขอจอง — ระบบจะแสดงข้อความยืนยันหลังส่งสำเร็จ</p>
+          <p id="success" role="status"></p>
+        </form>
+      </section>
+    </main>
+  </div>
+  <script>document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));</script>
+  <script src="booking.js"></script>
+</body>
+</html>
