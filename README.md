@@ -71,6 +71,15 @@ python -m http.server 4173
 - หน้าเนื้อหาแต่ละหัวข้อใช้ไฟล์ HTML แยกใน `booking/` และใช้ `booking/topic.css` ร่วมกัน
 - ภาพสนามและฟอนต์โหลดจาก Google Fonts และ Unsplash จึงต้องเชื่อมต่ออินเทอร์เน็ตเพื่อให้แสดงผลครบถ้วน
 
+## บัญชีผู้ดูแลระบบ (Admin)
+
+- URL: `admin/index.html` (ถูกป้องกันด้วย `shared/admin-guard.js` — ต้องล็อกอินก่อน)
+- ID: `admin`
+- รหัสผ่าน: `12345`
+- ล็อกอินที่ `auth/index.html` แล้วระบบจะพาไปหน้าแดชบอร์ดอัตโนมัติ — เข้าได้จากล็อกอินเท่านั้น ไม่มีลิงก์ Admin ใน Sidebar ของผู้ใช้ทั่วไป (`matching`, `appointments`, `booking`, `buffet-registration`)
+
+> หมายเหตุ: การตรวจสอบสิทธิ์เป็นแบบ Frontend เท่านั้น (เก็บ session ใน localStorage) เหมาะสำหรับเดโม/ต้นแบบ
+
 ## ข้อมูลติดต่อในตัวอย่าง
 
 - โทร. 091-234-5678
