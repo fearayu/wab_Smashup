@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ลงทะเบียนตีบุฟเฟต์ | SMASHUP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <link rel="stylesheet" href="buffet-registration.css">
+</head>
+<body>
+  <header class="app-topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
+    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a href="index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a class="active" href="buffet-registration.html">ตีบุฟเฟต์</a></nav>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>SMASHUP</strong><span>บุฟเฟต์ • Buffet</span></div>
+      <nav>
+        <a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a>
+        <a href="index.html"><i class="icon">▦</i> จองสนาม</a>
+        <a href="../matching/index.html"><i class="icon">◎</i> หาคู่เล่น</a>
+        <a class="active" href="buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a>
+        <a href="../appointments/index.html"><i class="icon">◈</i> นัดหมาย</a>
+        <a href="../admin/index.html"><i class="icon">⚙</i> ผู้ดูแลระบบ</a>
+      </nav>
+      <div class="section-label">บุฟเฟต์</div>
+      <nav>
+        <a href="buffet-queue.html"><i class="icon">☰</i> คิวตีบุฟเฟต์</a>
+        <a href="buffet-info.html"><i class="icon">▤</i> ข้อมูลบุฟเฟต์</a>
+      </nav>
+    </aside>
+    <main class="content">
+      <div class="content-inner buffet-layout">
+        <div class="buffet-main">
+          <p class="eyebrow">04 / BUFFET REGISTRATION</p>
+          <h1 class="page-title">ลงทะเบียน<em style="color:var(--orange);font-style:normal">ตีบุฟเฟต์</em></h1>
+          <p class="page-subtitle">เลือกเวลาที่เปิดรับและลงทะเบียนเพื่อรับคิวของคุณ</p>
+
+          <!-- Top: Time slots -->
+          <section class="slot-section">
+            <h2>รอบเวลาที่เปิดรับ</h2>
+            <div class="slot-grid" id="slotGrid">
+              <article class="slot-card active" data-slot="18:00 - 21:00">
+                <div class="slot-time">18:00 - 21:00 น.</div>
+                <div class="slot-cap">รับ 20 คน • ว่าง <strong>8</strong> ที่</div>
+                <span class="slot-badge">กำลังเปิดรับ</span>
+              </article>
+              <article class="slot-card" data-slot="13:00 - 16:00">
+                <div class="slot-time">13:00 - 16:00 น.</div>
+                <div class="slot-cap">รับ 15 คน • ว่าง <strong>3</strong> ที่</div>
+                <span class="slot-badge muted">รอบบ่าย</span>
+              </article>
+              <article class="slot-card" data-slot="19:00 - 22:00">
+                <div class="slot-time">19:00 - 22:00 น.</div>
+                <div class="slot-cap">รับ 20 คน • เต็ม</div>
+                <span class="slot-badge full">เต็มแล้ว</span>
+              </article>
+            </div>
+          </section>
+
+          <!-- Middle: Form -->
+          <section class="form-panel">
+            <h2>ฟอร์มลงทะเบียน</h2>
+            <form id="buffetForm">
+              <label>เลือกรอบเวลา <b>*</b>
+                <select id="slotSelect" required>
+                  <option value="">เลือกรอบเวลา</option>
+                  <option value="18:00 - 21:00">รอบ 18:00 - 21:00 น. (รับ 20 คน)</option>
+                  <option value="13:00 - 16:00">รอบ 13:00 - 16:00 น. (รับ 15 คน)</option>
+                  <option value="09:00 - 12:00">รอบ 09:00 - 12:00 น. (รับ 15 คน)</option>
+                </select>
+              </label>
+              <label>ระดับฝีมือของคุณ <b>*</b>
+                <select id="levelSelect" required>
+                  <option value="">เลือกระดับฝีมือ</option>
+                  <option value="beginner">Beginner — มือใหม่</option>
+                  <option value="intermediate">Intermediate — ระดับกลาง</option>
+                  <option value="advanced">Advanced — ระดับสูง</option>
+                </select>
+              </label>
+              <label>ชื่อเล่น (สำหรับเรียกคิว)
+                <input id="nickName" type="text" placeholder="เช่น มินท์" maxlength="20">
+              </label>
+              <button type="submit" class="btn-primary full">ลงทะเบียนรับคิว</button>
+              <p id="formMessage" class="form-message" role="status"></p>
+            </form>
+          </section>
+        </div>
+
+        <!-- Right/Bottom: Queue status -->
+        <aside class="queue-status" id="queueStatus">
+          <div class="queue-label">สถานะคิวของคุณ</div>
+          <div class="queue-number" id="queueNumber">—</div>
+          <div class="queue-state" id="queueState">ยังไม่ได้ลงทะเบียน</div>
+          <div class="queue-detail" id="queueDetail">เลือกรอบเวลาและกดลงทะเบียน ระบบจะออกเลขคิวให้ทันที</div>
+          <div class="queue-meta">
+            <div><small>รอบเวลา</small><strong id="metaSlot">—</strong></div>
+            <div><small>ระดับ</small><strong id="metaLevel">—</strong></div>
+          </div>
+          <button class="btn-secondary full" id="cancelQueue" type="button" hidden>ยกเลิกคิว</button>
+        </aside>
+      </div>
+    </main>
+  </div>
+  <script src="buffet-registration.js"></script>
+</body>
+</html>

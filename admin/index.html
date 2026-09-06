@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>แดชบอร์ดผู้ดูแลระบบ | SMASHUP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header class="app-topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
+    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a href="../booking/index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a class="active" href="index.html">แอดมิน</a></nav>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>ADMIN PANEL</strong><span>ผู้ดูแลระบบ • SMASHUP</span></div>
+      <nav>
+        <a class="active" href="index.html"><i class="icon">◈</i> ภาพรวม</a>
+        <a href="#requests"><i class="icon">▦</i> คำขอล่าสุด</a>
+        <a href="../booking/index.html"><i class="icon">▣</i> จัดการคอร์ต</a>
+        <a href="../appointments/index.html"><i class="icon">◎</i> จัดการนัดหมาย</a>
+      </nav>
+      <div class="section-label">ระบบ</div>
+      <nav>
+        <a href="../index.html"><i class="icon">⌂</i> กลับหน้าแรก</a>
+        <a href="../matching/index.html"><i class="icon">↗</i> ดูหน้าผู้ใช้</a>
+      </nav>
+    </aside>
+    <main class="content">
+      <div class="content-inner">
+        <p class="eyebrow">03 / ADMIN DASHBOARD</p>
+        <h1 class="page-title">แดชบอร์ด<em style="color:var(--orange);font-style:normal">ผู้ดูแล</em></h1>
+        <p class="page-subtitle">สรุปภาพรวมการใช้งานและจัดการคำขอล่าสุดแบบเรียลไทม์</p>
+
+        <!-- Overview 3 cards -->
+        <section class="stat-grid">
+          <article class="stat-card">
+            <div class="stat-icon orange">◉</div>
+            <div><small>ผู้ใช้งานทั้งหมด</small><strong id="statUsers">1,248</strong><span class="trend up">+12% จากเมื่อวาน</span></div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon blue">▦</div>
+            <div><small>การจองคอร์ตวันนี้</small><strong id="statBookings">86</strong><span class="trend up">+8% จากเมื่อวาน</span></div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon amber">◈</div>
+            <div><small>คำขอรอดำเนินการ</small><strong id="statPending">14</strong><span class="trend down">ต้องตรวจสอบ</span></div>
+          </article>
+        </section>
+
+        <!-- Management Table -->
+        <section class="table-section" id="requests">
+          <div class="table-header">
+            <h2>คำขอล่าสุด <span>Recent Requests</span></h2>
+            <div class="table-actions">
+              <input id="searchTable" type="search" placeholder="ค้นหาชื่อผู้จอง...">
+              <select id="filterStatus"><option value="">ทุกสถานะ</option><option value="รอยืนยัน">รอยืนยัน</option><option value="ยืนยันแล้ว">ยืนยันแล้ว</option><option value="ยกเลิก">ยกเลิก</option></select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="admin-table" id="adminTable">
+              <thead><tr><th>วันที่</th><th>ชื่อผู้จอง</th><th>รายการ</th><th>สถานะ</th><th>Action</th></tr></thead>
+              <tbody id="adminBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="admin.js"></script>
+</body>
+</html>
