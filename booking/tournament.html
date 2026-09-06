@@ -1,1 +1,48 @@
-<!doctype html><html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>การสมัครแข่งขัน | SMASHUP</title><link rel="stylesheet" href="topic.css"></head><body><header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a><a class="back" href="index.html">← หน้าจองสนาม</a></header><main class="topic-main"><p class="eyebrow">06 / TOURNAMENT</p><h1>การสมัคร<br><em>แข่งขัน</em></h1><p>เลือกงานแข่งขันก่อนเริ่มขั้นตอนสมัครและตรวจรายชื่อผู้สมัคร</p><section class="topic-content"><h2>โปรดเลือกงานแข่ง</h2><ul><li>CHIANGRAI CHAMPIONSHIP #2</li><li>กรอกรายละเอียดผู้สมัครให้ครบถ้วนก่อนดำเนินการต่อ</li><li>ตรวจสอบรายชื่อผู้สมัครจากเมนูการแข่งขันได้</li></ul><a class="topic-button" href="index.html">ดำเนินการต่อ ↗</a></section></main><script src="topic-nav.js"></script></body></html>
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>การสมัครแข่งขัน | SMASHUP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <link rel="stylesheet" href="topic.css">
+  <style>html,body{height:auto;overflow:auto}.app-shell main{height:auto;overflow:visible;margin-left:0}.content.booking-content{padding:0;background:transparent}.topic-main{margin-left:0!important;max-width:none!important;padding:48px clamp(20px,4vw,56px)!important}</style>
+</head>
+<body>
+  <header class="app-topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
+    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a class="active" href="index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a href="../appointments/index.html">นัดหมาย</a></nav>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>SMASHUP</strong><span>จองสนาม • Booking</span></div>
+      <nav>
+        <a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a>
+        <a class="active" href="index.html"><i class="icon">▦</i> จองสนาม</a>
+        <a href="../matching/index.html"><i class="icon">◎</i> หาคู่เล่น</a>
+        <a href="../appointments/index.html"><i class="icon">◈</i> นัดหมายของฉัน</a>
+        <a href="buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a>
+      </nav>
+      <div class="section-label">ช่วยเหลือ</div>
+      <nav>
+        <a href="rules.html"><i class="icon">▱</i> กฎการใช้สนาม</a>
+        <a href="shop.html"><i class="icon">♡</i> ร้านค้า</a>
+      </nav>
+    </aside>
+    <main class="content booking-content">
+      <div class="topic-main">
+        <p class="eyebrow">06 / TOURNAMENT</p>
+        <h1>การสมัคร<br><em>แข่งขัน</em></h1>
+        <p>เลือกงานแข่งขันก่อนเริ่มขั้นตอนสมัครและตรวจรายชื่อผู้สมัคร</p>
+        <section class="topic-content"><h2>โปรดเลือกงานแข่ง</h2><ul><li>CHIANGRAI CHAMPIONSHIP #2</li><li>กรอกรายละเอียดผู้สมัครให้ครบถ้วนก่อนดำเนินการต่อ</li><li>ตรวจสอบรายชื่อผู้สมัครจากเมนูการแข่งขันได้</li></ul><a class="topic-button" href="index.html">ดำเนินการต่อ ↗</a></section>
+      </div>
+    </main>
+  </div>
+  <script>document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));</script>
+  <script src="../shared/auth-ui.js"></script>
+</body>
+</html>
