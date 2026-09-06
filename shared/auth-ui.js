@@ -1,7 +1,7 @@
 (function () {
   const SESSION_KEY = 'smashup_session_v1';
   const session = (() => { try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { return null; } })();
-  const isNested = /\/(booking|matching)\//.test(location.pathname.replace(/\\/g, '/'));
+  const isNested = /\/(booking|matching|appointments|admin)\//.test(location.pathname.replace(/\\/g, '/'));
   const authUrl = `${isNested ? '../' : ''}auth/index.html`;
   const header = document.querySelector('.site-header, .booking-header, .topbar');
   if (!header || header.querySelector('.auth-link')) return;
