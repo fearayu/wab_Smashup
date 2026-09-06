@@ -1,0 +1,34 @@
+/* Courts management – extends admin.css */
+.court-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
+.c-stat{background:#fff;border:1px solid var(--line);border-top:4px solid var(--orange);border-radius:14px;padding:18px 20px}
+.c-stat:nth-child(2){border-top-color:#1683b4}
+.c-stat:nth-child(3){border-top-color:#94a3b8}
+.c-stat small{color:var(--muted);font-size:12px}
+.c-stat strong{display:block;font:700 30px 'Space Grotesk',sans-serif;line-height:1;margin:6px 0}
+.c-stat span{font-size:12px;color:var(--muted)}
+.c-stat span.ok{color:var(--green)}
+.c-stat span.warn{color:#d97706}
+#courtCount{color:var(--muted);font:400 12px 'Kanit',sans-serif;margin-left:8px}
+
+.admin-table td .price{font-weight:600}
+.status.open{background:#e6f6ea;color:var(--green);border:1px solid #bfe8c6}
+.status.busy{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.status.maintenance{background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0}
+
+.btn-toggle,.btn-edit{border-radius:8px;padding:7px 12px;font:600 13px 'Kanit',sans-serif;cursor:pointer;border:0}
+.btn-toggle{background:#0f2f4a;color:#fff}
+.btn-toggle.off{background:#f59e0b}
+.btn-edit{background:#fff;color:var(--orange);border:1px solid #ffd8c8}
+.btn-edit:hover{background:#fff3ef}
+
+.edit-dialog{border:1px solid var(--line);border-radius:16px;padding:24px;max-width:420px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,.18)}
+.edit-dialog::backdrop{background:rgba(15,47,74,.42)}
+.edit-dialog h3{margin:0 0 14px;font:700 18px 'Space Grotesk',sans-serif}
+.edit-dialog label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:#4a4642;margin-top:12px}
+.edit-dialog input,.edit-dialog select{border:1px solid #d8d2cb;border-radius:10px;padding:10px 12px;font:400 14px 'Kanit',sans-serif;outline:none}
+.edit-dialog input:focus,.edit-dialog select:focus{border-color:var(--orange)}
+.dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+.note{color:var(--muted);font-size:12px;margin-top:12px}
+
+@media(max-width:900px){.court-stats{grid-template-columns:1fr}}
+@media(max-width:640px){.table-actions{width:100%;flex-wrap:wrap}.table-actions input{flex:1;min-width:140px}}

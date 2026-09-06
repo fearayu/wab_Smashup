@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>จัดการคอร์ต | SMASHUP Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="courts.css">
+</head>
+<body>
+  <header class="app-topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
+    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a href="../booking/index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a class="active" href="index.html">แอดมิน</a></nav>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>ADMIN PANEL</strong><span>ผู้ดูแลระบบ • SMASHUP</span></div>
+      <nav>
+        <a href="index.html"><i class="icon">◈</i> ภาพรวม</a>
+        <a class="active" href="courts.html"><i class="icon">▦</i> จัดการคอร์ต</a>
+        <a href="index.html#requests"><i class="icon">▣</i> คำขอล่าสุด</a>
+        <a href="bookings.html"><i class="icon">◎</i> จัดการการจอง</a>
+      </nav>
+      <div class="section-label">ระบบ</div>
+      <nav>
+        <a href="../index.html"><i class="icon">⌂</i> กลับหน้าแรก</a>
+        <a href="../matching/index.html"><i class="icon">↗</i> ดูหน้าผู้ใช้</a>
+        <a href="#" id="logoutBtn"><i class="icon">↩</i> ออกจากระบบ</a>
+      </nav>
+    </aside>
+    <main class="content">
+      <div class="content-inner">
+        <p class="eyebrow">ADMIN / COURTS</p>
+        <h1 class="page-title">จัดการ<em style="color:var(--orange);font-style:normal">คอร์ต</em></h1>
+        <p class="page-subtitle">เปิด/ปิดคอร์ต ปรับราคาและเวลาให้บริการ — เปลี่ยนแปลงมีผลทันทีที่หน้าจองของผู้ใช้</p>
+
+        <section class="court-stats">
+          <article class="c-stat"><small>คอร์ตทั้งหมด</small><strong>13</strong><span>1–11, A, B</span></article>
+          <article class="c-stat"><small>ว่างตอนนี้</small><strong id="statAvailable">9</strong><span class="ok">พร้อมจอง</span></article>
+          <article class="c-stat"><small>ปิดปรับปรุง</small><strong id="statMaintenance">1</strong><span class="warn">ต้องตรวจสอบ</span></article>
+        </section>
+
+        <section class="table-section">
+          <div class="table-header">
+            <h2>รายการคอร์ต <span id="courtCount">13 คอร์ต</span></h2>
+            <div class="table-actions">
+              <input id="searchCourt" type="search" placeholder="ค้นหาคอร์ต...">
+              <select id="filterStatus"><option value="">ทุกสถานะ</option><option value="ว่าง">ว่าง</option><option value="ไม่ว่าง">ไม่ว่าง</option><option value="ปิดปรับปรุง">ปิดปรับปรุง</option></select>
+              <button class="btn-primary" id="addCourtBtn" type="button">+ เพิ่มคอร์ต</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="admin-table" id="courtTable">
+              <thead><tr><th>คอร์ต</th><th>ประเภท</th><th>สถานะ</th><th>ราคา / ชม.</th><th>เวลาเปิด</th><th>Action</th></tr></thead>
+              <tbody id="courtBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <p class="note">* ปุ่ม “เปิด/ปิด” จะสลับสถานะคอร์ตทันทีและบันทึกในเครื่อง (localStorage) สำหรับเดโม</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Edit dialog -->
+  <dialog id="editDialog" class="edit-dialog">
+    <form method="dialog" id="editForm">
+      <h3 id="editTitle">แก้ไขคอร์ต</h3>
+      <label>ราคา / ชม. (บาท)<input id="editPrice" type="number" min="0" step="10" required></label>
+      <label>เวลาเปิด<input id="editHours" type="text" placeholder="11:00–23:00" required></label>
+      <label>สถานะ<select id="editStatus"><option value="ว่าง">ว่าง</option><option value="ไม่ว่าง">ไม่ว่าง</option><option value="ปิดปรับปรุง">ปิดปรับปรุง</option></select></label>
+      <div class="dialog-actions"><button type="button" class="btn-secondary" id="closeDialog">ยกเลิก</button><button type="submit" class="btn-primary">บันทึก</button></div>
+    </form>
+  </dialog>
+
+  <script src="../shared/admin-guard.js"></script>
+  <script src="../shared/auth-ui.js"></script>
+  <script src="courts.js"></script>
+</body>
+</html>
