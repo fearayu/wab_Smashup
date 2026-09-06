@@ -1,7 +1,7 @@
 // Courts management – vanilla JS with localStorage
 const $ = (s,r=document)=> r.querySelector(s);
 $('#menuToggle')?.addEventListener('click',()=> $('#sidebar').classList.toggle('open'));
-$('#logoutBtn')?.addEventListener('click',(e)=>{e.preventDefault();localStorage.removeItem('smashup_session_v1');location.href='../auth/index.html';});
+$('#adminLogout')?.addEventListener('click',(e)=>{e.preventDefault();localStorage.removeItem('smashup_session_v1');location.href='../auth/index.html';});
 
 const STORAGE='smashup_courts_v1';
 const defaultCourts=[

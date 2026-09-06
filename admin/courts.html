@@ -12,25 +12,26 @@
   <link rel="stylesheet" href="courts.css">
 </head>
 <body>
-  <header class="app-topbar">
-    <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
-    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a href="../booking/index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a class="active" href="index.html">แอดมิน</a></nav>
-    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  <header class="app-topbar admin-topbar">
+    <a class="brand" href="index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>ADMIN PANEL</small></span></a>
+    <div class="admin-topbar-right"><span class="admin-badge">ผู้ดูแลระบบ</span><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
   </header>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-head"><strong>ADMIN PANEL</strong><span>ผู้ดูแลระบบ • SMASHUP</span></div>
+      <div class="sidebar-head"><strong>ADMIN PANEL</strong><span>แดชบอร์ดผู้ดูแล • SMASHUP</span></div>
       <nav>
         <a href="index.html"><i class="icon">◈</i> ภาพรวม</a>
-        <a class="active" href="courts.html"><i class="icon">▦</i> จัดการคอร์ต</a>
-        <a href="index.html#requests"><i class="icon">▣</i> คำขอล่าสุด</a>
-        <a href="bookings.html"><i class="icon">◎</i> จัดการการจอง</a>
+        <a class="active" href="courts.html"><i class="icon">▦</i> จัดการข้อมูลสนาม</a>
+        <a href="users.html"><i class="icon">◎</i> จัดการบัญชีผู้ใช้</a>
+        <a href="reports.html"><i class="icon">▣</i> รายงานสถิติ</a>
       </nav>
-      <div class="section-label">ระบบ</div>
+      <div class="section-label">การจัดการ</div>
       <nav>
-        <a href="../index.html"><i class="icon">⌂</i> กลับหน้าแรก</a>
-        <a href="../matching/index.html"><i class="icon">↗</i> ดูหน้าผู้ใช้</a>
-        <a href="#" id="logoutBtn"><i class="icon">↩</i> ออกจากระบบ</a>
+        <a href="index.html#requests"><i class="icon">≡</i> คำขอรอดำเนินการ</a>
+      </nav>
+      <div class="section-label">บัญชี</div>
+      <nav>
+        <a href="#" id="adminLogout"><i class="icon">↩</i> ออกจากระบบ</a>
       </nav>
     </aside>
     <main class="content">
@@ -79,7 +80,6 @@
   </dialog>
 
   <script src="../shared/admin-guard.js"></script>
-  <script src="../shared/auth-ui.js"></script>
   <script src="courts.js"></script>
 </body>
 </html>

@@ -1,6 +1,8 @@
-// Admin Dashboard – table management
+// Admin Dashboard – table management (admin-only mode)
 const $ = (s,r=document)=> r.querySelector(s);
 $('#menuToggle')?.addEventListener('click', ()=> $('#sidebar').classList.toggle('open'));
+$('#adminLogout')?.addEventListener('click',(e)=>{e.preventDefault();localStorage.removeItem('smashup_session_v1');location.href='../auth/index.html';});
+function updateRevenue(){ const bookings=Number($('#statBookings')?.textContent||86); const rev=bookings*145; const el=$('#statRevenue'); if(el) el.textContent='฿ '+rev.toLocaleString('th-TH'); }
 
 let requests = [
   { date:'06 ก.ย. 2026', name:'คุณสมชาย', item:'จองคอร์ต 1 • 19:00-20:00', status:'รอยืนยัน' },
@@ -34,10 +36,11 @@ function render(){
 
 function updateStats(){
   const pending = requests.filter(r=> r.status==='รอยืนยัน').length;
-  $('#statPending').textContent = String(pending);
+  const el=$('#statPending'); if(el) el.textContent = String(pending);
+  updateRevenue();
 }
 
-$('#searchTable').addEventListener('input', render);
-$('#filterStatus').addEventListener('change', render);
+$('#searchTable')?.addEventListener('input', render);
+$('#filterStatus')?.addEventListener('change', render);
 updateStats();
 render();
