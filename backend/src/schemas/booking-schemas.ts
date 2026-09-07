@@ -30,10 +30,10 @@ export const updateBookingSchema = z.object({
 })
 
 export const bookingListQuerySchema = z.object({
-  venueId: z.uuid().optional(),
+  venue_id: z.uuid().optional(),
   status: z.string().optional(),
-  dateFrom: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  dateTo: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  date_from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  date_to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   limit: z.coerce.number().int().min(1).max(200).default(50),
   offset: z.coerce.number().int().min(0).default(0),
 })
@@ -42,8 +42,6 @@ export const bookingListResponseSchema = z.object({
   data: z.object({
     items: z.array(bookingSchema),
     total: z.number().int(),
-    limit: z.number().int(),
-    offset: z.number().int(),
   }),
 })
 

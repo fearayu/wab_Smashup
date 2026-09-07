@@ -1,17 +1,15 @@
 import { Hono } from 'hono'
-import { describeRoute, resolver, validator } from 'hono-openapi'
+import { describeRoute } from 'hono-openapi'
 import { authMiddleware } from '../middleware/auth'
 import {
+  paymentListQuerySchema,
   paymentListResponseSchema,
   paymentResponseSchema,
   verifyPaymentSchema,
 } from '../schemas/payment-schemas'
 import { errorResponseSchema } from '../schemas/common-schemas'
 import type { AppEnv } from '../types'
-
-const jsonContent = (schema: Parameters<typeof resolver>[0]) => ({
-  'application/json': { schema: resolver(schema) },
-})
+import { jsonContent, v } from './route-utils'
 
 export function createPaymentRouter() {
   const router = new Hono<AppEnv>()
@@ -40,6 +38,7 @@ export function createPaymentRouter() {
       },
     }),
     authMiddleware,
+    v('query', paymentListQuerySchema),
     (c) => c.get('container').paymentHandler.list(c)
   )
 
@@ -55,7 +54,7 @@ export function createPaymentRouter() {
       },
     }),
     authMiddleware,
-    validator('json', verifyPaymentSchema),
+    v('json', verifyPaymentSchema),
     (c) => c.get('container').paymentHandler.verify(c)
   )
 

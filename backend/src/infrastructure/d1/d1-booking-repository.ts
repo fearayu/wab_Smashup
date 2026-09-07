@@ -16,12 +16,23 @@ interface BookingRow {
   updated_at: string
 }
 
+function parseTimeSlotIds(raw: string): string[] {
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(raw)
+  } catch {
+    throw new Error('Invalid time_slot_ids in bookings row')
+  }
+  if (Array.isArray(parsed) && parsed.every((x) => typeof x === 'string')) return parsed
+  throw new Error('Invalid time_slot_ids in bookings row')
+}
+
 function toBooking(row: BookingRow): Booking {
   return {
     id: row.id,
     venueId: row.venue_id,
     courtId: row.court_id,
-    timeSlotIds: JSON.parse(row.time_slot_ids),
+    timeSlotIds: parseTimeSlotIds(row.time_slot_ids),
     playerName: row.player_name,
     playerPhone: row.player_phone,
     playerEmail: row.player_email,

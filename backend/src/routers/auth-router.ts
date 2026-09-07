@@ -1,8 +1,9 @@
 import { Hono } from 'hono'
-import { describeRoute, resolver, validator } from 'hono-openapi'
+import { describeRoute } from 'hono-openapi'
 import { authMiddleware, requireRole } from '../middleware/auth'
+import { rateLimitAuth } from '../middleware/rate-limit'
+import { errorResponseSchema, idParamSchema } from '../schemas/common-schemas'
 import {
-  errorResponseSchema,
   loginResponseSchema,
   loginSchema,
   ownerListResponseSchema,
@@ -11,10 +12,7 @@ import {
   updateRoleSchema,
 } from '../schemas/auth-schemas'
 import type { AppEnv } from '../types'
-
-const jsonContent = (schema: Parameters<typeof resolver>[0]) => ({
-  'application/json': { schema: resolver(schema) },
-})
+import { jsonContent, v } from './route-utils'
 
 export function createAuthRouter() {
   const router = new Hono<AppEnv>()
@@ -30,7 +28,8 @@ export function createAuthRouter() {
         409: { description: 'Email already registered', content: jsonContent(errorResponseSchema) },
       },
     }),
-    validator('json', registerSchema),
+    v('json', registerSchema),
+    rateLimitAuth(),
     (c) => c.get('container').authHandler.register(c)
   )
 
@@ -44,7 +43,8 @@ export function createAuthRouter() {
         401: { description: 'Invalid credentials', content: jsonContent(errorResponseSchema) },
       },
     }),
-    validator('json', loginSchema),
+    v('json', loginSchema),
+    rateLimitAuth(),
     (c) => c.get('container').authHandler.login(c)
   )
 
@@ -90,7 +90,8 @@ export function createAuthRouter() {
         403: { description: 'Forbidden', content: jsonContent(errorResponseSchema) },
       },
     }),
-    validator('json', updateRoleSchema),
+    v('json', updateRoleSchema),
+    v('param', idParamSchema),
     (c) => c.get('container').authHandler.updateRole(c)
   )
 

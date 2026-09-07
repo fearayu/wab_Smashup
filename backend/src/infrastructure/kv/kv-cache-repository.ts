@@ -4,7 +4,11 @@ export class KVCacheRepository implements CacheRepository {
   constructor(private readonly kv: KVNamespace) {}
 
   async get<T>(key: string): Promise<T | null> {
-    return this.kv.get<T>(key, 'json')
+    try {
+      return await this.kv.get<T>(key, 'json')
+    } catch {
+      return null
+    }
   }
 
   async set<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {

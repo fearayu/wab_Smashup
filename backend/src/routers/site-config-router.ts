@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { describeRoute, resolver, validator } from 'hono-openapi'
+import { describeRoute } from 'hono-openapi'
 import { authMiddleware } from '../middleware/auth'
 import {
   publicSiteResponseSchema,
@@ -8,10 +8,7 @@ import {
 } from '../schemas/site-config-schemas'
 import { errorResponseSchema } from '../schemas/common-schemas'
 import type { AppEnv } from '../types'
-
-const jsonContent = (schema: Parameters<typeof resolver>[0]) => ({
-  'application/json': { schema: resolver(schema) },
-})
+import { jsonContent, v } from './route-utils'
 
 export function createSiteConfigRouter() {
   const router = new Hono<AppEnv>()
@@ -43,7 +40,7 @@ export function createSiteConfigRouter() {
       },
     }),
     authMiddleware,
-    validator('json', updateSiteConfigSchema),
+    v('json', updateSiteConfigSchema),
     (c) => c.get('container').siteConfigHandler.update(c)
   )
 

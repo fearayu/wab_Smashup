@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { describeRoute, resolver, validator } from 'hono-openapi'
+import { describeRoute } from 'hono-openapi'
 import { authMiddleware } from '../middleware/auth'
 import {
   courtListResponseSchema,
@@ -9,10 +9,7 @@ import {
 } from '../schemas/court-schemas'
 import { errorResponseSchema } from '../schemas/common-schemas'
 import type { AppEnv } from '../types'
-
-const jsonContent = (schema: Parameters<typeof resolver>[0]) => ({
-  'application/json': { schema: resolver(schema) },
-})
+import { jsonContent, v } from './route-utils'
 
 export function createCourtRouter() {
   const router = new Hono<AppEnv>()
@@ -41,7 +38,7 @@ export function createCourtRouter() {
         400: { description: 'Invalid input', content: jsonContent(errorResponseSchema) },
       },
     }),
-    validator('json', createCourtSchema),
+    v('json', createCourtSchema),
     (c) => c.get('container').courtHandler.create(c)
   )
 
@@ -56,7 +53,7 @@ export function createCourtRouter() {
         404: { description: 'Court not found', content: jsonContent(errorResponseSchema) },
       },
     }),
-    validator('json', updateCourtSchema),
+    v('json', updateCourtSchema),
     (c) => c.get('container').courtHandler.update(c)
   )
 

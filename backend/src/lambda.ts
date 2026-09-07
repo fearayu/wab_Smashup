@@ -15,6 +15,9 @@ import { MemoryTimeSlotRepository } from './infrastructure/memory/memory-time-sl
 import { MemoryUserRepository } from './infrastructure/memory/memory-user-repository'
 import { MemoryVenueRepository } from './infrastructure/memory/memory-venue-repository'
 
+const processEnv =
+  (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env ?? {}
+
 const container = createContainer({
   userRepository: new MemoryUserRepository(),
   ownerRepository: new MemoryOwnerRepository(),
@@ -26,7 +29,7 @@ const container = createContainer({
   siteConfigRepository: new MemorySiteConfigRepository(),
   dashboardRepository: new MemoryDashboardRepository(),
   cacheRepository: new MemoryCacheRepository(),
-})
+}, processEnv.JWT_SECRET ?? '')
 
 const app = createApp(() => container)
 

@@ -16,10 +16,13 @@ export const ownerSchema = z.object({
   id: z.uuid(),
   email: z.email(),
   name: z.string(),
+  phone: z.string().nullable(),
   plan: z.enum(['free', 'pro']),
+  planExpiresAt: z.iso.datetime().nullable(),
   onboardingCompleted: z.boolean(),
   role: z.enum(['admin', 'member', 'user']),
   createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
 })
 
 export const loginResponseSchema = z.object({
@@ -39,11 +42,4 @@ export const ownerListResponseSchema = z.object({
 
 export const updateRoleSchema = z.object({
   role: z.enum(['admin', 'member', 'user']),
-})
-
-export const errorResponseSchema = z.object({
-  error: z.object({
-    code: z.string(),
-    message: z.string(),
-  }),
 })

@@ -1,12 +1,12 @@
 import type { GenerateSlotsInput, TimeSlot, UpdateSlotInput } from '../domain/entities/time-slot'
 import { ConflictError, ForbiddenError, NotFoundError, ValidationError } from '../domain/errors'
+import { slotListCacheKey } from '../domain/repositories/cache-repository'
 import type { CacheRepository } from '../domain/repositories/cache-repository'
 import type { CourtRepository } from '../domain/repositories/court-repository'
 import type { TimeSlotRepository } from '../domain/repositories/time-slot-repository'
 import type { VenueRepository } from '../domain/repositories/venue-repository'
 
 const CACHE_TTL = 60
-const cacheKey = (courtId: string, date: string) => `slots:${courtId}:${date}`
 
 export class TimeSlotService {
   constructor(
@@ -24,11 +24,11 @@ export class TimeSlotService {
       if (!venue || venue.ownerId !== ownerId) throw new ForbiddenError()
     }
 
-    const cached = await this.cache.get<TimeSlot[]>(cacheKey(courtId, slotDate))
+    const cached = await this.cache.get<TimeSlot[]>(slotListCacheKey(courtId, slotDate))
     if (cached) return cached
 
     const slots = await this.timeSlotRepository.findAllByCourtAndDate(courtId, slotDate)
-    await this.cache.set(cacheKey(courtId, slotDate), slots, CACHE_TTL)
+    await this.cache.set(slotListCacheKey(courtId, slotDate), slots, CACHE_TTL)
     return slots
   }
 
@@ -56,7 +56,7 @@ export class TimeSlotService {
     const updated = await this.timeSlotRepository.update(id, input)
     if (!updated) throw new NotFoundError('Time slot')
 
-    await this.cache.delete(cacheKey(slot.courtId, slot.slotDate))
+    await this.cache.delete(slotListCacheKey(slot.courtId, slot.slotDate))
     return updated
   }
 }

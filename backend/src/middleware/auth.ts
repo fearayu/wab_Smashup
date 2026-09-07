@@ -1,6 +1,6 @@
 import { createMiddleware } from 'hono/factory'
 import { UnauthorizedError, ForbiddenError } from '../domain/errors'
-import { verifyJwt } from '../services/auth-service'
+import { verifyJwt } from '../services/jwt'
 import type { AppEnv } from '../types'
 
 export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
@@ -8,7 +8,8 @@ export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
   if (!header?.startsWith('Bearer ')) throw new UnauthorizedError('Missing or invalid Authorization header')
 
   const token = header.slice(7)
-  const secret = c.env.JWT_SECRET ?? 'smashup-dev-secret'
+  const secret = c.env.JWT_SECRET
+  if (!secret) throw new UnauthorizedError('JWT_SECRET is not configured')
   const payload = await verifyJwt(token, secret)
   c.set('ownerId', payload.sub)
   c.set('ownerRole', payload.role)
@@ -19,7 +20,7 @@ export function requireRole(...roles: string[]) {
   return createMiddleware<AppEnv>(async (c, next) => {
     const role = c.get('ownerRole')
     if (!role || !roles.includes(role)) {
-      throw new ForbiddenError(`ต้องเป็น ${roles.join(' หรือ ')} เท่านั้น`)
+      throw new ForbiddenError(`Requires role: ${roles.join(' or ')}`)
     }
     await next()
   })

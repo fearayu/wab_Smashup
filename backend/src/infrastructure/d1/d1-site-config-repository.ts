@@ -15,6 +15,21 @@ interface SiteConfigRow {
   updated_at: string
 }
 
+function parseSocialLinks(raw: string): SiteConfig['socialLinks'] {
+  try {
+    const parsed: unknown = JSON.parse(raw)
+    if (
+      typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed) &&
+      Object.values(parsed).every((v) => v === undefined || typeof v === 'string')
+    ) {
+      return parsed as SiteConfig['socialLinks']
+    }
+  } catch {
+    // fall through
+  }
+  return null
+}
+
 function toSiteConfig(row: SiteConfigRow): SiteConfig {
   return {
     id: row.id,
@@ -25,7 +40,7 @@ function toSiteConfig(row: SiteConfigRow): SiteConfig {
     showPricing: row.show_pricing === 1,
     showMap: row.show_map === 1,
     customCss: row.custom_css,
-    socialLinks: row.social_links ? JSON.parse(row.social_links) : null,
+    socialLinks: row.social_links ? parseSocialLinks(row.social_links) : null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   }

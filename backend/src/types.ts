@@ -1,4 +1,5 @@
 import type { Container } from './di/container'
+import type { OwnerRole } from './domain/repositories/owner-repository'
 
 // Cloudflare Workers bindings (declared in wrangler.jsonc)
 export interface Bindings {
@@ -11,7 +12,7 @@ export interface Bindings {
 export interface Variables {
   container: Container
   ownerId: string
-  ownerRole: 'admin' | 'member' | 'user'
+  ownerRole: OwnerRole
 }
 
 export type AppEnv = {

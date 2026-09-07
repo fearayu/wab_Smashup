@@ -1,10 +1,12 @@
 import type { Context } from 'hono'
-import { ValidationError } from '../domain/errors'
+import { NotFoundError } from '../domain/errors'
 
 export class DemoHandler {
-  constructor(private readonly db: D1Database) {}
+  constructor(private readonly db?: D1Database) {}
 
   seed = async (c: Context) => {
+    if (!this.db) throw new NotFoundError('Demo seeding (only available with D1)')
+
     const now = new Date().toISOString()
 
     // Check if demo already exists

@@ -20,7 +20,7 @@ export const verifyPaymentSchema = z.object({
 
 export const paymentListQuerySchema = z.object({
   status: z.enum(['pending', 'verified', 'rejected']).optional(),
-  venueId: z.uuid().optional(),
+  venue_id: z.uuid().optional(),
 })
 
 export const paymentListResponseSchema = z.object({

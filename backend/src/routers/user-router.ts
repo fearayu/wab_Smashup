@@ -1,18 +1,14 @@
 import { Hono } from 'hono'
-import { describeRoute, resolver, validator } from 'hono-openapi'
+import { describeRoute } from 'hono-openapi'
 import {
   createUserSchema,
-  errorResponseSchema,
-  idParamSchema,
   updateUserSchema,
   userListResponseSchema,
   userResponseSchema,
 } from '../schemas/user-schemas'
+import { errorResponseSchema, idParamSchema } from '../schemas/common-schemas'
 import type { AppEnv } from '../types'
-
-const jsonContent = (schema: Parameters<typeof resolver>[0]) => ({
-  'application/json': { schema: resolver(schema) },
-})
+import { jsonContent, v } from './route-utils'
 
 export function createUserRouter() {
   const router = new Hono<AppEnv>()
@@ -40,7 +36,7 @@ export function createUserRouter() {
         409: { description: 'Email already registered', content: jsonContent(errorResponseSchema) },
       },
     }),
-    validator('json', createUserSchema),
+    v('json', createUserSchema),
     (c) => c.get('container').userHandler.create(c)
   )
 
@@ -55,7 +51,7 @@ export function createUserRouter() {
         404: { description: 'User not found', content: jsonContent(errorResponseSchema) },
       },
     }),
-    validator('param', idParamSchema),
+    v('param', idParamSchema),
     (c) => c.get('container').userHandler.get(c)
   )
 
@@ -70,8 +66,8 @@ export function createUserRouter() {
         404: { description: 'User not found', content: jsonContent(errorResponseSchema) },
       },
     }),
-    validator('param', idParamSchema),
-    validator('json', updateUserSchema),
+    v('param', idParamSchema),
+    v('json', updateUserSchema),
     (c) => c.get('container').userHandler.update(c)
   )
 
@@ -85,7 +81,7 @@ export function createUserRouter() {
         404: { description: 'User not found', content: jsonContent(errorResponseSchema) },
       },
     }),
-    validator('param', idParamSchema),
+    v('param', idParamSchema),
     (c) => c.get('container').userHandler.delete(c)
   )
 

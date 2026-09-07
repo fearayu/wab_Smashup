@@ -80,20 +80,34 @@ export class D1TimeSlotRepository implements TimeSlotRepository {
 
     const start = new Date(input.startDate + 'T00:00:00Z')
     const end = new Date(input.endDate + 'T00:00:00Z')
+
+    const dates: string[] = []
+    for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
+      dates.push(d.toISOString().slice(0, 10))
+    }
+
+    // Collect existing (court, date) combinations in a single query instead of
+    // one query per court/date (N+1).
+    const courtIds = courts.map((c) => c.id)
+    const existingPairs = new Set<string>()
+    if (courtIds.length > 0 && dates.length > 0) {
+      const { results: existing } = await this.db
+        .prepare(
+          `SELECT court_id, slot_date FROM time_slots WHERE court_id IN (${courtIds.map(() => '?').join(',')}) AND slot_date IN (${dates.map(() => '?').join(',')})`
+        )
+        .bind(...courtIds, ...dates)
+        .all<{ court_id: string; slot_date: string }>()
+      for (const row of existing) existingPairs.add(`${row.court_id}|${row.slot_date}`)
+    }
+
     let inserted = 0
 
-    for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
-      const dateStr = d.toISOString().slice(0, 10)
-      const isWeekend = d.getUTCDay() === 0 || d.getUTCDay() === 6
+    for (const dateStr of dates) {
+      const isWeekend = new Date(dateStr + 'T00:00:00Z').getUTCDay() === 0 || new Date(dateStr + 'T00:00:00Z').getUTCDay() === 6
 
       for (const court of courts) {
         if (!court) continue
-        // Check if any slots already exist for this court/date
-        const { results: existing } = await this.db
-          .prepare('SELECT id FROM time_slots WHERE court_id = ? AND slot_date = ? LIMIT 1')
-          .bind(court.id, dateStr)
-          .all<{ id: string }>()
-        if (existing && existing.length > 0) continue
+        if (existingPairs.has(`${court.id}|${dateStr}`)) continue
 
         for (let i = 0; i < slotsPerDay; i++) {
           const slotMinutes = openMinutes + i * slotDur

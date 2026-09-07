@@ -49,7 +49,7 @@ export class D1OwnerRepository implements OwnerRepository {
     return row ? toOwner(row) : null
   }
 
-  async create(input: CreateOwnerInput & { passwordHash: string }): Promise<Owner> {
+  async create(input: Omit<CreateOwnerInput, 'password'> & { passwordHash: string }): Promise<Owner> {
     const id = crypto.randomUUID()
     const now = new Date().toISOString()
     await this.db

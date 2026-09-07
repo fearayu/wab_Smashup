@@ -1,17 +1,15 @@
 import { Hono } from 'hono'
-import { describeRoute, resolver, validator } from 'hono-openapi'
+import { describeRoute } from 'hono-openapi'
 import { authMiddleware } from '../middleware/auth'
 import {
   generateSlotsResponseSchema,
   generateSlotsSchema,
   publicSlotsResponseSchema,
+  slotResponseSchema,
 } from '../schemas/slot-schemas'
 import { errorResponseSchema } from '../schemas/common-schemas'
 import type { AppEnv } from '../types'
-
-const jsonContent = (schema: Parameters<typeof resolver>[0]) => ({
-  'application/json': { schema: resolver(schema) },
-})
+import { jsonContent, v } from './route-utils'
 
 export function createSlotRouter() {
   const router = new Hono<AppEnv>()
@@ -43,7 +41,7 @@ export function createSlotRouter() {
       },
     }),
     authMiddleware,
-    validator('json', generateSlotsSchema),
+    v('json', generateSlotsSchema),
     (c) => c.get('container').timeSlotHandler.generate(c)
   )
 
@@ -54,7 +52,7 @@ export function createSlotRouter() {
       tags: ['Slots'],
       summary: 'Update a time slot',
       responses: {
-        200: { description: 'Slot updated', content: jsonContent(generateSlotsResponseSchema) },
+        200: { description: 'Slot updated', content: jsonContent(slotResponseSchema) },
         400: { description: 'Invalid input', content: jsonContent(errorResponseSchema) },
         404: { description: 'Slot not found', content: jsonContent(errorResponseSchema) },
       },

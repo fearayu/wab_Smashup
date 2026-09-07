@@ -1,6 +1,8 @@
 import type { Payment, PaymentListQuery, VerifyPaymentInput } from '../domain/entities/payment'
 import { ForbiddenError, NotFoundError, ValidationError } from '../domain/errors'
 import type { BookingRepository } from '../domain/repositories/booking-repository'
+import { slotListCacheKey } from '../domain/repositories/cache-repository'
+import type { CacheRepository } from '../domain/repositories/cache-repository'
 import type { PaymentRepository } from '../domain/repositories/payment-repository'
 import type { TimeSlotRepository } from '../domain/repositories/time-slot-repository'
 import type { VenueRepository } from '../domain/repositories/venue-repository'
@@ -10,7 +12,8 @@ export class PaymentService {
     private readonly paymentRepository: PaymentRepository,
     private readonly bookingRepository: BookingRepository,
     private readonly venueRepository: VenueRepository,
-    private readonly timeSlotRepository: TimeSlotRepository
+    private readonly timeSlotRepository: TimeSlotRepository,
+    private readonly cache: CacheRepository
   ) {}
 
   async createSlip(bookingId: string, slipImageUrl: string): Promise<Payment> {
@@ -54,6 +57,14 @@ export class PaymentService {
     } else if (input.status === 'rejected') {
       await this.bookingRepository.update(payment.bookingId, { status: 'cancelled' })
       await this.timeSlotRepository.releaseSlots(payment.bookingId)
+
+      const booking = await this.bookingRepository.findById(payment.bookingId)
+      if (booking) {
+        const slots = await this.timeSlotRepository.findManyByIds(booking.timeSlotIds)
+        const keys = new Map<string, boolean>()
+        for (const slot of slots) keys.set(slotListCacheKey(slot.courtId, slot.slotDate), true)
+        await Promise.all([...keys.keys()].map((key) => this.cache.delete(key)))
+      }
     }
 
     return updated

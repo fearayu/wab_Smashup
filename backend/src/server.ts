@@ -16,6 +16,9 @@ import type { Bindings } from './types'
 
 const app = createApp((env) => {
   const bindings = env as Bindings
+  if (!bindings.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not configured in wrangler.jsonc vars')
+  }
   const db = bindings.DB
   return createContainer({
     userRepository: new D1UserRepository(db),
@@ -28,7 +31,7 @@ const app = createApp((env) => {
     siteConfigRepository: new D1SiteConfigRepository(db),
     dashboardRepository: new D1DashboardRepository(db),
     cacheRepository: new KVCacheRepository(bindings.KV),
-  })
+  }, bindings.JWT_SECRET, db)
 })
 
 export default app

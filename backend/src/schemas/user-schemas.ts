@@ -17,16 +17,5 @@ export const createUserSchema = z.object({
 
 export const updateUserSchema = createUserSchema.partial()
 
-export const idParamSchema = z.object({
-  id: z.string().min(1),
-})
-
 export const userResponseSchema = z.object({ data: userSchema })
 export const userListResponseSchema = z.object({ data: z.array(userSchema) })
-
-export const errorResponseSchema = z.object({
-  error: z.object({
-    code: z.string(),
-    message: z.string(),
-  }),
-})

@@ -28,19 +28,24 @@ export class UserService {
   }
 
   async createUser(input: CreateUserInput): Promise<User> {
-    this.validateEmail(input.email)
+    const email = input.email.trim().toLowerCase()
+    this.validateEmail(email)
     if (!input.name?.trim()) throw new ValidationError('name is required')
 
-    const existing = await this.userRepository.findByEmail(input.email)
+    const existing = await this.userRepository.findByEmail(email)
     if (existing) throw new ConflictError('Email is already registered')
 
-    return this.userRepository.create({ email: input.email, name: input.name.trim() })
+    return this.userRepository.create({ email, name: input.name.trim() })
   }
 
   async updateUser(id: string, input: UpdateUserInput): Promise<User> {
-    if (input.email !== undefined) this.validateEmail(input.email)
+    const email = input.email !== undefined ? input.email.trim().toLowerCase() : undefined
+    if (email !== undefined) this.validateEmail(email)
 
-    const updated = await this.userRepository.update(id, input)
+    const updateInput: UpdateUserInput = { ...input }
+    if (email !== undefined) updateInput.email = email
+
+    const updated = await this.userRepository.update(id, updateInput)
     if (!updated) throw new NotFoundError('User')
 
     await this.cache.delete(cacheKey(id))

@@ -54,9 +54,9 @@ export interface Container {
   demoHandler: DemoHandler
 }
 
-export function createContainer(repos: Repositories): Container {
+export function createContainer(repos: Repositories, jwtSecret: string, db?: D1Database): Container {
   const userService = new UserService(repos.userRepository, repos.cacheRepository)
-  const authService = new AuthService(repos.ownerRepository)
+  const authService = new AuthService(repos.ownerRepository, jwtSecret)
   const venueService = new VenueService(repos.venueRepository, repos.siteConfigRepository, repos.cacheRepository)
   const courtService = new CourtService(repos.courtRepository, repos.venueRepository, repos.cacheRepository)
   const timeSlotService = new TimeSlotService(
@@ -70,27 +70,29 @@ export function createContainer(repos: Repositories): Container {
     repos.timeSlotRepository,
     repos.courtRepository,
     repos.venueRepository,
-    repos.paymentRepository
+    repos.paymentRepository,
+    repos.cacheRepository
   )
   const paymentService = new PaymentService(
     repos.paymentRepository,
     repos.bookingRepository,
     repos.venueRepository,
-    repos.timeSlotRepository
+    repos.timeSlotRepository,
+    repos.cacheRepository
   )
   const siteConfigService = new SiteConfigService(repos.siteConfigRepository, repos.venueRepository, repos.cacheRepository)
   const dashboardService = new DashboardService(repos.dashboardRepository)
 
   return {
     userHandler: new UserHandler(userService),
-    authHandler: new AuthHandler(authService, repos.ownerRepository),
+    authHandler: new AuthHandler(authService),
     venueHandler: new VenueHandler(venueService),
     courtHandler: new CourtHandler(courtService),
-    timeSlotHandler: new TimeSlotHandler(timeSlotService, courtService),
+    timeSlotHandler: new TimeSlotHandler(timeSlotService, courtService, venueService),
     bookingHandler: new BookingHandler(bookingService),
     paymentHandler: new PaymentHandler(paymentService),
     siteConfigHandler: new SiteConfigHandler(siteConfigService),
     dashboardHandler: new DashboardHandler(dashboardService),
-    demoHandler: new DemoHandler((repos as any).db),
+    demoHandler: new DemoHandler(db),
   }
 }

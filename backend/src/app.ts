@@ -2,6 +2,7 @@ import { Scalar } from '@scalar/hono-api-reference'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
+import type { ContentfulStatusCode } from 'hono/utils/http-status'
 import { openAPIRouteHandler } from 'hono-openapi'
 import type { Container } from './di/container'
 import { AppError } from './domain/errors'
@@ -58,7 +59,8 @@ export function createApp(containerFactory: (env: Partial<Bindings>) => Containe
 
   app.onError((err, c) => {
     if (err instanceof AppError) {
-      return c.json({ error: { code: err.code, message: err.message } }, err.status as 400)
+      const status = err.status as ContentfulStatusCode
+      return c.json({ error: { code: err.code, message: err.message } }, status)
     }
     console.error('Unhandled error:', err)
     return c.json({ error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } }, 500)

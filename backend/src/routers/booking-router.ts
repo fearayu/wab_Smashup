@@ -1,7 +1,8 @@
 import { Hono } from 'hono'
-import { describeRoute, resolver, validator } from 'hono-openapi'
+import { describeRoute } from 'hono-openapi'
 import { authMiddleware } from '../middleware/auth'
 import {
+  bookingListQuerySchema,
   bookingListResponseSchema,
   bookingResponseSchema,
   createBookingSchema,
@@ -10,10 +11,7 @@ import {
 } from '../schemas/booking-schemas'
 import { errorResponseSchema } from '../schemas/common-schemas'
 import type { AppEnv } from '../types'
-
-const jsonContent = (schema: Parameters<typeof resolver>[0]) => ({
-  'application/json': { schema: resolver(schema) },
-})
+import { jsonContent, v } from './route-utils'
 
 export function createBookingRouter() {
   const router = new Hono<AppEnv>()
@@ -30,7 +28,7 @@ export function createBookingRouter() {
         409: { description: 'Slots no longer available', content: jsonContent(errorResponseSchema) },
       },
     }),
-    validator('json', createBookingSchema),
+    v('json', createBookingSchema),
     (c) => c.get('container').bookingHandler.createPublic(c)
   )
 
@@ -45,6 +43,7 @@ export function createBookingRouter() {
       },
     }),
     authMiddleware,
+    v('query', bookingListQuerySchema),
     (c) => c.get('container').bookingHandler.list(c)
   )
 
@@ -74,7 +73,7 @@ export function createBookingRouter() {
       },
     }),
     authMiddleware,
-    validator('json', updateBookingSchema),
+    v('json', updateBookingSchema),
     (c) => c.get('container').bookingHandler.update(c)
   )
 

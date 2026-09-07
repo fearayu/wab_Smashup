@@ -1,28 +1,65 @@
 import type { CreateOwnerInput, Owner, UpdateOwnerInput } from '../domain/entities/owner'
 import { ConflictError, NotFoundError, UnauthorizedError, ValidationError } from '../domain/errors'
-import type { OwnerRepository } from '../domain/repositories/owner-repository'
+import type { OwnerRepository, OwnerRole } from '../domain/repositories/owner-repository'
+import { base64UrlToBytes, bytesToBase64Url, signJwt, timingSafeEqual } from './jwt'
+
+const encoder = new TextEncoder()
+const PBKDF2_ITERATIONS = 100_000
+const KEY_LENGTH_BYTES = 32 // SHA-256 output
+
+function bytesToStandardBase64(bytes: Uint8Array): string {
+  let binary = ''
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]!)
+  return btoa(binary)
+}
+
+function randomSalt(): Uint8Array {
+  const salt = new Uint8Array(16)
+  crypto.getRandomValues(salt)
+  return salt
+}
+
+async function deriveKey(password: string, salt: Uint8Array, iterations: number): Promise<Uint8Array> {
+  const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveBits'])
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', hash: 'SHA-256', salt, iterations },
+    keyMaterial,
+    KEY_LENGTH_BYTES * 8
+  )
+  return new Uint8Array(bits)
+}
 
 async function hashPassword(password: string): Promise<string> {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(password)
-  const hash = await crypto.subtle.digest('SHA-256', data)
-  return btoa(String.fromCharCode(...new Uint8Array(hash)))
+  const salt = randomSalt()
+  const hash = await deriveKey(password, salt, PBKDF2_ITERATIONS)
+  return `pbkdf2$${PBKDF2_ITERATIONS}$${bytesToBase64Url(salt)}$${bytesToBase64Url(hash)}`
 }
 
-async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  return (await hashPassword(password)) === hash
-}
+async function verifyPassword(password: string, stored: string): Promise<boolean> {
+  const parts = stored.split('$')
+  if (parts.length === 4 && parts[0] === 'pbkdf2') {
+    const iterations = Number(parts[1])
+    if (!Number.isInteger(iterations) || iterations <= 0) return false
+    try {
+      const derived = await deriveKey(password, base64UrlToBytes(parts[2]!), iterations)
+      return timingSafeEqual(derived, base64UrlToBytes(parts[3]!))
+    } catch {
+      return false
+    }
+  }
 
-export interface AuthTokenPayload {
-  sub: string
-  email: string
-  role: 'admin' | 'member' | 'user'
-  iat: number
-  exp: number
+  // Legacy pre-PBKDF2 hash: unsalted SHA-256 stored as standard base64.
+  // Verify comparably so existing accounts keep working; new hashes use PBKDF2.
+  const legacyHash = await crypto.subtle.digest('SHA-256', encoder.encode(password))
+  const computed = bytesToStandardBase64(new Uint8Array(legacyHash))
+  return timingSafeEqual(encoder.encode(computed), encoder.encode(stored))
 }
 
 export class AuthService {
-  constructor(private readonly ownerRepository: OwnerRepository) {}
+  constructor(
+    private readonly ownerRepository: OwnerRepository,
+    private readonly jwtSecret: string,
+  ) {}
 
   async register(input: CreateOwnerInput): Promise<{ owner: Owner; token: string }> {
     if (!input.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email)) {
@@ -33,24 +70,24 @@ export class AuthService {
     }
     if (!input.name?.trim()) throw new ValidationError('name is required')
 
-    const existing = await this.ownerRepository.findByEmail(input.email)
+    const email = input.email.trim().toLowerCase()
+    const existing = await this.ownerRepository.findByEmail(email)
     if (existing) throw new ConflictError('Email is already registered')
 
     const passwordHash = await hashPassword(input.password)
     const owner = await this.ownerRepository.create({
-      email: input.email,
-      password: input.password,
+      email,
       name: input.name.trim(),
       phone: input.phone,
       passwordHash,
     })
 
-    const token = await this.signJwt(owner.id, owner.email, owner.role)
+    const token = await this.buildToken(owner)
     return { owner, token }
   }
 
   async login(email: string, password: string): Promise<{ owner: Owner; token: string }> {
-    const owner = await this.ownerRepository.findByEmail(email)
+    const owner = await this.ownerRepository.findByEmail(email.trim().toLowerCase())
     if (!owner) throw new UnauthorizedError('Invalid credentials')
 
     const hash = await this.ownerRepository.getPasswordHash(owner.id)
@@ -59,7 +96,7 @@ export class AuthService {
     const valid = await verifyPassword(password, hash)
     if (!valid) throw new UnauthorizedError('Invalid credentials')
 
-    const token = await this.signJwt(owner.id, owner.email, owner.role)
+    const token = await this.buildToken(owner)
     return { owner, token }
   }
 
@@ -69,27 +106,19 @@ export class AuthService {
     return owner
   }
 
-  private async signJwt(sub: string, email: string, role: string = 'member'): Promise<string> {
+  async listOwners(): Promise<Owner[]> {
+    return this.ownerRepository.findAll()
+  }
+
+  async updateRole(id: string, role: OwnerRole): Promise<Owner> {
+    const owner = await this.ownerRepository.updateRole(id, role)
+    if (!owner) throw new NotFoundError('Owner')
+    return owner
+  }
+
+  private buildToken(owner: Pick<Owner, 'id' | 'email' | 'role'>): Promise<string> {
     const iat = Math.floor(Date.now() / 1000)
     const exp = iat + 7 * 24 * 60 * 60 // 7 days
-    const header = btoa(JSON.stringify({ alg: 'none', typ: 'JWT' }))
-    const payload = btoa(JSON.stringify({ sub, email, role, iat, exp }))
-    // In production use real signing with jose or webcrypto; for MVP we use alg:none
-    // because Workers KV/D1 environments may lack full crypto library for RS256
-    return `${header}.${payload}.`
-  }
-}
-
-export async function verifyJwt(token: string, _secret: string): Promise<AuthTokenPayload> {
-  const parts = token.split('.')
-  if (parts.length !== 3 || !parts[1]) throw new UnauthorizedError('Invalid token')
-  try {
-    const payload = JSON.parse(atob(parts[1]))
-    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
-      throw new UnauthorizedError('Token expired')
-    }
-    return payload as AuthTokenPayload
-  } catch {
-    throw new UnauthorizedError('Invalid token')
+    return signJwt({ sub: owner.id, email: owner.email, role: owner.role, iat, exp }, this.jwtSecret)
   }
 }

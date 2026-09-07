@@ -26,7 +26,7 @@ export class MemoryOwnerRepository implements OwnerRepository {
     return this.owners.get(id)?.passwordHash ?? null
   }
 
-  async create(input: CreateOwnerInput & { passwordHash: string }): Promise<Owner> {
+  async create(input: Omit<CreateOwnerInput, 'password'> & { passwordHash: string }): Promise<Owner> {
     const id = crypto.randomUUID()
     const now = new Date().toISOString()
     const owner: Owner & { passwordHash: string } = {
@@ -62,7 +62,8 @@ export class MemoryOwnerRepository implements OwnerRepository {
     if (!existing) return null
     existing.role = role
     existing.updatedAt = new Date().toISOString()
-    return existing
+    const { passwordHash: _, ...result } = existing
+    return result
   }
 
   async delete(id: string): Promise<boolean> {

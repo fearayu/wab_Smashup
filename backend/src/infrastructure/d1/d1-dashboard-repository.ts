@@ -7,6 +7,9 @@ export class D1DashboardRepository implements DashboardRepository {
   async getSummary(ownerId: string): Promise<DashboardSummary> {
     const today = new Date().toISOString().slice(0, 10)
     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10) + 'T00:00:00Z'
+    // slot_date is a TEXT date column ('YYYY-MM-DD'); compare against a plain date,
+    // not a timestamp, or the cutoff day is dropped by lexicographic ordering.
+    const weekAgoDate = weekAgo.slice(0, 10)
 
     const { results: venueRows } = await this.db
       .prepare('SELECT id FROM venues WHERE owner_id = ? AND is_active = 1')
@@ -86,7 +89,7 @@ export class D1DashboardRepository implements DashboardRepository {
         ORDER BY bookings DESC
         LIMIT 5
       `)
-      .bind(...venueIds, weekAgo)
+      .bind(...venueIds, weekAgoDate)
       .all<{ hour: string; bookings: number }>()
 
     return {
