@@ -1,15 +1,15 @@
-const MY_BOOKING_KEY = 'smashup_bookings_v1';
-const myContainer = document.querySelector('#myBookings');
-const myEmpty = document.querySelector('#myEmpty');
-const myMessage = document.querySelector('#myMessage');
-const currentSession = (() => { try { return JSON.parse(localStorage.getItem('smashup_session_v1')); } catch { return null; } })();
-function loadMyBookings() { try { return JSON.parse(localStorage.getItem(MY_BOOKING_KEY)) || []; } catch { return []; } }
-function canCancel(booking) { const start = new Date(`${booking.date}T${booking.time || '00:00'}:00`).getTime(); return booking.status !== 'ยกเลิกแล้ว' && Number.isFinite(start) && start - Date.now() >= 2 * 60 * 60 * 1000; }
-function renderMyBookings() {
-  if (!currentSession) { myContainer.innerHTML = ''; myEmpty.hidden = false; myEmpty.textContent = 'กรุณาเข้าสู่ระบบเพื่อดูรายการของคุณ'; myMessage.textContent = ''; return; }
-  const mine = loadMyBookings().filter((booking) => booking.ownerId === currentSession.id).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  myContainer.innerHTML = mine.map((booking) => { const cancelled = booking.status === 'ยกเลิกแล้ว'; const payment = booking.paymentStatus ? `<small>การชำระเงิน: ${booking.paymentStatus}</small>` : ''; const cancelButton = canCancel(booking) ? `<button class="cancel-button" type="button" data-id="${booking.id}">ยกเลิกการจอง</button>` : (cancelled ? '' : '<small>ยกเลิกได้ก่อนเวลาใช้บริการ 2 ชั่วโมง</small>'); return `<article class="booking-card ${cancelled ? 'cancelled' : ''}"><div class="booking-date">${booking.date}<span>${booking.time} น.</span></div><div class="booking-detail"><b>คอร์ต ${booking.court}</b><span>${booking.name} · ${booking.phone} · ฿ ${Number(booking.amount).toLocaleString('th-TH')}</span>${payment}</div><div><span class="booking-status ${cancelled ? 'cancelled' : 'pending'}">${booking.status}</span>${cancelButton}</div></article>`; }).join('');
-  myEmpty.hidden = mine.length > 0; myMessage.textContent = mine.length ? `พบ ${mine.length} รายการ` : '';
+
+const R=window.SmashRules,myContainer=document.querySelector('#myBookings'),myEmpty=document.querySelector('#myEmpty'),myMessage=document.querySelector('#myMessage');
+const initialSession=(()=>{try{return R.session()}catch{return null}})();
+function renderMyBookings(){
+ try{const who=R.session();if(!who||who.id!==initialSession?.id){myContainer.innerHTML='';myEmpty.hidden=false;myEmpty.textContent='กรุณาเข้าสู่ระบบหรือโหลดหน้าใหม่เพื่อดูรายการของบัญชีปัจจุบัน';return;}
+ const mine=['court','buffet','service'].flatMap(type=>R.list(R.keys[type]).filter(r=>r.ownerId===who.id).map(r=>({...r,type}))).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+ myContainer.innerHTML=mine.map(r=>{
+ const title=r.type==='court'?'คอร์ต '+r.court:r.type==='buffet'?'ตีบุฟเฟต์':r.service;
+ const detail=r.type==='service'?[r.event,r.category,r.item,r.quantity?'จำนวน '+r.quantity:''].filter(Boolean).join(' · '):r.type==='buffet'?'ระดับ '+(r.level||'ยังไม่ทราบ'):'';
+ return '<article class="booking-card"><div class="booking-date">'+R.escape(r.date||'รอผู้จัดแจ้งวัน')+'<span>'+R.escape(r.time||r.session||'')+'</span></div><div class="booking-detail"><b>'+R.escape(title)+'</b><span>'+R.escape(detail)+'</span><span>'+R.escape(r.name)+'</span>'+(r.amount!=null?'<span>฿ '+Number(r.amount).toLocaleString('th-TH')+'</span>':'')+(r.cancelReason?'<small>'+R.escape(r.cancelReason)+'</small>':'')+'</div><div><span class="booking-status">'+R.escape(r.status)+'</span>'+(r.id&&R.canCancel(r,r.type)?'<button type="button" class="cancel-button" data-type="'+r.type+'" data-id="'+R.escape(r.id)+'">ยกเลิกรายการ</button>':R.active(r)?'<small>ยกเลิกก่อนเริ่ม 2 ชั่วโมง หรือก่อนคำขอบริการดำเนินการเสร็จ</small>':'')+'</div></article>';
+ }).join('');myEmpty.hidden=mine.length>0;myEmpty.textContent='ยังไม่มีรายการของคุณ';
+ }catch(e){myMessage.textContent=e.message}
 }
-myContainer.addEventListener('click', (event) => { const button = event.target.closest('[data-id]'); if (!button) return; const bookings = loadMyBookings(); const target = bookings.find((booking) => booking.id === button.dataset.id); if (!target || !canCancel(target)) { myMessage.textContent = 'รายการนี้ยกเลิกไม่ได้ เนื่องจากเหลือเวลาใช้บริการน้อยกว่า 2 ชั่วโมง'; return; } if (!confirm('ยืนยันการยกเลิกการจองนี้?')) return; target.status = 'ยกเลิกแล้ว'; target.cancelReason = 'ผู้ใช้ยกเลิก'; localStorage.setItem(MY_BOOKING_KEY, JSON.stringify(bookings)); myMessage.textContent = 'ยกเลิกการจองเรียบร้อย'; renderMyBookings(); });
-renderMyBookings();
+myContainer.addEventListener('click',async e=>{const b=e.target.closest('[data-id]');if(!b)return;if(!confirm('ยืนยันยกเลิกรายการนี้?'))return;b.disabled=true;try{await R.cancel(b.dataset.type,b.dataset.id,initialSession);renderMyBookings();myMessage.textContent='ยกเลิกแล้ว หากชำระเงินจริงกับสนามไว้ให้ติดต่อผู้จัดเรื่องคืนเงิน';}catch(error){myMessage.textContent=error.message;b.disabled=false}});
+window.addEventListener('storage',renderMyBookings);window.addEventListener('focus',renderMyBookings);renderMyBookings();

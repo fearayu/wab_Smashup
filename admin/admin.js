@@ -1,47 +1,34 @@
 const SESSION_KEY='smashup_session_v1',BOOKING_KEY='smashup_bookings_v1',BUFFET_KEY='smashup_buffet_bookings_v1',SERVICE_KEY='smashup_service_requests_v1',EMPLOYEE_KEY='smashup_employees_v1';
+const levelReviewLink=document.createElement('a');levelReviewLink.href='../auth/player-assessment.html';levelReviewLink.textContent='ตรวจระดับผู้เล่น';levelReviewLink.className='admin-action';document.querySelector('#adminApp')?.prepend(levelReviewLink);
 const appView=document.querySelector('#adminApp'),screenTitles={overview:'ภาพรวม <em>Dashboard</em>',bookings:'จัดการ <em>จองสนาม</em>',buffet:'จัดการ <em>ตีบุฟเฟต์</em>',services:'จัดการ <em>คำขอบริการ</em>',employees:'ข้อมูล <em>พนักงาน</em>'};
 const adminSession=()=>{try{const session=JSON.parse(localStorage.getItem(SESSION_KEY));return session?.role==='admin'?session:null}catch{return null}};
-const data=key=>{try{return JSON.parse(localStorage.getItem(key))||[]}catch{return[]}},save=(key,value)=>localStorage.setItem(key,JSON.stringify(value));
-const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
-function seedDemoData(){
-  if(localStorage.getItem('smashup_demo_seeded_v1')){
-    if(!data(EMPLOYEE_KEY).length)save(EMPLOYEE_KEY,[
-      {id:'emp-001',name:'กมลชนก แก้วดี',position:'ผู้จัดการสนาม',phone:'081-555-1001',shift:'09:00–18:00',status:'ปฏิบัติงาน'},
-      {id:'emp-002',name:'ภาณุวัฒน์ คำแสน',position:'พนักงานต้อนรับ',phone:'082-555-1002',shift:'11:00–20:00',status:'ปฏิบัติงาน'},
-      {id:'emp-003',name:'ณิชาภา ชัยวงศ์',position:'พนักงานคอร์ต',phone:'083-555-1003',shift:'14:00–23:00',status:'ปฏิบัติงาน'},
-      {id:'emp-004',name:'จักรินทร์ มณี',position:'ช่างดูแลอุปกรณ์',phone:'084-555-1004',shift:'12:00–21:00',status:'ปฏิบัติงาน'}
-    ]);
-    return;
-  }
-  if(!data(BOOKING_KEY).length)save(BOOKING_KEY,[
-    {id:'demo-court-1',date:'2026-09-02',time:'17:00',court:'3',name:'สมชาย ใจดี',phone:'081-234-5678',amount:130,status:'รอยืนยัน'},
-    {id:'demo-court-2',date:'2026-09-02',time:'19:00',court:'A',name:'พิมพ์ชนก ศรีสุข',phone:'089-876-5432',amount:130,status:'ยืนยันแล้ว'},
-    {id:'demo-court-3',date:'2026-09-03',time:'18:00',court:'7',name:'ณัฐวุฒิ มั่นคง',phone:'086-111-2233',amount:130,status:'รอยืนยัน'}
-  ]);
-  if(!data(BUFFET_KEY).length)save(BUFFET_KEY,[
-    {name:'กิตติพงศ์',date:'2026-09-02',session:'19:00–22:00',shuttle:'2',amount:80,status:'รอยืนยัน'},
-    {name:'ชลธิชา',date:'2026-09-02',session:'17:00–20:00',shuttle:'0',amount:60,status:'ยืนยันแล้ว'},
-    {name:'ธนกฤต',date:'2026-09-03',session:'19:00–22:00',shuttle:'1',amount:70,status:'รอยืนยัน'}
-  ]);
-  if(!data(SERVICE_KEY).length)save(SERVICE_KEY,[
-    {id:'demo-service-1',service:'สมัครแข่งขัน',name:'รัชนีกร',phone:'082-333-4411',status:'รอตรวจสอบ'},
-    {id:'demo-service-2',service:'จองสนามซ้อม',name:'วรพล',phone:'095-222-8901',status:'รอตรวจสอบ'},
-    {id:'demo-service-3',service:'ลงชื่อซื้อของ',name:'ศิรินทร์',phone:'080-555-6655',status:'ดำเนินการแล้ว'}
-  ]);
-  if(!data(EMPLOYEE_KEY).length)save(EMPLOYEE_KEY,[
-    {id:'emp-001',name:'กมลชนก แก้วดี',position:'ผู้จัดการสนาม',phone:'081-555-1001',shift:'09:00–18:00',status:'ปฏิบัติงาน'},
-    {id:'emp-002',name:'ภาณุวัฒน์ คำแสน',position:'พนักงานต้อนรับ',phone:'082-555-1002',shift:'11:00–20:00',status:'ปฏิบัติงาน'},
-    {id:'emp-003',name:'ณิชาภา ชัยวงศ์',position:'พนักงานคอร์ต',phone:'083-555-1003',shift:'14:00–23:00',status:'ปฏิบัติงาน'},
-    {id:'emp-004',name:'จักรินทร์ มณี',position:'ช่างดูแลอุปกรณ์',phone:'084-555-1004',shift:'12:00–21:00',status:'ปฏิบัติงาน'}
-  ]);
-  localStorage.setItem('smashup_demo_seeded_v1','true');
-}
+const R=window.SmashRules, openedAdmin=adminSession();
+const data=key=>R.list(key),save=(key,value)=>{R.actor(openedAdmin,true);R.write(key,value)};
+const adminMessage=document.createElement('p');adminMessage.setAttribute('role','status');document.querySelector('.admin-top').after(adminMessage);
+const escapeHtml=window.SmashUtils?.escapeHtml||(value=>String(value==null?'':value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])));
 function showScreen(screen){document.querySelectorAll('[data-screen-panel]').forEach(panel=>panel.classList.toggle('active',panel.dataset.screenPanel===screen));document.querySelectorAll('.admin-nav').forEach(button=>button.classList.toggle('active',button.dataset.screen===screen));document.querySelector('#screenTitle').innerHTML=screenTitles[screen];renderDashboard()}
-function showAdmin(){seedDemoData();appView.hidden=false;document.querySelector('#adminGreeting').textContent=`สวัสดี, ${adminSession().name}`;showScreen('overview')}
+function showAdmin(){appView.hidden=false;document.querySelector('#adminGreeting').textContent=`สวัสดี, ${adminSession().name}`;showScreen('overview')}
 function recordsWithIds(key){const records=data(key);let changed=false;records.forEach(record=>{if(!record.id){record.id=crypto.randomUUID();changed=true}});if(changed)save(key,records);return records}
-function renderDashboard(){const bookings=data(BOOKING_KEY),buffet=recordsWithIds(BUFFET_KEY),services=recordsWithIds(SERVICE_KEY),employees=data(EMPLOYEE_KEY);document.querySelector('#courtTotal').textContent=bookings.length;document.querySelector('#pendingTotal').textContent=bookings.filter(item=>item.status==='รอตรวจสอบการชำระเงิน').length;document.querySelector('#buffetTotal').textContent=buffet.length;document.querySelector('#serviceTotal').textContent=services.length;renderBookings(bookings);renderManagedRecords('#adminBuffetRows',buffet,'buffet',item=>`<b>${escapeHtml(item.name||'ไม่ระบุชื่อ')}</b><span>${escapeHtml(item.session||item.time||'ไม่ระบุรอบ')}</span>`,'ยังไม่มีผู้ลงชื่อบุฟเฟต์',['รอตรวจสอบการชำระเงิน','ยืนยันแล้ว','ยกเลิกแล้ว']);renderManagedRecords('#adminServiceRows',services,'service',item=>`<b>${escapeHtml(item.service||'คำขอบริการ')}</b><span>${escapeHtml(item.name||'ไม่ระบุชื่อ')}</span>`,'ยังไม่มีคำขอบริการ',['รอตรวจสอบ','ดำเนินการแล้ว','ยกเลิกแล้ว']);renderEmployees(employees)}
-function renderBookings(bookings=data(BOOKING_KEY)){const query=document.querySelector('#adminBookingSearch').value.trim().toLowerCase(),visible=bookings.filter(item=>!query||`${item.name} ${item.court} ${item.phone}`.toLowerCase().includes(query));document.querySelector('#adminBookingRows').innerHTML=visible.map(item=>`<tr><td>${escapeHtml(item.date)}<br><small>${escapeHtml(item.time)} น.</small></td><td><b>${escapeHtml(item.court)}</b></td><td>${escapeHtml(item.name)}</td><td>${escapeHtml(item.phone)}</td><td>฿ ${Number(item.amount||0).toLocaleString('th-TH')}</td><td><select data-status="${item.id}"><option ${item.status==='รอตรวจสอบการชำระเงิน'?'selected':''}>รอตรวจสอบการชำระเงิน</option><option ${item.status==='ยืนยันแล้ว'?'selected':''}>ยืนยันแล้ว</option><option ${item.status==='ยกเลิกแล้ว'?'selected':''}>ยกเลิกแล้ว</option></select></td><td><button class="admin-action" data-save="${item.id}">บันทึก</button></td></tr>`).join('');document.querySelector('#adminEmpty').hidden=visible.length>0;document.querySelector('#bookingCaption').textContent=visible.length?`พบ ${visible.length} รายการ`:'ไม่พบรายการ'}
+function renderDashboard(){const bookings=data(BOOKING_KEY),buffet=recordsWithIds(BUFFET_KEY),services=recordsWithIds(SERVICE_KEY),employees=data(EMPLOYEE_KEY);document.querySelector('#courtTotal').textContent=bookings.length;document.querySelector('#pendingTotal').textContent=bookings.filter(item=>R.pending(item.status)).length;document.querySelector('#buffetTotal').textContent=buffet.length;document.querySelector('#serviceTotal').textContent=services.length;renderBookings(bookings);renderManagedRecords('#adminBuffetRows',buffet,'buffet',item=>`<b>${escapeHtml(item.name||'ไม่ระบุชื่อ')}</b><span>${escapeHtml(item.session||item.time||'ไม่ระบุรอบ')}</span>`,'ยังไม่มีผู้ลงชื่อบุฟเฟต์',['รอตรวจสอบ','รอยืนยัน','รอตรวจสอบการชำระเงิน','ยืนยันแล้ว','ยกเลิกแล้ว']);renderManagedRecords('#adminServiceRows',services,'service',item=>`<b>${escapeHtml(item.service||'คำขอบริการ')}</b><span>${escapeHtml(item.name||'ไม่ระบุชื่อ')}</span>`,'ยังไม่มีคำขอบริการ',['รอตรวจสอบ','ดำเนินการแล้ว','ยกเลิกแล้ว']);renderEmployees(employees)}
+
+function renderBookings(bookings=data(BOOKING_KEY)){
+const q=document.querySelector('#adminBookingSearch').value.trim().toLowerCase(),visible=bookings.filter(r=>!q||(r.name+' '+r.court+' '+r.phone).toLowerCase().includes(q));
+document.querySelector('#adminBookingRows').innerHTML=visible.map(r=>'<tr><td>'+escapeHtml(r.date)+'<br>'+escapeHtml(r.time)+'</td><td>'+escapeHtml(r.court)+'</td><td>'+escapeHtml(r.name)+'</td><td>'+escapeHtml(r.phone)+'</td><td>฿ '+Number(r.amount||0).toLocaleString('th-TH')+'</td><td><select data-status="'+escapeHtml(r.id)+'"><option selected>'+escapeHtml(r.status)+'</option><option>ยืนยันแล้ว</option><option>ยกเลิกแล้ว</option></select></td><td><button class="admin-action" data-save="'+escapeHtml(r.id)+'" '+(!R.active(r)?'disabled':'')+'>บันทึก</button></td></tr>').join('');
+document.querySelector('#adminEmpty').hidden=visible.length>0;document.querySelector('#bookingCaption').textContent='พบ '+visible.length+' รายการ';
+}
 function renderManagedRecords(selector,list,type,formatter,empty,statuses){document.querySelector(selector).innerHTML=list.length?list.slice().reverse().map(item=>`<div class="managed-record"><div>${formatter(item)}</div><div class="record-controls"><select data-${type}-status="${item.id}">${statuses.map(status=>`<option ${item.status===status?'selected':''}>${status}</option>`).join('')}</select><button class="admin-action" data-${type}-save="${item.id}">บันทึก</button></div></div>`).join(''):`<p class="empty-state">${empty}</p>`}
-function saveRecordStatus(key,id,status){const records=data(key),record=records.find(item=>item.id===id);if(record){record.status=status;if(key===BUFFET_KEY&&status==='ยืนยันแล้ว')record.paymentStatus='ชำระเงินยืนยันแล้ว';save(key,records);renderDashboard()}}
+
+async function saveRecordStatus(key,id,status){
+try{await R.setStatus(key===BOOKING_KEY?'court':key===BUFFET_KEY?'buffet':'service',id,status,openedAdmin);adminMessage.textContent='บันทึกสถานะแล้ว (การยืนยันรายการไม่ใช่การรับชำระเงินจริง)';renderDashboard();}
+catch(e){adminMessage.textContent=e.message}
+}
 function renderEmployees(employees){document.querySelector('#employeeCaption').textContent=employees.length?`พนักงานทั้งหมด ${employees.length} คน`:'ยังไม่มีข้อมูลพนักงาน';document.querySelector('#adminEmployeeRows').innerHTML=employees.length?employees.map(employee=>`<article class="employee-card"><h3>${escapeHtml(employee.name)}</h3><p><strong>${escapeHtml(employee.position)}</strong></p><p>☎ ${escapeHtml(employee.phone)}</p><p>กะทำงาน: ${escapeHtml(employee.shift)}</p><span class="employee-status">${escapeHtml(employee.status)}</span></article>`).join(''):'<p class="empty-state">ยังไม่มีข้อมูลพนักงาน</p>'}
-document.querySelectorAll('.admin-nav, [data-go-screen]').forEach(button=>button.addEventListener('click',()=>showScreen(button.dataset.screen||button.dataset.goScreen)));document.querySelector('#adminLogout').addEventListener('click',()=>{localStorage.removeItem(SESSION_KEY);location.href='../auth/login.html'});document.querySelector('#adminRefresh').addEventListener('click',renderDashboard);document.querySelector('#buffetRefresh').addEventListener('click',renderDashboard);document.querySelector('#serviceRefresh').addEventListener('click',renderDashboard);document.querySelector('#employeeRefresh').addEventListener('click',renderDashboard);document.querySelector('#adminBookingSearch').addEventListener('input',renderBookings);document.querySelector('#adminBookingRows').addEventListener('click',event=>{const button=event.target.closest('[data-save]');if(!button)return;const bookings=data(BOOKING_KEY),item=bookings.find(row=>row.id===button.dataset.save),status=document.querySelector(`[data-status="${button.dataset.save}"]`).value;if(item){item.status=status;if(status==='ยืนยันแล้ว')item.paymentStatus='ชำระเงินยืนยันแล้ว';save(BOOKING_KEY,bookings);renderDashboard()}});document.querySelector('#adminBuffetRows').addEventListener('click',event=>{const button=event.target.closest('[data-buffet-save]');if(button)saveRecordStatus(BUFFET_KEY,button.dataset.buffetSave,document.querySelector(`[data-buffet-status="${button.dataset.buffetSave}"]`).value)});document.querySelector('#adminServiceRows').addEventListener('click',event=>{const button=event.target.closest('[data-service-save]');if(button)saveRecordStatus(SERVICE_KEY,button.dataset.serviceSave,document.querySelector(`[data-service-status="${button.dataset.serviceSave}"]`).value)});if(adminSession())showAdmin();else location.replace('../auth/login.html?next=../admin/admin-dashboard.html');
+
+document.querySelectorAll('.admin-nav,[data-go-screen]').forEach(b=>b.addEventListener('click',()=>showScreen(b.dataset.screen||b.dataset.goScreen)));
+document.querySelector('#adminLogout').onclick=()=>{localStorage.removeItem(SESSION_KEY);location.href='../auth/login.html'};
+['#adminRefresh','#buffetRefresh','#serviceRefresh','#employeeRefresh'].forEach(id=>document.querySelector(id).onclick=()=>{try{R.actor(openedAdmin,true);renderDashboard()}catch(e){adminMessage.textContent=e.message}});
+document.querySelector('#adminBookingSearch').addEventListener('input',()=>renderBookings());
+document.querySelector('#adminBookingRows').addEventListener('click',e=>{const b=e.target.closest('[data-save]');if(!b)return;const select=b.closest('tr').querySelector('select');saveRecordStatus(BOOKING_KEY,b.dataset.save,select.value)});
+[['#adminBuffetRows','buffet',BUFFET_KEY],['#adminServiceRows','service',SERVICE_KEY]].forEach(([sel,type,key])=>document.querySelector(sel).addEventListener('click',e=>{const b=e.target.closest('[data-'+type+'-save]');if(!b)return;saveRecordStatus(key,b.dataset[type+'Save'],b.closest('.record-controls').querySelector('select').value)}));
+window.addEventListener('storage',()=>{if(!adminSession()||adminSession().id!==openedAdmin?.id){appView.hidden=true;location.replace('../auth/login.html');return;}try{renderDashboard()}catch(e){adminMessage.textContent=e.message}});
+try{if(adminSession())showAdmin();else location.replace('../auth/login.html?next=../admin/admin-dashboard.html')}catch(e){appView.hidden=false;adminMessage.textContent=e.message}

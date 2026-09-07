@@ -1,13 +1,14 @@
 const USERS_KEY = 'smashup_users_v1';
 const SESSION_KEY = 'smashup_session_v1';
 // บัญชีผู้ดูแลเป็นบัญชีระบบ จึงไม่อยู่ในขั้นตอนสมัครสมาชิก
-const SYSTEM_ADMINS = [{ id: 'system-admin-smashup', username: 'admin', name: 'Admin SMASHUP', password: 'smashup123', role: 'admin' }];
+const SYSTEM_ADMINS = [{ id: 'system-admin-smashup', username: 'admin', name: 'Admin SMASHUP', passwordHash: '93823af8d0e719e4a7a68efdbb62886b4169ff7683f95a3741b6b0d21aa85873', role: 'admin' }];
 let registerMode = false;
 const form = document.querySelector('#authForm');
 const feedback = document.querySelector('#feedback');
 const emailField = document.querySelector('#emailField');
 const playerProfile = document.querySelector('#playerProfile');
 const profileLevel = document.querySelector('#profileLevel');
+profileLevel.innerHTML = '<option value="pending">ประเมินทักษะหลังสมัครสมาชิก</option>';
 const profileGoal = document.querySelector('#profileGoal');
 const title = document.querySelector('#formTitle');
 const description = document.querySelector('#formDescription');
@@ -20,7 +21,7 @@ async function hashPassword(password) { const bytes = new TextEncoder().encode(p
 function nextPage(role) {
   const next = new URLSearchParams(location.search).get('next');
   if (next && next.startsWith('../')) return next;
-  return role === 'admin' ? '../admin/admin-dashboard.html' : '../index.html';
+  return role === 'admin' ? '../admin/admin-dashboard.html' : '../auth/player-assessment.html';
 }
 function renderMode() {
   const login = !registerMode;
@@ -49,7 +50,7 @@ form.addEventListener('submit', async (event) => {
     users.push(user); localStorage.setItem(USERS_KEY, JSON.stringify(users)); localStorage.setItem(SESSION_KEY, JSON.stringify({ id: user.id, name: user.username, email: user.email, profile: user.profile, role: user.role }));
     setFeedback('สร้างบัญชีและบันทึกโปรไฟล์ผู้เล่นเรียบร้อย กำลังพาไปหน้าแรก…', 'success');
   } else {
-    const systemAdmin = SYSTEM_ADMINS.find(item => item.username === username && item.password === password);
+    const systemAdmin = SYSTEM_ADMINS.find(item => item.username === username && item.passwordHash === passwordHash);
     const user = systemAdmin || users.find(item => (item.username === username || (!item.username && item.email === username)) && item.passwordHash === passwordHash);
     if (!user) { setFeedback('username หรือรหัสผ่านไม่ถูกต้อง', 'error'); return; }
     const role = user.role === 'admin' ? 'admin' : 'user';

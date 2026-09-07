@@ -13,51 +13,28 @@ const headerStyle = document.createElement('style');
 headerStyle.textContent = '.booking-header { min-height: 70px; position: sticky; top: 0; z-index: 10; }';
 document.head.append(headerStyle);
 
-const BOOKING_STORAGE_KEY = 'smashup_bookings_v1';
-const form = document.querySelector('#booking-form');
-const date = document.querySelector('#date');
-const estimate = document.querySelector('#estimate');
-const success = document.querySelector('#success');
-const currentUser = (() => { try { return JSON.parse(localStorage.getItem('smashup_session_v1')); } catch { return null; } })();
-const courtNumbers = ['1','2','3','4','5','6','7','8','9','10','11','A','B'];
-const BOOKING_WINDOW_DAYS = 7;
-const PAYMENT_GRACE_MINUTES = 15;
 
-function getBookings() { try { return JSON.parse(localStorage.getItem(BOOKING_STORAGE_KEY)) || []; } catch { return []; } }
-function expireUnpaidBookings() { const now = Date.now(); const bookings = getBookings(); let changed = false; bookings.forEach((booking) => { if (booking.status === 'รอตรวจสอบการชำระเงิน' && booking.paymentDueAt && new Date(booking.paymentDueAt).getTime() < now) { booking.status = 'ยกเลิกแล้ว'; booking.cancelReason = 'หมดเวลาชำระเงิน'; changed = true; } }); if (changed) localStorage.setItem(BOOKING_STORAGE_KEY, JSON.stringify(bookings)); return bookings; }
-function isCourtAvailable(court, bookingDate, time) { return !getBookings().some((booking) => booking.date === bookingDate && booking.time === time && booking.court === court && booking.status !== 'ยกเลิกแล้ว'); }
-function updateCourtOptions() {
-  const court = form.elements.court;
-  const time = form.elements.time.value;
-  const selected = court.value;
-  court.innerHTML = '<option value="">เลือกคอร์ต</option>' + courtNumbers.map((number) => `<option value="${number}" ${isCourtAvailable(number, date.value, time) ? '' : 'disabled'}>คอร์ต ${number}${isCourtAvailable(number, date.value, time) ? '' : ' (จองแล้ว)'}</option>`).join('');
-  court.value = isCourtAvailable(selected, date.value, time) ? selected : '';
+const R=window.SmashRules, form=document.querySelector('#booking-form'), date=document.querySelector('#date');
+const estimate=document.querySelector('#estimate'), success=document.querySelector('#success');
+let currentUser;try{currentUser=R.session()}catch(e){success.textContent=e.message}
+function updateCourtOptions(){
+ try{const records=R.list(R.keys.court),selected=form.elements.court.value;
+ form.elements.court.innerHTML='<option value="">เลือกคอร์ต</option>'+R.courts.map(c=>{
+ const busy=R.courtConflict(records,{court:c,date:date.value,time:form.elements.time.value});
+ return '<option value="'+c+'" '+(busy?'disabled':'')+'>คอร์ต '+c+(busy?' (จองแล้ว)':'')+'</option>';
+ }).join('');form.elements.court.value=R.courtConflict(records,{court:selected,date:date.value,time:form.elements.time.value})?'':selected;
+ }catch(e){success.textContent=e.message}
 }
-
-if (form && date && estimate && success) {
-  expireUnpaidBookings();
-  const oldCourtCount = document.querySelector('#courts');
-  const field = oldCourtCount.closest('label');
-  field.innerHTML = 'คอร์ตที่ต้องการ <b>*</b><select id="court" name="court" required></select>';
-  const today = new Date();
-  date.min = today.toISOString().split('T')[0];
-  const latestBooking = new Date(today); latestBooking.setDate(today.getDate() + BOOKING_WINDOW_DAYS);
-  date.max = latestBooking.toISOString().split('T')[0];
-  if (currentUser && form.elements.name && !form.elements.name.value) form.elements.name.value = currentUser.name;
-  date.addEventListener('change', updateCourtOptions);
-  form.elements.time.addEventListener('change', updateCourtOptions);
-  updateCourtOptions();
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    if (!currentUser) { success.innerHTML = 'กรุณา <a href="../auth/login.html?next=../booking/form.html">เข้าสู่ระบบ</a> ก่อนส่งคำขอจอง'; return; }
-    const data = Object.fromEntries(new FormData(form));
-    expireUnpaidBookings();
-    if (!isCourtAvailable(data.court, data.date, data.time)) { success.textContent = 'คอร์ตนี้เพิ่งถูกจองไป กรุณาเลือกคอร์ตอื่น'; updateCourtOptions(); return; }
-    const bookings = getBookings();
-    const paymentDueAt = new Date(Date.now() + PAYMENT_GRACE_MINUTES * 60 * 1000).toISOString();
-    bookings.push({ id: crypto.randomUUID(), date: data.date, time: data.time, court: data.court, name: data.name, phone: data.phone, amount: 130, status: 'รอตรวจสอบการชำระเงิน', paymentStatus: 'รอชำระเงิน', paymentDueAt, ownerId: currentUser.id, createdAt: new Date().toISOString() });
-    localStorage.setItem(BOOKING_STORAGE_KEY, JSON.stringify(bookings));
-    success.innerHTML = `ล็อกคอร์ต ${data.court} ชั่วคราวแล้ว โปรดชำระเงินภายใน 15 นาที ดูสถานะได้ที่ <a href="my-bookings.html">รายการของฉัน</a>`;
-    form.reset(); date.min = new Date().toISOString().split('T')[0]; if (currentUser) form.elements.name.value = currentUser.name; estimate.textContent = '฿ 130'; updateCourtOptions();
-  });
+if(form){
+ document.querySelector('#courts').closest('label').innerHTML='คอร์ตที่ต้องการ <b>*</b><select id="court" name="court" required></select>';
+ date.min=R.localDate();date.max=R.lastDate();
+ if(currentUser)form.elements.name.value=currentUser.name||'';
+ date.addEventListener('change',updateCourtOptions);form.elements.time.addEventListener('change',updateCourtOptions);
+ window.addEventListener('storage',updateCourtOptions);window.addEventListener('focus',updateCourtOptions);updateCourtOptions();
+ form.addEventListener('submit',async e=>{e.preventDefault();const button=form.querySelector('[type=submit]');if(button)button.disabled=true;
+ try{const r=await R.bookCourt(Object.fromEntries(new FormData(form)),currentUser);
+ success.innerHTML='ล็อกคอร์ต '+R.escape(r.court)+' ชั่วคราว 15 นาที รอผู้จัดยืนยันรายการจำลอง ไม่มีการชำระเงินจริง · <a href="my-bookings.html">ดูรายการของฉัน</a>';
+ form.reset();if(currentUser)form.elements.name.value=currentUser.name;estimate.textContent='฿ 130';
+ }catch(error){success.textContent=error.message}finally{if(button)button.disabled=false;updateCourtOptions()}
+ });
 }
