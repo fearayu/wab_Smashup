@@ -1,13 +1,38 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0; url=login.html">
-  <title>กำลังเปิดหน้าเข้าสู่ระบบ | SMASHUP</title>
-  <script>window.location.replace('login.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>เข้าสู่ระบบ | SMASHUP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="auth.css">
 </head>
 <body>
-  กำลังเปิดหน้าเข้าสู่ระบบ… <a href="login.html">เปิดต่อ</a>
+  <main class="auth-page"><a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a><section class="auth-card"><p class="eyebrow">MEMBER ACCESS</p><h1 id="formTitle">เข้าสู่ระบบ</h1><p class="intro" id="formDescription">เข้าสู่ระบบเพื่อจัดการการจองและข้อมูลผู้เล่นของคุณ</p><form id="authForm" novalidate><label>Username<input id="username" autocomplete="username" maxlength="30" required placeholder="เช่น smashup_player"></label><label id="emailField" hidden>อีเมล<input id="email" type="email" autocomplete="email" placeholder="name@example.com"></label><label>รหัสผ่าน<input id="password" type="password" autocomplete="current-password" required minlength="6" placeholder="อย่างน้อย 6 ตัวอักษร"></label><button type="submit" id="submitButton">เข้าสู่ระบบ</button><p class="feedback" id="feedback" role="status"></p></form><p class="switch-copy" id="switchCopy">ยังไม่มีบัญชี? <button id="switchMode" type="button">สมัครสมาชิก</button></p><div class="demo-accounts" style="margin-top:18px;padding:14px;background:#f7f5f1;border:1px solid #e8e3dd;border-radius:10px;font-size:13px;line-height:1.6">
+  <strong style="color:#0f2f4a">บัญชีทดสอบ (คลิกเพื่อกรอกอัตโนมัติ):</strong><br>
+  <button type="button" class="demo-fill" data-user="admin" data-pass="12345" style="text-align:left;background:#fff;border:1px solid #ffd8c8;color:var(--orange, #f4511e);border-radius:8px;padding:8px 10px;margin:6px 6px 0 0;cursor:pointer;font:500 13px Kanit">👑 admin / 12345 (ผู้ดูแล)</button>
+  <button type="button" class="demo-fill" data-user="customer01" data-pass="123456" style="text-align:left;background:#fff;border:1px solid #e8e3dd;border-radius:8px;padding:8px 10px;margin:6px 6px 0 0;cursor:pointer;font:500 13px Kanit">👤 customer01 / 123456</button>
+  <button type="button" class="demo-fill" data-user="player01" data-pass="player123" style="text-align:left;background:#fff;border:1px solid #e8e3dd;border-radius:8px;padding:8px 10px;margin:6px 0 0 0;cursor:pointer;font:500 13px Kanit">🏸 player01 / player123</button>
+  <div style="margin-top:8px"><button type="button" id="clearSession" style="background:none;border:0;color:#77736f;cursor:pointer;font:400 12px Kanit;text-decoration:underline">ล้าง session แล้วลองใหม่</button></div>
+</div>
+<p class="demo-note">เวอร์ชันต้นแบบ: บัญชีถูกเก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น</p></section></main><script src="auth.js"></script>
+<script>
+document.querySelectorAll('.demo-fill').forEach(b=>b.addEventListener('click',()=>{
+  document.getElementById('username').value=b.dataset.user;
+  document.getElementById('password').value=b.dataset.pass;
+  if(window.registerMode) { document.getElementById('switchMode').click(); }
+  document.getElementById('feedback').textContent='กรอก '+b.dataset.user+' แล้ว กดเข้าสู่ระบบ';
+  document.getElementById('feedback').className='feedback';
+}));
+document.getElementById('clearSession')?.addEventListener('click',()=>{
+  localStorage.removeItem('smashup_session_v1');
+  localStorage.removeItem('smashup_users_v1');
+  // re-seed demo hint
+  document.getElementById('feedback').textContent='ล้าง session แล้ว — ลองกดบัญชีทดสอบอีกครั้ง';
+  document.getElementById('feedback').className='feedback success';
+});
+</script>
 </body>
 </html>

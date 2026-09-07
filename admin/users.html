@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>จัดการบัญชีผู้ใช้ | SMASHUP Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <link rel="stylesheet" href="admin.css">
+  <style>.user-status{padding:4px 10px;border-radius:999px;font:600 12px 'Kanit',sans-serif;display:inline-flex}.user-status.active{background:#e6f6ea;color:var(--green);border:1px solid #bfe8c6}.user-status.suspended{background:#fff7e6;color:#b7790f;border:1px solid #ffe2a8}.user-status.banned{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}.btn-suspend{background:#fff;color:#d97706;border:1px solid #ffe2a8}.btn-suspend:hover{background:#fff7e6}.btn-ban{background:#fff;color:var(--red);border:1px solid #fecaca}.btn-ban:hover{background:#fef2f2}.btn-restore{background:var(--green);color:#fff;border:0}</style>
+</head>
+<body class="admin-mode">
+  <header class="app-topbar admin-topbar">
+    <a class="brand" href="index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>ADMIN PANEL</small></span></a>
+    <div class="admin-topbar-right"><span class="admin-badge">ผู้ดูแลระบบ</span><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>ADMIN PANEL</strong><span>แดชบอร์ดผู้ดูแล • SMASHUP</span></div>
+      <nav>
+        <a href="index.html"><i class="icon">◈</i> ภาพรวม</a>
+        <a href="courts.html"><i class="icon">▦</i> จัดการข้อมูลสนาม</a>
+        <a class="active" href="users.html"><i class="icon">◎</i> จัดการบัญชีผู้ใช้</a>
+        <a href="reports.html"><i class="icon">▣</i> รายงานสถิติ</a>
+      </nav>
+      <div class="section-label">การจัดการ</div>
+      <nav><a href="index.html#requests"><i class="icon">≡</i> คำขอรอดำเนินการ</a></nav>
+      <div class="section-label">บัญชี</div>
+      <nav><a href="#" id="adminLogout"><i class="icon">↩</i> ออกจากระบบ</a></nav>
+    </aside>
+    <main class="content">
+      <div class="content-inner">
+        <p class="eyebrow">ADMIN / USERS</p>
+        <h1 class="page-title">จัดการ<em style="color:var(--orange);font-style:normal">บัญชีผู้ใช้</em></h1>
+        <p class="page-subtitle">ตรวจสอบ ระงับสิทธิ์ หรือลบบัญชีที่ผิดนโยบาย — ค้นหาและกรองตามสถานะได้</p>
+        <section class="table-section">
+          <div class="table-header">
+            <h2>บัญชีทั้งหมด <span id="userCount">6 บัญชี</span></h2>
+            <div class="table-actions">
+              <input id="searchUser" type="search" placeholder="ค้นหาชื่อ/อีเมล...">
+              <select id="filterUserStatus"><option value="">ทุกสถานะ</option><option value="active">ใช้งานได้</option><option value="suspended">ระงับสิทธิ์</option><option value="banned">ลบ/แบน</option></select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>ชื่อผู้ใช้</th><th>อีเมล</th><th>สมัครเมื่อ</th><th>สถานะ</th><th>Action</th></tr></thead>
+              <tbody id="userBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="../shared/admin-guard.js"></script>
+  <script src="users.js"></script>
+</body>
+</html>

@@ -7,38 +7,42 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
   <link rel="stylesheet" href="topic.css">
-  <link rel="stylesheet" href="booking-info.css">
-  <link rel="stylesheet" href="booking-info-hero.css">
+  <style>html,body{height:auto;overflow:auto}.app-shell main{height:auto;overflow:visible;margin-left:0}.content.booking-content{padding:0;background:transparent}.topic-main{margin-left:0!important;max-width:none!important;padding:48px clamp(20px,4vw,56px)!important}</style>
 </head>
 <body>
-  <header class="topbar">
+  <header class="app-topbar">
     <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
-    <a class="back" href="court-booking.html">← หน้าจองสนาม</a>
+    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a class="active" href="index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a href="../appointments/index.html">นัดหมาย</a></nav>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
   </header>
-  <main class="topic-main booking-info-page">
-    <div class="page-heading">
-      <div><p class="eyebrow">02 / BOOKING INFORMATION</p><h1>ข้อมูล<br><em>การจอง</em></h1><p>ตรวจสอบรายการจองสนามตามวัน คอร์ต เวลา และสถานะการชำระเงิน</p></div>
-      <a class="new-booking" href="form.html">+ จองสนาม</a>
-    </div>
-    <section class="booking-toolbar" aria-label="ค้นหารายการจอง">
-      <label>วันที่ต้องการตรวจสอบ<input id="bookingDate" type="date"></label>
-      <label>ค้นหาชื่อหรือเบอร์โทร<input id="bookingSearch" type="search" placeholder="เช่น สมชาย หรือ 08X"></label>
-      <button id="clearFilters" type="button">ล้างตัวกรอง</button>
-    </section>
-    <section class="booking-summary" aria-label="สรุปรายการจอง">
-      <article><span>คอร์ตทั้งหมด</span><strong>13</strong><small>คอร์ต 1–11, A และ B</small></article>
-      <article><span>จองแล้ว</span><strong id="bookedCount">0</strong><small>ตามวันที่เลือก</small></article>
-      <article><span>คอร์ตว่าง</span><strong id="availableCount">13</strong><small>พร้อมรับการจอง</small></article>
-      <article><span>รอยืนยัน</span><strong id="pendingCount">0</strong><small>รอตรวจสอบการชำระเงิน</small></article>
-    </section>
-    <section class="booking-list">
-      <div class="list-heading"><div><h2>รายการจองสนาม</h2><p id="resultMessage" role="status">กำลังแสดงรายการจอง</p></div><button id="refreshList" class="refresh" type="button">↻ รีเฟรช</button></div>
-      <div class="table-scroll"><table><thead><tr><th>เวลา</th><th>คอร์ต</th><th>ผู้จอง</th><th>เบอร์โทรศัพท์</th><th>สถานะ</th><th>ยอดชำระ</th></tr></thead><tbody id="bookingRows"></tbody></table></div>
-      <p id="emptyState" class="empty-state" hidden>ไม่พบรายการจองตามเงื่อนไขที่เลือก</p>
-    </section>
-  </main>
-  <script src="topic-nav.js"></script>
-  <script src="../shared/utils.js"></script><script src="../shared/service-rules.js"></script><script src="booking-info.js"></script>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>SMASHUP</strong><span>จองสนาม • Booking</span></div>
+      <nav>
+        <a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a>
+        <a class="active" href="index.html"><i class="icon">▦</i> จองสนาม</a>
+        <a href="../matching/index.html"><i class="icon">◎</i> หาคู่เล่น</a>
+        <a href="../appointments/index.html"><i class="icon">◈</i> นัดหมายของฉัน</a>
+        <a href="buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a>
+      </nav>
+      <div class="section-label">ช่วยเหลือ</div>
+      <nav>
+        <a href="rules.html"><i class="icon">▱</i> กฎการใช้สนาม</a>
+        <a href="shop.html"><i class="icon">♡</i> ร้านค้า</a>
+      </nav>
+    </aside>
+    <main class="content booking-content">
+      <div class="topic-main">
+        <p class="eyebrow">02 / BOOKING INFO</p>
+        <h1>ข้อมูล<br><em>การจอง</em></h1>
+        <p>ตรวจสอบรายการจองตามวันที่ คอร์ต เวลา ผู้จอง สถานะ และการชำระเงินในรูปแบบเดียวกับหน้ารายการจองจริง</p>
+        <section class="topic-content"><h2>รายละเอียดบริการ</h2><ul><li>ตารางตัวอย่างเปิดรอบเวลา 11:00–23:00 น.</li><li>มีคอร์ต 1–11 และคอร์ต A–B รวม 13 คอร์ต</li><li>ค่าบริการตัวอย่าง 130 บาทต่อคอร์ตต่อชั่วโมง</li><li>เลือกวันเพื่อตรวจตารางล่วงหน้าได้ 7 วัน</li></ul><a class="topic-button" href="index.html">ไปหน้าจองสนาม ↗</a></section>
+      </div>
+    </main>
+  </div>
+  <script>document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));</script>
+  <script src="../shared/auth-ui.js"></script>
 </body>
 </html>

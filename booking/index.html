@@ -1,13 +1,58 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0; url=court-booking.html">
-  <title>กำลังเปิดหน้าจองสนาม | SMASHUP</title>
-  <script>window.location.replace('court-booking.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>จองสนาม | SMASHUP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <link rel="stylesheet" href="booking.css">
+  <style>
+    /* Override booking.css layout to work with app-shell */
+    html,body{height:auto;overflow:auto}
+    .app-shell main{height:auto;overflow:visible;margin-left:0}
+    .content.booking-content{padding:0;background:transparent}
+    .reservation-board{height:auto;min-height:calc(100vh - 62px)}
+    @media(max-width:860px){.reservation-board{min-height:auto}}
+  </style>
 </head>
 <body>
-  กำลังเปิดหน้าจองสนาม… <a href="court-booking.html">เปิดต่อ</a>
+  <header class="app-topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
+    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a class="active" href="index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a href="../appointments/index.html">นัดหมาย</a></nav>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>SMASHUP</strong><span>จองสนาม • Booking</span></div>
+      <nav>
+        <a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a>
+        <a class="active" href="index.html"><i class="icon">▦</i> จองสนาม</a>
+        <a href="../matching/index.html"><i class="icon">◎</i> หาคู่เล่น</a>
+        <a href="../appointments/index.html"><i class="icon">◈</i> นัดหมายของฉัน</a>
+        <a href="buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a>
+      </nav>
+      <div class="section-label">ช่วยเหลือ</div>
+      <nav>
+        <a href="rules.html"><i class="icon">▱</i> กฎการใช้สนาม</a>
+        <a href="shop.html"><i class="icon">♡</i> ร้านค้า</a>
+      </nav>
+    </aside>
+    <main class="content booking-content">
+      <section class="reservation-board" aria-labelledby="board-title">
+        <div class="board-heading"><h1 id="board-title">ตารางการจองสนาม</h1><strong>แสดงผล 7 วันล่วงหน้า</strong></div>
+        <div class="date-tabs"><button class="selected" type="button">วันนี้</button><button type="button">พรุ่งนี้</button><button type="button">+2 วัน</button><button type="button">+3 วัน</button><button type="button">+4 วัน</button><button type="button">+5 วัน</button><button type="button">+6 วัน</button></div>
+        <div class="schedule-scroll"><table><thead><tr><th>เวลา / คอร์ต</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>A</th><th>B</th></tr></thead><tbody><tr><th>11:00–12:00</th><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td></tr><tr><th>19:00–20:00</th><td class="reserved">จองแล้ว</td><td class="reserved">จองแล้ว</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td></tr><tr><th>22:00–23:00</th><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td></tr></tbody></table></div>
+        <p class="board-note"><span class="legend free"></span>ว่าง <span class="legend reserved"></span>จองแล้ว — กดคอร์ตที่ว่างเพื่อทำการจอง ระบบจะแสดงรายละเอียดการจองภายใน 15 นาที</p>
+        <a class="topic-button" href="form.html">จองสนามแบดมินตัน →</a>
+      </section>
+    </main>
+  </div>
+  <script>
+    document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));
+  </script>
+  <script src="../shared/auth-ui.js"></script>
 </body>
 </html>

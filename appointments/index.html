@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>จัดการนัดหมายและคำเชิญ | SMASHUP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <link rel="stylesheet" href="appointments.css">
+</head>
+<body>
+  <header class="app-topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
+    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a href="../booking/index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a class="active" href="index.html">นัดหมาย</a></nav>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>SMASHUP</strong><span>นัดหมาย • Appointments</span></div>
+      <nav>
+        <a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a>
+        <a href="../booking/index.html"><i class="icon">▦</i> จองสนาม</a>
+        <a href="../matching/index.html"><i class="icon">◎</i> หาคู่เล่น</a>
+        <a class="active" href="index.html"><i class="icon">◈</i> นัดหมายของฉัน</a>
+        <a href="../booking/buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a>
+      </nav>
+    </aside>
+    <main class="content">
+      <div class="content-inner">
+        <p class="eyebrow">02 / APPOINTMENTS</p>
+        <h1 class="page-title">จัดการ<em style="color:var(--orange);font-style:normal">นัดหมาย</em></h1>
+        <p class="page-subtitle">ตอบรับคำเชิญหรือดูตารางนัดหมายที่ยืนยันแล้วของคุณ</p>
+
+        <div class="tabs" role="tablist">
+          <button class="tab active" role="tab" aria-selected="true" data-tab="invites">คำเชิญที่ได้รับ <span class="count" id="inviteCount">3</span></button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="schedule">ตารางนัดหมายของฉัน</button>
+        </div>
+
+        <!-- Tab 1: Invites -->
+        <section class="tab-panel active" id="panel-invites" role="tabpanel">
+          <div class="invite-list" id="inviteList"></div>
+          <p id="inviteEmpty" class="empty" hidden>ไม่มีคำเชิญที่รอดำเนินการ</p>
+        </section>
+
+        <!-- Tab 2: Schedule Table -->
+        <section class="tab-panel" id="panel-schedule" role="tabpanel" hidden>
+          <div class="table-wrap">
+            <table class="clean-table" id="scheduleTable">
+              <thead>
+                <tr><th>วันที่</th><th>เวลา</th><th>สนาม</th><th>คู่เล่น</th><th>สถานะ</th></tr>
+              </thead>
+              <tbody id="scheduleBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="appointments.js"></script>
+</body>
+</html>

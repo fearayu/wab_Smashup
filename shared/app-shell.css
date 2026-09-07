@@ -1,0 +1,53 @@
+/* SMASHUP App Shell — Sidebar #0f2f4a, Content white, Primary #f4511e */
+:root{--navy:#0f2f4a;--navy-2:#143a5e;--navy-active:#1e4f78;--orange:#f4511e;--orange-hover:#e34714;--cream:#f7f5f1;--line:#e8e3dd;--ink:#171717;--muted:#77736f;--green:#16a34a;--red:#ef4444}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:'Kanit',sans-serif;color:var(--ink);background:var(--cream)}
+a{text-decoration:none;color:inherit}
+
+/* Topbar */
+.app-topbar{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:14px clamp(16px,3vw,28px)}
+.brand{display:flex;align-items:center;gap:11px}
+.brand-mark{background:var(--orange);color:#fff;width:39px;height:34px;display:flex;align-items:center;justify-content:center;font:700 13px 'Space Grotesk',sans-serif;transform:skew(-6deg)}
+.brand strong{display:block;font:700 17px/1 'Space Grotesk',sans-serif;letter-spacing:.08em}
+.brand small{display:block;color:var(--muted);font:400 8px 'Space Grotesk',sans-serif;letter-spacing:.2em;margin-top:3px}
+.topbar-nav{display:flex;gap:22px;align-items:center}
+.topbar-nav a{font-size:14px;color:var(--muted)}
+.topbar-nav a.active,.topbar-nav a:hover{color:var(--orange)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.menu-toggle{display:none;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:8px 12px;font:600 13px 'Kanit',sans-serif;cursor:pointer}
+
+/* Shell layout */
+.app-shell{display:flex;min-height:calc(100vh - 62px)}
+.sidebar{width:280px;flex-shrink:0;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:18px 14px;gap:6px}
+.sidebar-head{padding:10px 8px 14px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:6px}
+.sidebar-head strong{display:block;font:700 13px 'Space Grotesk',sans-serif;letter-spacing:.12em}
+.sidebar-head span{color:#9fb6ca;font-size:12px}
+.sidebar nav{display:flex;flex-direction:column;gap:4px}
+.sidebar a,.sidebar button.group-title{width:100%;display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;color:#d6e6f5;font-size:14px;text-align:left;border:0;background:transparent;cursor:pointer;transition:.18s}
+.sidebar a:hover,.sidebar button.group-title:hover{background:rgba(255,255,255,.08);color:#fff}
+.sidebar a.active{background:var(--navy-active);color:#fff;box-shadow:inset 3px 0 0 var(--orange);font-weight:600}
+.sidebar .icon{width:20px;text-align:center;font-style:normal}
+.sidebar .section-label{color:#8eaac6;font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;margin:12px 8px 4px}
+.content{flex:1;background:#fff;min-width:0;padding:36px clamp(18px,3vw,40px) 48px}
+.content-inner{max-width:1080px}
+.page-title{margin:0 0 6px;font:700 clamp(28px,4vw,36px) 'Space Grotesk',sans-serif;letter-spacing:-.04em}
+.page-subtitle{margin:0 0 28px;color:var(--muted);font-size:15px;line-height:1.6}
+.eyebrow{color:var(--orange);font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.14em}
+
+/* Buttons */
+.btn-primary{background:var(--orange);color:#fff;border:0;border-radius:10px;padding:13px 22px;font:600 15px 'Kanit',sans-serif;cursor:pointer;transition:.18s}
+.btn-primary:hover{background:var(--orange-hover)}
+.btn-secondary{background:#fff;color:var(--orange);border:1.5px solid var(--orange);border-radius:10px;padding:12px 18px;font:600 14px 'Kanit',sans-serif;cursor:pointer}
+.btn-secondary:hover{background:#fff3ef}
+.btn-ghost{background:#f1f5f9;color:var(--ink);border:0;border-radius:10px;padding:11px 18px;font:500 14px 'Kanit',sans-serif;cursor:pointer}
+
+/* Responsive */
+@media(max-width:860px){
+  .menu-toggle{display:inline-flex}
+  .topbar-nav{display:none}
+  .app-shell{flex-direction:column}
+  .sidebar{width:100%;display:none}
+  .sidebar.open{display:flex}
+  .content{padding:26px 16px 40px}
+}
