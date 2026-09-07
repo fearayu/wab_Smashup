@@ -1,0 +1,41 @@
+/* Appointments tabs */
+.tabs{display:flex;gap:8px;border-bottom:2px solid var(--line);margin-bottom:22px}
+.tab{appearance:none;background:transparent;border:0;border-bottom:3px solid transparent;padding:12px 16px;margin-bottom:-2px;font:600 14px 'Kanit',sans-serif;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab.active{color:var(--orange);border-color:var(--orange)}
+.tab .count{background:var(--orange);color:#fff;border-radius:999px;padding:2px 8px;font:700 11px 'Space Grotesk',sans-serif}
+.tab-panel{animation:fade .18s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* Invite cards */
+.invite-list{display:grid;gap:14px}
+.invite-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.invite-avatar{width:48px;height:48px;border-radius:50%;background:#eaf2ff;color:#1e4f78;display:flex;align-items:center;justify-content:center;font:700 16px 'Space Grotesk',sans-serif;flex-shrink:0;overflow:hidden}
+.invite-avatar img{width:100%;height:100%;object-fit:cover}
+.invite-info{flex:1;min-width:180px}
+.invite-info strong{display:block;font-size:15px}
+.invite-info span{color:var(--muted);font-size:13px}
+.invite-meta{display:flex;gap:14px;flex-wrap:wrap;color:#5e5a56;font-size:13px}
+.invite-actions{display:flex;gap:10px;flex-shrink:0}
+.invite-actions .btn-primary,.invite-actions .btn-secondary{padding:10px 16px;border-radius:10px}
+.invite-card.accepted{opacity:.7;border-color:#bfe8c6;background:#f6fbf7}
+.invite-card.declined{opacity:.6}
+
+/* Table */
+.table-wrap{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.clean-table{width:100%;border-collapse:collapse;min-width:620px}
+.clean-table th{background:#f7f5f1;color:#5e5a56;font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.06em;text-transform:uppercase;text-align:left;padding:13px 16px;border-bottom:1px solid var(--line)}
+.clean-table td{padding:14px 16px;border-bottom:1px solid #f0ece6;font-size:14px}
+.clean-table tr:last-child td{border-bottom:0}
+.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font:600 12px 'Kanit',sans-serif}
+.badge.green{background:#e6f6ea;color:var(--green);border:1px solid #bfe8c6}
+.badge.orange{background:#fff3ef;color:var(--orange);border:1px solid #ffd8c8}
+.badge.gray{background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0}
+
+.empty{color:var(--muted);text-align:center;padding:32px 16px;border:1px dashed var(--line);border-radius:14px;background:#fcfbfa}
+
+@media(max-width:640px){
+  .invite-card{flex-direction:column;align-items:stretch}
+  .invite-actions{width:100%}
+  .invite-actions button{flex:1}
+  .table-wrap{overflow-x:auto}
+}

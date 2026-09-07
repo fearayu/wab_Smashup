@@ -1,0 +1,42 @@
+/* Matchmaking page - extends app-shell */
+.search-panel{background:#fff;border:1px solid var(--line);border-top:4px solid var(--orange);border-radius:14px;padding:28px;box-shadow:0 8px 28px rgba(15,47,74,.06)}
+.panel-header{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-bottom:22px;flex-wrap:wrap}
+.panel-header h2{margin:0;font:700 20px 'Space Grotesk',sans-serif}
+.panel-header h2 span{color:var(--orange)}
+.panel-header small{color:var(--muted);font-size:13px}
+.search-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px}
+.search-grid label{display:flex;flex-direction:column;gap:8px;color:#4a4642;font-size:13px;font-weight:500}
+.search-grid select,.search-grid input{border:1px solid #d8d2cb;border-radius:10px;padding:12px 14px;font:400 14px 'Kanit',sans-serif;background:#fff;outline:none}
+.search-grid select:focus,.search-grid input:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(244,81,30,.12)}
+.search-btn{grid-column:1/-1;margin-top:6px}
+.form-message{margin:10px 0 0;color:var(--muted);font-size:13px;min-height:18px}
+.form-message.error{color:#c0392b}
+
+/* Results */
+.results-section{margin-top:26px}
+.results-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.results-header h2{margin:0;font:700 18px 'Space Grotesk',sans-serif}
+.results-header h2 span{color:var(--orange);font-weight:700}
+.sort-wrap label{color:var(--muted);font-size:13px;display:flex;gap:8px;align-items:center}
+.sort-wrap select{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:400 13px 'Kanit',sans-serif;background:#fff}
+
+.card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.player-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px;transition:.18s}
+.player-card:hover{box-shadow:0 10px 28px rgba(15,47,74,.08);transform:translateY(-2px)}
+.card-top{display:flex;gap:14px;align-items:center}
+.avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#ff8a5b,#f4511e);color:#fff;display:flex;align-items:center;justify-content:center;font:700 18px 'Space Grotesk',sans-serif;flex-shrink:0;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.card-meta{flex:1;min-width:0}
+.card-meta strong{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-meta small{color:var(--muted);font-size:13px}
+.match-badge{flex-shrink:0;background:#fff3ef;border:1px solid #ffd8c8;color:var(--orange);border-radius:999px;padding:6px 10px;font:700 13px 'Space Grotesk',sans-serif;text-align:center;min-width:74px}
+.match-badge.high{background:#eef8f0;border-color:#bfe8c6;color:var(--green)}
+.match-badge.mid{background:#fff7e6;border-color:#ffe2a8;color:#b7790f}
+.card-details{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:#f7f5f1;border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:12px;color:#5e5a56}
+.chip.level{border-color:#ffd8c8;color:var(--orange);background:#fff3ef}
+.invite-btn{width:100%;margin-top:auto}
+.invite-btn.sent{background:#e8f5e9;color:var(--green);border-color:#bfe8c6;cursor:default}
+
+@media(max-width:900px){.card-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.search-grid{grid-template-columns:1fr}}

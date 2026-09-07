@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>หาคู่เล่นแบดมินตัน | SMASHUP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <link rel="stylesheet" href="matchmaking.css">
+</head>
+<body>
+  <header class="app-topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
+    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a href="../booking/index.html">จองสนาม</a><a class="active" href="index.html">หาคู่เล่น</a><a href="../appointments/index.html">นัดหมาย</a></nav>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>SMASHUP</strong><span>หาคู่เล่น • Matchmaking</span></div>
+      <nav>
+        <a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a>
+        <a href="../booking/index.html"><i class="icon">▦</i> จองสนาม</a>
+        <a class="active" href="index.html"><i class="icon">◎</i> หาคู่เล่น</a>
+        <a href="../appointments/index.html"><i class="icon">◈</i> นัดหมายของฉัน</a>
+        <a href="../booking/buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a>
+      </nav>
+      <div class="section-label">ช่วยเหลือ</div>
+      <nav>
+        <a href="../booking/rules.html"><i class="icon">▱</i> กฎการใช้สนาม</a>
+        <a href="../booking/shop.html"><i class="icon">♡</i> ร้านค้า</a>
+      </nav>
+    </aside>
+    <main class="content">
+      <div class="content-inner">
+        <p class="eyebrow">01 / MATCHMAKING</p>
+        <h1 class="page-title">หาคู่เล่น<em style="color:var(--orange);font-style:normal">แบดมินตัน</em></h1>
+        <p class="page-subtitle">เลือกเงื่อนไขที่ต้องการแล้วให้ระบบแนะนำผู้เล่นที่ตรงกับระดับและเวลาของคุณมากที่สุด</p>
+
+        <!-- Search Form (Top) -->
+        <section class="search-panel">
+          <div class="panel-header">
+            <h2><span>ค้นหา</span> ตัวกรองการจับคู่</h2>
+            <small>กรอกครบแล้วกด “ค้นหาคู่เล่น” ระบบจะคำนวณ Match % ให้ทันที</small>
+          </div>
+          <form id="searchForm" class="search-grid">
+            <label>ระดับฝีมือ
+              <select id="skillLevel" required>
+                <option value="">เลือกระดับฝีมือ</option>
+                <option value="beginner">Beginner — มือใหม่</option>
+                <option value="intermediate">Intermediate — ระดับกลาง</option>
+                <option value="advanced">Advanced — ระดับสูง</option>
+              </select>
+            </label>
+            <label>รูปแบบ
+              <select id="matchType">
+                <option value="">เลือกรูปแบบ</option>
+                <option value="single">เดี่ยว (1 vs 1)</option>
+                <option value="double">คู่ (2 vs 2)</option>
+              </select>
+            </label>
+            <label>วันที่และเวลา
+              <input id="playDateTime" type="datetime-local">
+            </label>
+            <label>ระยะทางที่สะดวก
+              <select id="distance">
+                <option value="">เลือกระยะทาง</option>
+                <option value="2">ภายใน 2 กม.</option>
+                <option value="5">ภายใน 5 กม.</option>
+                <option value="10">ภายใน 10 กม.</option>
+                <option value="20">ภายใน 20 กม.</option>
+              </select>
+            </label>
+            <button type="submit" class="btn-primary search-btn">ค้นหาคู่เล่น</button>
+          </form>
+          <p id="searchMessage" class="form-message" role="status"></p>
+        </section>
+
+        <!-- Results (Bottom) Card Layout -->
+        <section class="results-section" id="resultsSection">
+          <div class="results-header">
+            <h2>ผู้เล่นที่แนะนำ <span id="resultCount">4 คน</span></h2>
+            <div class="sort-wrap">
+              <label>เรียงตาม
+                <select id="sortBy"><option value="match">ความตรงกันสูงสุด</option><option value="level">ระดับฝีมือ</option></select>
+              </label>
+            </div>
+          </div>
+          <div class="card-grid" id="cardGrid">
+            <!-- Cards injected by JS -->
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="matchmaking.js"></script>
+</body>
+</html>

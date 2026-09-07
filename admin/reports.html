@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>รายงานสถิติ | SMASHUP Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <link rel="stylesheet" href="admin.css">
+  <style>.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px}.report-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px}.report-card h3{margin:0 0 8px;font:700 16px 'Space Grotesk',sans-serif}.report-card p{color:var(--muted);font-size:13px;line-height:1.6;margin:0 0 14px}.export-actions{display:flex;gap:10px;flex-wrap:wrap}.export-actions button{flex:1;min-width:140px}@media(max-width:860px){.report-grid{grid-template-columns:1fr}}</style>
+</head>
+<body class="admin-mode">
+  <header class="app-topbar admin-topbar">
+    <a class="brand" href="index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>ADMIN PANEL</small></span></a>
+    <div class="admin-topbar-right"><span class="admin-badge">ผู้ดูแลระบบ</span><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>ADMIN PANEL</strong><span>แดชบอร์ดผู้ดูแล • SMASHUP</span></div>
+      <nav>
+        <a href="index.html"><i class="icon">◈</i> ภาพรวม</a>
+        <a href="courts.html"><i class="icon">▦</i> จัดการข้อมูลสนาม</a>
+        <a href="users.html"><i class="icon">◎</i> จัดการบัญชีผู้ใช้</a>
+        <a class="active" href="reports.html"><i class="icon">▣</i> รายงานสถิติ</a>
+      </nav>
+      <div class="section-label">การจัดการ</div>
+      <nav><a href="index.html#requests"><i class="icon">≡</i> คำขอรอดำเนินการ</a></nav>
+      <div class="section-label">บัญชี</div>
+      <nav><a href="#" id="adminLogout"><i class="icon">↩</i> ออกจากระบบ</a></nav>
+    </aside>
+    <main class="content">
+      <div class="content-inner">
+        <p class="eyebrow">ADMIN / REPORTS</p>
+        <h1 class="page-title">รายงาน<em style="color:var(--orange);font-style:normal">สถิติ</em></h1>
+        <p class="page-subtitle">ส่งออกรายงานการจองและรายได้ — ข้อมูลจำลองสำหรับเดโม (Export PDF/Excel)</p>
+
+        <section class="stat-grid stat-grid-4" style="margin-bottom:22px">
+          <article class="stat-card"><div class="stat-icon orange">◈</div><div><small>รายได้เดือนนี้</small><strong>฿ 324,500</strong><span class="trend up">+12%</span></div></article>
+          <article class="stat-card"><div class="stat-icon blue">▦</div><div><small>การจองทั้งหมด</small><strong>1,842</strong><span class="trend up">30 วัน</span></div></article>
+          <article class="stat-card"><div class="stat-icon green">◎</div><div><small>อัตราการใช้งาน</small><strong>78%</strong><span class="trend up">คอร์ตเฉลี่ย</span></div></article>
+          <article class="stat-card"><div class="stat-icon amber">◉</div><div><small>ลูกค้าใหม่</small><strong>124</strong><span class="trend up">เดือนนี้</span></div></article>
+        </section>
+
+        <section class="report-grid">
+          <article class="report-card">
+            <h3>รายงานการจองรายวัน</h3>
+            <p>สรุปรายการจองตามวันที่ คอร์ต และผู้จอง พร้อมสถานะ — เหมาะสำหรับตรวจสอบรายวัน</p>
+            <div class="export-actions"><button class="btn-primary" data-export="pdf" data-type="daily">Export PDF</button><button class="btn-secondary" data-export="excel" data-type="daily">Export Excel</button></div>
+          </article>
+          <article class="report-card">
+            <h3>รายงานรายได้</h3>
+            <p>สรุปรายได้ประจำวัน/เดือน/ปี จากค่าจองคอร์ตและบุฟเฟต์ — ตัวเลขจำลองสำหรับเดโม</p>
+            <div class="export-actions"><button class="btn-primary" data-export="pdf" data-type="revenue">Export PDF</button><button class="btn-secondary" data-export="excel" data-type="revenue">Export Excel</button></div>
+          </article>
+          <article class="report-card">
+            <h3>รายงานผู้ใช้งาน</h3>
+            <p>จำนวนผู้สมัครใหม่ ผู้ใช้งานทั้งหมด และการเติบโต — สำหรับดูการใช้งานระบบ</p>
+            <div class="export-actions"><button class="btn-primary" data-export="pdf" data-type="users">Export PDF</button><button class="btn-secondary" data-export="excel" data-type="users">Export Excel</button></div>
+          </article>
+          <article class="report-card">
+            <h3>รายงานคำขอรอดำเนินการ</h3>
+            <p>รายการที่รอตรวจสอบ พร้อมปุ่มอนุมัติ/ปฏิเสธ — เชื่อมกับตารางหน้าแรก</p>
+            <div class="export-actions"><button class="btn-primary" data-export="pdf" data-type="pending">Export PDF</button><button class="btn-secondary" data-export="excel" data-type="pending">Export Excel</button></div>
+          </article>
+        </section>
+        <p id="exportMsg" class="form-message" style="color:var(--muted);font-size:13px;min-height:18px"></p>
+      </div>
+    </main>
+  </div>
+  <script src="../shared/admin-guard.js"></script>
+  <script src="reports.js"></script>
+</body>
+</html>

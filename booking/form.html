@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>จองสนามแบดมินตัน | SMASHUP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <link rel="stylesheet" href="booking.css">
+  <style>
+    html,body{height:auto;overflow:auto}
+    .app-shell main{height:auto;overflow:visible;margin-left:0}
+    .content.booking-content{padding:0;background:transparent}
+    .topic-intro{background:var(--ink);color:#fff;padding:56px clamp(24px,5vw,56px)}
+    .topic-intro h1{font:700 clamp(40px,6vw,72px)/.9 'Space Grotesk',sans-serif;letter-spacing:-.04em;margin:12px 0}
+    .topic-intro h1 em{color:var(--orange);font-style:normal}
+    .court-schedule,.booking-panel{max-width:none;margin:0}
+    .booking-panel{margin:0}
+    .form-page main{overflow-y:visible}
+    @media(max-width:860px){.topic-intro{padding:40px 20px}}
+  </style>
+</head>
+<body class="form-page">
+  <header class="app-topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
+    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a class="active" href="index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a href="../appointments/index.html">นัดหมาย</a></nav>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>SMASHUP</strong><span>จองสนาม • Booking</span></div>
+      <nav>
+        <a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a>
+        <a class="active" href="index.html"><i class="icon">▦</i> จองสนาม</a>
+        <a href="../matching/index.html"><i class="icon">◎</i> หาคู่เล่น</a>
+        <a href="../appointments/index.html"><i class="icon">◈</i> นัดหมายของฉัน</a>
+        <a href="buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a>
+      </nav>
+      <div class="section-label">ช่วยเหลือ</div>
+      <nav>
+        <a href="rules.html"><i class="icon">▱</i> กฎการใช้สนาม</a>
+        <a href="shop.html"><i class="icon">♡</i> ร้านค้า</a>
+      </nav>
+    </aside>
+    <main class="content booking-content">
+      <section class="topic-intro">
+        <p class="eyebrow">BOOK A COURT</p>
+        <h1>จองสนาม<br><em>แบดมินตัน</em></h1>
+        <p>เลือกวันที่ เวลา และจำนวนคอร์ตที่ต้องการ — ระบบจะคำนวณราคาและสถานะการจองให้ทันที</p>
+      </section>
+      <section class="court-schedule">
+        <div class="schedule-heading"><h2>ตารางคอร์ตว่าง</h2><span>คอร์ต 1–11, A และ B</span></div>
+        <div class="schedule-scroll"><table><thead><tr><th>เวลา / คอร์ต</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>A</th><th>B</th></tr></thead><tbody><tr><th>11:00–12:00</th><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td></tr><tr><th>19:00–20:00</th><td class="reserved">จองแล้ว</td><td class="reserved">จองแล้ว</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td></tr></tbody></table></div>
+        <p class="schedule-note"><span class="legend free"></span> ว่าง <span class="legend reserved"></span> จองแล้ว — ราคา 130 บาท / คอร์ต / ชั่วโมง</p>
+      </section>
+      <section class="booking-panel">
+        <div class="booking-photo" aria-label="สนามแบดมินตัน"></div>
+        <form id="booking-form">
+          <div class="form-heading"><span>กรอกข้อมูลการจอง</span><small>* จำเป็น</small></div>
+          <label>วันที่ต้องการ <b>*</b><input id="date" name="date" type="date" required></label>
+          <div class="form-row"><label>เวลาเริ่มต้น <b>*</b><select name="time" required><option value="">เลือกเวลา</option><option>11:00</option><option>13:00</option><option>15:00</option><option>17:00</option><option>19:00</option><option>21:00</option></select></label><label>จำนวนคอร์ต <b>*</b><select id="courts" name="courts"><option value="1">1 คอร์ต</option><option value="2">2 คอร์ต</option><option value="3">3 คอร์ต</option><option value="4">4 คอร์ต</option></select></label></div>
+          <div class="form-row"><label>ชื่อผู้จอง <b>*</b><input name="name" placeholder="เช่น สมชาย" required></label><label>เบอร์โทรศัพท์ <b>*</b><input name="phone" type="tel" placeholder="08X-XXX-XXXX" required></label></div>
+          <div class="estimate"><span>ยอดโดยประมาณ</span><strong id="estimate">฿ 130</strong><small>฿ 130 / คอร์ต / ชั่วโมง</small></div>
+          <button type="submit">ยืนยันการจอง <span>→</span></button>
+          <p class="note">ต้องเข้าสู่ระบบก่อนส่งคำขอจอง — ระบบจะแสดงข้อความยืนยันหลังส่งสำเร็จ</p>
+          <p id="success" role="status"></p>
+        </form>
+      </section>
+    </main>
+  </div>
+  <dialog id="bookingSuccessDialog" style="border:0;border-radius:16px;padding:0;max-width:480px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,.2)">
+    <div style="padding:28px 24px;text-align:center">
+      <div style="width:56px;height:56px;border-radius:50%;background:#e6f6ea;color:var(--green, #16a34a);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px">✓</div>
+      <h3 style="margin:0 0 8px;font:700 20px 'Space Grotesk',sans-serif;color:#0f2f4a">จองเสร็จสิ้น</h3>
+      <p id="bookingSuccessText" style="margin:0;color:#5e5a56;font-size:15px;line-height:1.7">รับข้อมูลแล้ว คุณ <strong id="successUserId">-</strong> ทีมงานจะติดต่อกลับเพื่อยืนยันการจองเร็ว ๆ นี้</p>
+      <p id="bookingSuccessDetail" style="margin:10px 0 0;color:#77736f;font-size:13px"></p>
+      <div style="display:flex;gap:10px;margin-top:20px">
+        <button id="bookingStayBtn" type="button" style="flex:1;background:var(--orange,#f4511e);color:#fff;border:0;border-radius:10px;padding:12px;font:600 14px 'Kanit',sans-serif;cursor:pointer">ตกลง</button>
+        <button id="bookingBackBtn" type="button" style="flex:1;background:#fff;color:#0f2f4a;border:1.5px solid #e8e3dd;border-radius:10px;padding:12px;font:600 14px 'Kanit',sans-serif;cursor:pointer">ย้อนกลับหน้าแรก</button>
+      </div>
+    </div>
+  </dialog>
+  <style>#bookingSuccessDialog::backdrop{background:rgba(15,47,74,.45)}#bookingSuccessDialog[open]{animation:pop .18s ease}@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}</style>
+  <script>document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));</script>
+  <script src="booking.js"></script>
+</body>
+</html>
