@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-backend:
-    name: Backend — Typecheck & Build
+    name: Backend - Typecheck & Build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -38,43 +38,21 @@ jobs:
           name: lambda-bundle
           path: backend/dist/lambda/
 
-  build-frontend:
-    name: Frontend — Typecheck & Build
+  check-frontend:
+    name: Frontend - Site files check
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8.6.2
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --ignore-scripts
-
-      - name: Typecheck
-        run: pnpm typecheck
-
-      - name: Build
-        run: pnpm build
-        env:
-          VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
-
-      - name: Upload dist artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-dist
-          path: frontend/dist/
+      - name: Verify required site files exist
+        run: |
+          for f in index.html admin/index.html admin/admin.js auth/index.html auth/auth.js booking/index.html booking/booking.js matching/index.html matching/matching.js shared/app-shell.css shared/auth-ui.js; do
+            test -f "$f" || { echo "Missing: $f"; exit 1; }
+          done
+          echo "Static site structure OK"
 
   deploy-backend:
-    name: Deploy Backend → Cloudflare Workers
+    name: Deploy Backend - Cloudflare Workers
     runs-on: ubuntu-latest
     needs: build-backend
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -99,9 +77,9 @@ jobs:
             cp wrangler.example.jsonc wrangler.jsonc
             sed -i "s/<REPLACE_WITH_D1_DATABASE_ID>/${{ secrets.D1_DATABASE_ID }}/g" wrangler.jsonc
             sed -i "s/<REPLACE_WITH_KV_NAMESPACE_ID>/${{ secrets.KV_NAMESPACE_ID }}/g" wrangler.jsonc
-            echo "✅ Using secrets for D1/KV IDs"
+            echo "Using secrets for D1/KV IDs"
           else
-            echo "ℹ️ Secrets not set — using existing wrangler.jsonc with hardcoded IDs"
+            echo "Secrets not set - using existing wrangler.jsonc with hardcoded IDs"
           fi
 
       - name: Apply D1 migrations
@@ -122,20 +100,15 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Show deployment URL
-        run: echo "✅ Backend deployed to ${{ steps.deploy.outputs.deployment-url }}"
+        run: echo "Backend deployed to ${{ steps.deploy.outputs.deployment-url }}"
 
   deploy-frontend:
-    name: Deploy Frontend → Cloudflare Pages
+    name: Deploy Frontend - Cloudflare Pages
     runs-on: ubuntu-latest
-    needs: [build-frontend, deploy-backend]
+    needs: [check-frontend, deploy-backend]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: frontend-dist
-          path: dist
 
       - uses: actions/setup-node@v4
         with:
@@ -147,7 +120,7 @@ jobs:
       - name: Deploy to Cloudflare Pages
         run: |
           set -o pipefail
-          npx wrangler pages deploy dist \
+          npx wrangler pages deploy . \
             --project-name=${{ secrets.PAGES_PROJECT_NAME }} \
             --branch=main \
             --commit-dirty=true \
@@ -157,4 +130,4 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Show deployment URL
-        run: echo "✅ Frontend deployed to https://${{ secrets.PAGES_PROJECT_NAME }}.pages.dev"
+        run: echo "Frontend deployed to https://${{ secrets.PAGES_PROJECT_NAME }}.pages.dev"
