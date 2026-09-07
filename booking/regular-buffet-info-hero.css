@@ -1,0 +1,6 @@
+/* Buffet information hero, consistent with booking information. */
+.buffet-info-page{padding:0 0 68px}
+.buffet-info-page .info-heading{align-items:center;background:linear-gradient(120deg,#062b45,#0b3a5b);color:#fff;max-width:none;min-height:326px;padding:56px clamp(24px,7vw,90px)}
+.buffet-info-page .info-heading h1{color:#fff;font:700 clamp(54px,7vw,88px)/.95 'Space Grotesk',sans-serif;letter-spacing:-.06em;margin:15px 0}
+.buffet-info-page .info-heading h1 em{color:#ff6b35;font-style:normal}.buffet-info-page .info-heading>div>p:last-child{color:#d4e3ec;font-size:17px;line-height:1.8}.buffet-info-page .info-heading .eyebrow{color:#ff6b35}
+@media(max-width:600px){.buffet-info-page{padding:0 0 42px}.buffet-info-page .info-heading{align-items:start;min-height:0;padding:45px 20px}.buffet-info-page .info-heading h1{font-size:52px}}

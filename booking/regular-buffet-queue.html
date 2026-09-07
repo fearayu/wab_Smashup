@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>คิวตีบุฟเฟต์ | SMASHUP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <link rel="stylesheet" href="topic.css">
+  <link rel="stylesheet" href="regular-buffet-queue.css">
+  <style>html,body{height:auto;overflow:auto}.app-shell main{height:auto;overflow:visible;margin-left:0}.content.booking-content{padding:0;background:transparent}.topic-main{margin-left:0!important;max-width:none!important;padding:48px clamp(20px,4vw,56px)!important}.topic-main.queue-page{padding:32px clamp(20px,4vw,40px)!important}</style>
+</head>
+<body>
+  <header class="app-topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
+    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a class="active" href="index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a href="../appointments/index.html">นัดหมาย</a></nav>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>SMASHUP</strong><span>จองสนาม • Booking</span></div>
+      <nav>
+        <a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a>
+        <a class="active" href="index.html"><i class="icon">▦</i> จองสนาม</a>
+        <a href="../matching/index.html"><i class="icon">◎</i> หาคู่เล่น</a>
+        <a href="../appointments/index.html"><i class="icon">◈</i> นัดหมายของฉัน</a>
+        <a href="buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a>
+      </nav>
+      <div class="section-label">ช่วยเหลือ</div>
+      <nav>
+        <a href="rules.html"><i class="icon">▱</i> กฎการใช้สนาม</a>
+        <a href="shop.html"><i class="icon">♡</i> ร้านค้า</a>
+      </nav>
+    </aside>
+    <main class="content booking-content">
+      <div class="topic-main queue-page">
+        <div class="queue-heading"><div><p class="eyebrow">05 / BUFFET QUEUE</p><h1>จัดคิวตี<br><em>บุฟเฟต์</em></h1><p>เลือกผู้เล่นจากรายการรอ แล้วจัดเข้าคิวลงสนามได้ทันที</p></div><button class="refresh-button" id="refreshQueue" type="button">↻ รีเฟรช</button></div>
+        <section class="queue-layout" aria-label="ระบบจัดคิวตีบุฟเฟต์">
+          <article class="queue-panel playing-panel"><div class="panel-title"><h2>คิวการเล่น</h2><span id="queueCount">0 / 30 คิว</span></div><div class="queue-labels"><span>คิว</span><span>ชื่อผู้เล่น</span><span>ลูก</span><span>สนาม</span></div><div class="queue-list" id="queueList"></div></article>
+          <div class="right-column">
+            <article class="queue-panel waiting-panel"><div class="panel-title"><h2>รอจัดคิว</h2><span id="waitingCount">0 คน</span></div><form class="waiting-form" id="waitingForm"><label>ชื่อเล่น<input id="playerName" name="playerName" maxlength="30" required placeholder="เช่น มินท์"></label><label>ลูก<select id="shuttleCount" name="shuttleCount"><option value="0">0 ลูก</option><option value="1">1 ลูก</option><option value="2">2 ลูก</option><option value="3">3 ลูก</option></select></label><button type="submit">+ เพิ่มเข้ารอ</button></form><div class="waiting-list" id="waitingList"><p class="empty-state">ไม่พบข้อมูล</p></div></article>
+            <article class="queue-panel history-panel"><div class="panel-title"><h2>ประวัติ</h2><span>รอบล่าสุด</span></div><div class="history-scroll"><table><thead><tr><th>#</th><th>คิว</th><th>ชื่อผู้เล่น</th><th>ลูก</th><th>สนาม</th><th>เวลา</th></tr></thead><tbody id="historyList"><tr><td colspan="6" class="empty-state">ยังไม่มีประวัติ</td></tr></tbody></table></div></article>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script>document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));</script>
+  <script src="../shared/auth-ui.js"></script>
+  <script src="regular-buffet-queue.js"></script>
+</body>
+</html>

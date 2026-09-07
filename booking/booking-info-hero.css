@@ -1,0 +1,9 @@
+/* Booking information hero, aligned with the court booking page. */
+.booking-info-page{padding:0 0 68px}
+.booking-info-page .page-heading{align-items:center;background:linear-gradient(120deg,#062b45,#0b3a5b);color:#fff;max-width:none;min-height:326px;padding:56px clamp(24px,7vw,90px)}
+.booking-info-page .page-heading h1{color:#fff;font:700 clamp(54px,7vw,88px)/.95 'Space Grotesk',sans-serif;letter-spacing:-.06em;margin:15px 0}
+.booking-info-page .page-heading h1 em{color:#ff6b35;font-style:normal}
+.booking-info-page .page-heading>div>p:last-child{color:#d4e3ec;font-size:17px;line-height:1.8}
+.booking-info-page .page-heading .eyebrow{color:#ff6b35}
+.booking-info-page .new-booking{box-shadow:0 4px 0 #bf3613}
+@media(max-width:600px){.booking-info-page{padding:0 0 42px}.booking-info-page .page-heading{align-items:start;min-height:0;padding:45px 20px}.booking-info-page .page-heading h1{font-size:52px}}

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>เข้าสู่ระบบ | SMASHUP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="auth.css">
+  <link rel="stylesheet" href="auth-profile.css">
+  <link rel="stylesheet" href="../shared/theme.css">
+</head>
+<body>
+  <main class="auth-page"><a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a><section class="auth-card"><p class="eyebrow">MEMBER ACCESS</p><h1 id="formTitle">เข้าสู่ระบบ</h1><p class="intro" id="formDescription">เข้าสู่ระบบเพื่อจัดการการจองและข้อมูลผู้เล่นของคุณ</p><form id="authForm" novalidate><label>Username<input id="username" autocomplete="username" maxlength="30" required placeholder="เช่น smashup_player"></label><label id="emailField" hidden>อีเมล<input id="email" type="email" autocomplete="email" placeholder="name@example.com"></label><fieldset id="playerProfile" hidden><legend>โปรไฟล์ผู้เล่น</legend><p>คำตอบนี้ช่วยแนะนำคู่เล่นและรอบที่เหมาะกับคุณ</p><label>ระดับการเล่นของคุณ <b>*</b><select id="profileLevel"><option value="">เลือกระดับ</option><option value="beginner">มือใหม่</option><option value="intermediate">ระดับกลาง</option><option value="advanced">ระดับสูง</option></select></label><label>เป้าหมายหลัก <b>*</b><select id="profileGoal"><option value="">เลือกเป้าหมาย</option><option value="ออกกำลังกาย">ออกกำลังกาย</option><option value="พัฒนาฝีมือ">พัฒนาฝีมือ</option><option value="หาเพื่อนเล่น">หาเพื่อนเล่น</option><option value="แข่งขัน">แข่งขัน</option></select></label><div class="profile-row"><label>เล่นต่อสัปดาห์<select id="profileFrequency"><option value="นาน ๆ ครั้ง">นาน ๆ ครั้ง</option><option value="1–2 ครั้ง">1–2 ครั้ง</option><option value="3 ครั้งขึ้นไป">3 ครั้งขึ้นไป</option></select></label><label>ช่วงเวลาที่สะดวก<select id="profileAvailability"><option value="">ไม่ระบุ</option><option value="11:00">ช่วงกลางวัน</option><option value="17:00">ช่วงเย็น</option><option value="19:00">ช่วงค่ำ</option></select></label></div></fieldset><label>รหัสผ่าน<input id="password" type="password" autocomplete="current-password" required minlength="6" placeholder="อย่างน้อย 6 ตัวอักษร"></label><button type="submit" id="submitButton">เข้าสู่ระบบ</button><p class="feedback" id="feedback" role="status"></p></form><p class="switch-copy" id="switchCopy">ยังไม่มีบัญชี? <button id="switchMode" type="button">สมัครสมาชิก</button></p><p class="demo-note">เวอร์ชันต้นแบบ: บัญชีถูกเก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น</p></section></main><script src="auth.js"></script>
+</body>
+</html>
