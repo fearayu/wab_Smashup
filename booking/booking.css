@@ -1,3 +1,6 @@
+@import url('../shared/theme.css');
+@import url('topic.css');
+
 /* SMASHUP booking section — components only. Page chrome comes from shared/app-shell.css.
    Fallback tokens in case app-shell.css is not loaded (same values as app-shell). */
 :root{
