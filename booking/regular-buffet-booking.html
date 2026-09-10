@@ -9,13 +9,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="topic.css">
   <link rel="stylesheet" href="regular-buffet-booking.css">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <style>html,body{height:auto;overflow:auto}.app-shell main{height:auto;overflow:visible;margin-left:0}.content.booking-content{padding:0;background:transparent}.topic-main{margin-left:0!important;max-width:none!important;padding:48px clamp(20px,4vw,56px)!important}</style>
 </head>
 <body>
-  <header class="topbar">
+  <header class="app-topbar">
     <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
-    <a class="back" href="court-booking.html">← หน้าจองสนาม</a>
+    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a class="active" href="index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a href="../appointments/index.html">นัดหมาย</a></nav>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
   </header>
-  <main class="topic-main buffet-page">
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>SMASHUP</strong><span>จองสนาม • Booking</span></div>
+      <nav><a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a><a class="active" href="index.html"><i class="icon">▦</i> จองสนาม</a><a href="../matching/index.html"><i class="icon">◎</i> หาคู่เล่น</a><a href="../appointments/index.html"><i class="icon">◈</i> นัดหมายของฉัน</a><a href="buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a></nav>
+      <div class="section-label">ช่วยเหลือ</div>
+      <nav><a href="rules.html"><i class="icon">▱</i> กฎการใช้สนาม</a><a href="shop.html"><i class="icon">♡</i> ร้านค้า</a></nav>
+    </aside>
+    <main class="content booking-content topic-main buffet-page">
     <section class="buffet-hero">
       <p class="eyebrow">03 / BUFFET BOOKING</p>
       <h1>จองตี<br><em>บุฟเฟต์</em></h1>
@@ -42,8 +52,9 @@
         <div class="info-card dark"><span class="card-number">02</span><h2>สิ่งที่ต้องเตรียม</h2><p>รองเท้าแบดมินตันและไม้แบดส่วนตัว</p><a href="regular-buffet-queue.html">ดูคิวตีบุฟเฟต์ ↗</a></div>
       </aside>
     </section>
-  </main>
-  <script src="topic-nav.js"></script>
+    </main>
+  </div>
+  <script>document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));</script>
   <script src="../shared/player-levels.js"></script>
   <script src="../shared/utils.js"></script><script src="../shared/service-rules.js"></script><script src="regular-buffet-booking.js"></script>
 </body>
