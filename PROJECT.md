@@ -1,63 +1,53 @@
-# wab_Smashup — Badminton Court Booking Web Builder
+# wab_Smashup — ระบบจองสนามแบดมินตันและช่วยค้นหาคู่เล่น
 
-## Vision
-AI-powered platform that lets badminton court owners create their own booking website in 5 minutes — no coding required. Eliminates manual chat/phone booking, prevents double-booking, and accepts payments 24/7.
+เอกสารนี้คือภาพรวมโครงการ (project brief) สำหรับใช้เขียนขอบเขตโครงงานภาคนิพนธ์ ให้ตรงกับสิ่งที่พัฒนาได้จริงในโค้ด
 
-## Audience
-- **Primary users**: Badminton court owners who want their own booking website
-- **Secondary users**: Players looking for available courts to book
-- Market size: ~1,500 badminton courts in Thailand still relying on word-of-mouth / LINE chat
-- User scenario: Friday 4:30 PM, group of 6 friends wants to play but doesn't know which court is available
+## โจทย์และแนวคิดหลัก
 
-## Problems We Solve
-- Court owners manually reply to LINE chats / phone calls to check availability
-- Double-bookings happen frequently
-- Bank transfer slips must be checked one by one
-- Off-peak hours (10:00–16:00) lose revenue because no real-time promotion channel
-- Digital-first players expect instant booking in a few clicks
+ผู้เล่นแบดมินตันมีปัญหา 2 อย่างที่มาด้วยกัน: (1) จองสนามยังต้องโทร/พิมพ์แชท แล้วไม่ได้ดูความว่างแบบเรียลไทม์ และ (2) หาคู่เล่น/คู่ซ้อมที่มีระดับฝีมือใกล้เคียงและเวลาว่างตรงกันได้ยาก ต้นแบบนี้แก้ทั้งสองจุดในเว็บเดียวกัน โดยแบ่งเป็นสองกระแสงานหลัก
 
-## Must-Have Features (Priority Order)
-1. **Instant Web Generator** — Create a booking website in a few clicks
-2. **Real-time Slot Booking** — Check court availability and auto-lock slots 24/7
-3. **Auto Payment & Verification** — Accept transfers and verify slips automatically
-4. **Owner Dashboard** — Revenue summary, peak hours report, booking management
+## กลุ่มผู้ใช้เป้าหมาย
 
-## Solution Flow
-1. User selects a court template and enters court info / pricing
-2. AI agent generates a complete booking website with real-time availability
-3. Owner gets a ready-to-use link to promote and receives real-time bookings
+- **ผู้เล่น** — หาสนามว่าง จองคอร์ต ลงทะเบียนตีบุฟเฟต์ และหาคู่เล่นตามระดับ/เวลา/ระยะทาง
+- **ผู้จัด/เจ้าของสนาม** — ตรวจคำขอยืนยันและยกเลิกรายการ จัดคิวบุฟเฟต์ ตรวจและยืนยันระดับผู้เล่น ดูภาพรวมรายการ
 
-## Business Model
-- B2B SaaS Subscription + Transaction Fee
-- Free Tier: 14-day trial or basic website
-- Pro Plan: ฿590–990/month (full features, unlimited courts, auto slip verification)
-- Transaction Fee: 1–2% per booking processed through the system
+## สิ่งที่ระบบทำได้จริง (Implemented)
 
-## Competitive Edge
-- vs LINE OA / Google Forms / Excel: We are fully automated (no manual work)
-- vs Custom court management systems: We are cheaper, faster setup (5 minutes), and the owner keeps their own brand
+| หมวด | สิ่งที่ทำได้ | แฟ้ม |
+|---|---|---|
+| จองสนาม | เลือกคอร์ต/วัน/เวลา, กันการจองซ้ำ, ยกเลิกตามเงื่อนไข (ก่อนเริ่ม 2 ชม.), ล็อกยืนยัน 15 นาทีจำลอง | `shared/service-rules.js`, `booking/` |
+| ตีบุฟเฟต์ | ลงชื่อต่อรอบ (สูงสุด 30), เลือกค่าลูก, กันรอบซ้ำ/เวลาทับซ้อน | เดียวกัน |
+| บริการ | สมัครแข่ง, จองสนามซ้อม, ซื้อของ (ตรวจรายการซ้ำ/ความถูกต้อง) | เดียวกัน |
+| หาคู่เล่น | คะแนน deterministic ระดับ 70% + เวลา 15% + ระยะทาง 15%, แสดงเหตุผล + ที่มาของระดับ | `shared/match-core.js`, `matching/` |
+| นัดหมาย/คำเชิญ | ส่งคำเชิญผูก id ผู้รับ, ยืนยัน/ปฏิเสธ/ยกเลิก, หมดอายุ 7 วัน | `shared/appointments.js` |
+| ระดับผู้เล่น | แบบประเมิน 6 ด้าน (N–A/Pro), ผู้จัดสังเกตอย่างน้อย 2 เกม, ความเห็นต่าง, ประวัติ | `shared/player-levels.js`, `auth/player-assessment.html` |
+| หน้าผู้ดูแล | สถิติ + ยืนยัน/ยกเลิก จากข้อมูลจริง ไม่มีตัวเลขปลอม | `admin/` |
+| ชุดทดสอบ | 7 ชุด/116 จุดตรวจ (`node --test`) + Browser E2E 24 ตรวจ (`tests/e2e/run-e2e.mjs`) | `tests/` |
 
-## Technical Requirements
-- Responsive web app (mobile + desktop)
-- Stack: Vue 3 + Vuetify + Pinia (frontend), Hono + Cloudflare Workers + D1 + KV (backend)
-- Seed/mock data for instant demo without registration
-- Clean code, clear file separation, README with run instructions
-- Focus on must-have features first, then enhancements
+## สิ่งที่ยังเป็นเดโม/ต้องพัฒนาเพิ่ม (Not implemented / Limitation)
 
-## Demo Moment (30 seconds)
-Type court name → set number of courts → press button → AI generates a beautiful, complete booking website ready to accept real bookings immediately.
+- ข้อมูลเก็บใน **localStorage** ของเบราว์เซอร์ ไม่ใช่ฐานข้อมูลกลาง → ไม่รองรับการจองพร้อมกันข้ามอุปกรณ์ และผู้ใช้เครื่องเดียวแก้ข้อมูลโดยตรงได้
+- ไม่มีการชำระเงินจริง (ล็อก 15 นาทีเป็นขั้นตอนจำลอง) ไม่มีการแจ้งเตือนอีเมล/LINE/Push
+- คำเชิญ/นัดหมาย **ไม่ใช่การจองคอร์ตจริง** — แค่บันทึกข้อตกลงระหว่างผู้เล่น
+- การยืนยันตัวตนและสิทธิ์เป็นแบบ Frontend เหมาะกับเดโมเท่านั้น
 
-## Target Outcome
-- Pilot test with 10 badminton courts (free + exclusive support)
-- Or: Pitch for 300k funding to develop next phase / advance to final round
+## สถาปัตยกรรมปัจจุบัน
 
-## UI Direction
-- Simple, gamified UX
-- Easy to understand for both court owners and players
-- Thai language primary, English secondary
+- **หน้าเว็บ**: Static HTML/CSS/JS (ไม่ใช้ framework) เรียกกฎกลาง Shared Domain (`shared/*.js`) ที่รันได้ทั้งในเบราว์เซอร์และ Node (ทดสอบได้)
+- **กฎธุรกิจอยู่จุดเดียว**: ทุกหน้าเขียน/อ่านข้อมูลผ่านกฎกลาง; การตรวจเจ้าของรายการทำใน domain (`own()`), ไม่ใช่แค่ปิดปุ่มหน้าจอ
+- **Backend (มีโค้ด, ยังไม่เชื่อม)**: `backend/` เป็น Hono API (Clean Architecture: domain → service → handler → router) รันบน Cloudflare Workers/D1/KV ตรวจผ่าน typecheck/build/smoke แล้ว (ดู `backend/STATUS.md`)
+- **Seam โหมด API**: `shared/api.js` — โหมด API จะไม่เขียน localStorage และ error เมื่อล้มเหลว ไม่มี silent fallback
 
-## File Locations
-- Backend: `/backend/` — Hono API with Clean Architecture
-- Frontend: `/frontend/` — Vue 3 SPA with file-based routing
-- Template base: `https://github.com/fakduai-logistics-and-digital-platform/starter-template`
-- Renamed from `starter-*` to `wab_Smashup`
+## สถานะที่ยืนยันได้ในเครื่อง
+
+| รายการ | สถานะ |
+|---|---|
+| ชุดทดสอบ frontend domain (`node --test tests/*.test.cjs`) | ✅ 7 ไฟล์ผ่าน 116 check |
+| Browser E2E (`tests/e2e/run-e2e.mjs`) | ✅ 24/24 ผ่าน (จอง/ซ้ำ/ยกเลิก, ฟอร์ม, ผู้ดูแล, หาคู่/เชิญ/ตอบรับ) |
+| `backend` typecheck / build / smoke | ✅ ผ่านหมด (smoke: health, register, login, me) |
+| เชื่อมหน้าเว็บกับ backend (fetch จากหน้าเว็บ) | ❌ ยังไม่มี |
+| Deploy ขึ้น Cloudflare | ❌ ยังไม่ทำ (ไม่มี secret/ID จริง) |
+
+## คำขอบเขตสำหรับใช้ในรายงาน
+
+SMASHUP เป็นเว็บต้นแบบสำหรับสาธิตการจองสนาม การหาคู่เล่นตามระดับและเวลา และการนัดหมายระหว่างผู้เล่น พร้อมหน้าผู้ดูแล ข้อมูลเก็บใน localStorage ของเบราว์เซอร์ จึงใช้แสดงขั้นตอนและผลลัพธ์ได้จริง แต่ยังไม่รวมฐานข้อมูลกลาง การชำระเงินจริง การแจ้งเตือนภายนอก การยืนยันตัวตนบนเซิร์ฟเวอร์ และการจองพร้อมกันหลายอุปกรณ์ คะแนนจับคู่เป็นค่าปรียบเทียบจากข้อมูลที่ผู้ใช้กรอกและระดับที่ผู้จัดยืนยัน ไม่ใช่การรับรองฝีมือหรือรับประกันการนัดหมายสำเร็จ

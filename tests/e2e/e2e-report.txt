@@ -1,0 +1,30 @@
+SMASHUP E2E REPORT  8/9/2569 11:49:29
+BROWSER: headless Edge/Chrome via puppeteer-core
+TOTAL: 24  PASS: 24  FAIL: 0
+
+PASS  A01 login player01 redirects to home
+PASS  A02 board renders 39 free cells (13 courts x 3 slots)
+PASS  A03 dialog prefills name from session
+PASS  A04 booking success message shown
+PASS  A05 cell now shows จองแล้ว
+PASS  A06 duplicate booking rejected (คอร์ตนี้เพิ่งถูกจอง)
+PASS  A07 my-bookings shows คอร์ต 2 · รอตรวจสอบ · ฿130
+PASS  A08 cancel ผ่าน UI แล้วสถานะเป็นยกเลิกแล้ว
+PASS  A09 cancelled slot is free again on board
+PASS  A10 form.html success dialog shown
+PASS  A11 my-bookings shows form booking (คอร์ต 1 · รอยืนยัน · ฿130)
+PASS  A12 admin statUsers = real registered users
+PASS  A13 admin statPending = 1 (form booking รอยืนยัน)
+PASS  A14 admin statRevenue starts ฿0 (no confirmed yet)
+PASS  A15 admin sees court request row with ยืนยัน button
+PASS  A16 confirm → status ยืนยันแล้ว in admin table
+PASS  A17 confirm → revenue updates to ฿130
+PASS  A18 confirm → pending drops to 0
+PASS  B01 register 2 real users with levels (C+)
+PASS  B02 real player pong_b matched with Match % badge
+PASS  B03 invite button present on real card
+PASS  B04 invite sent → button shows ✓ ส่งคำเชิญแล้ว
+PASS  B05 pong_b receives invite from pong_a
+PASS  B06 accepted → schedule shows pong_a partner + ยืนยันแล้ว
+
+ALL CHECKS PASSED

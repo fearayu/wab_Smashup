@@ -33,6 +33,23 @@
 
 .empty{color:var(--muted);text-align:center;padding:32px 16px;border:1px dashed var(--line);border-radius:14px;background:#fcfbfa}
 
+/* Send invitation form */
+.send-form{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px}
+.send-title{font-size:17px;margin:0 0 4px}
+.send-hint{color:var(--muted);font-size:13px;margin:0 0 16px}
+.send-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.send-grid label{display:flex;flex-direction:column;gap:6px;font:600 13px 'Kanit',sans-serif;color:#5e5a56}
+.send-grid input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font:500 14px 'Kanit',sans-serif;background:#fff;color:#221f1c}
+.send-grid input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(244,102,60,.14)}
+.send-note{grid-column:span 2}
+.send-actions{display:flex;align-items:flex-end}
+.send-actions .btn-primary{padding:11px 20px;border-radius:10px}
+.form-message{margin-top:12px;padding:10px 14px;border-radius:10px;font:500 13px 'Kanit',sans-serif}
+.form-message.success{background:#e6f6ea;color:var(--green);border:1px solid #bfe8c6}
+.form-message.error{background:#fdecea;color:#c0392b;border:1px solid #f5c6c0}
+@media(max-width:860px){.send-grid{grid-template-columns:repeat(2,1fr)}.send-note{grid-column:span 2}}
+@media(max-width:520px){.send-grid{grid-template-columns:1fr}.send-note{grid-column:span 1}}
+
 @media(max-width:640px){
   .invite-card{flex-direction:column;align-items:stretch}
   .invite-actions{width:100%}

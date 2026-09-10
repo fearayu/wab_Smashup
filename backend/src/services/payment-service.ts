@@ -21,6 +21,12 @@ export class PaymentService {
     if (!booking) throw new NotFoundError('Booking')
     if (!slipImageUrl) throw new ValidationError('slip image is required')
 
+    // Prevent duplicate payments for the same booking
+    const existing = await this.paymentRepository.findByBookingId(bookingId)
+    if (existing && existing.status === 'pending') {
+      throw new ValidationError('A pending payment already exists for this booking')
+    }
+
     return this.paymentRepository.create({ bookingId, amount: booking.totalAmount, slipImageUrl })
   }
 
@@ -51,9 +57,17 @@ export class PaymentService {
     const updated = await this.paymentRepository.update(id, { ...input, verifiedBy: ownerId, verifiedAt: new Date().toISOString() })
     if (!updated) throw new NotFoundError('Payment')
 
-    // If verified, confirm booking; if rejected, cancel and release slots
+    // If verified, confirm booking and invalidate caches; if rejected, cancel and release slots
     if (input.status === 'verified') {
       await this.bookingRepository.update(payment.bookingId, { status: 'confirmed' })
+      // Invalidate slot cache for the confirmed booking
+      const booking = await this.bookingRepository.findById(payment.bookingId)
+      if (booking) {
+        const slots = await this.timeSlotRepository.findManyByIds(booking.timeSlotIds)
+        const keys = new Map<string, boolean>()
+        for (const slot of slots) keys.set(slotListCacheKey(slot.courtId, slot.slotDate), true)
+        await Promise.all([...keys.keys()].map((key) => this.cache.delete(key)))
+      }
     } else if (input.status === 'rejected') {
       await this.bookingRepository.update(payment.bookingId, { status: 'cancelled' })
       await this.timeSlotRepository.releaseSlots(payment.bookingId)

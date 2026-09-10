@@ -1,3 +1,55 @@
 <!doctype html>
-<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>รายการของฉัน | SMASHUP</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="topic.css"><link rel="stylesheet" href="my-bookings.css"></head>
-<body><header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a><a class="back" href="court-booking.html">← หน้าจองสนาม</a></header><main class="topic-main my-bookings-page"><section class="my-hero"><p class="eyebrow">MY BOOKINGS</p><h1>รายการ<br><em>ของฉัน</em></h1><p>ติดตามการจองสนาม บุฟเฟต์ และคำขอบริการของคุณ</p></section><section class="my-list"><div class="list-title"><div><h2>รายการทั้งหมดของฉัน</h2><p id="myMessage" role="status"></p></div><a href="form.html">+ จองสนาม</a></div><div id="myBookings" class="booking-cards"></div><p id="myEmpty" class="empty-state" hidden>ยังไม่มีรายการจองสนามของคุณ</p></section></main><script src="topic-nav.js"></script><script src="../shared/utils.js"></script><script src="../shared/service-rules.js"></script><script src="my-bookings.js"></script></body></html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f4511e'/%3E%3Ctext x='32' y='42' font-size='28' font-family='Arial' font-weight='700' fill='%23fff' text-anchor='middle'%3ESU%3C/text%3E%3C/svg%3E">
+  <title>รายการของฉัน | SMASHUP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <link rel="stylesheet" href="my-bookings.css">
+</head>
+<body>
+  <header class="app-topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
+    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a class="active" href="index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a href="../appointments/index.html">นัดหมาย</a></nav>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><strong>SMASHUP</strong><span>จองสนาม • Booking</span></div>
+      <nav>
+        <a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a>
+        <a class="active" href="index.html"><i class="icon">▦</i> จองสนาม</a>
+        <a href="../matching/index.html"><i class="icon">◎</i> หาคู่เล่น</a>
+        <a href="../appointments/index.html"><i class="icon">◈</i> นัดหมายของฉัน</a>
+        <a href="buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a>
+      </nav>
+      <div class="section-label">ช่วยเหลือ</div>
+      <nav>
+        <a href="rules.html"><i class="icon">▱</i> กฎการใช้สนาม</a>
+        <a href="shop.html"><i class="icon">♡</i> ร้านค้า</a>
+      </nav>
+    </aside>
+    <main class="content">
+      <div class="content-inner">
+        <p class="eyebrow">MY BOOKINGS</p>
+        <h1 class="page-title">รายการ<em style="color:var(--orange);font-style:normal">ของฉัน</em></h1>
+        <p class="page-subtitle">ติดตามการจองสนาม บุฟเฟต์ และคำขอบริการของคุณ</p>
+        <section class="my-list">
+          <div class="list-title"><div><h2>รายการทั้งหมดของฉัน</h2><p id="myMessage" role="status"></p></div><a href="form.html">+ จองสนาม</a></div>
+          <div id="myBookings" class="booking-cards"></div>
+          <p id="myEmpty" class="empty-state" hidden>ยังไม่มีรายการจองสนามของคุณ</p>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script>document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));</script>
+  <script src="../shared/auth-ui.js"></script>
+  <script src="../shared/utils.js"></script><script src="../shared/api.js"></script>
+  <script src="../shared/service-rules.js"></script>
+  <script src="my-bookings.js"></script>
+</body>
+</html>

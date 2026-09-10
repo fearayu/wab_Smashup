@@ -18,12 +18,16 @@ import { MemoryVenueRepository } from './infrastructure/memory/memory-venue-repo
 const processEnv =
   (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env ?? {}
 
+const courtRepo = new MemoryCourtRepository()
+const slotRepo = new MemoryTimeSlotRepository()
+slotRepo.setCourtRepository(courtRepo)
+
 const container = createContainer({
   userRepository: new MemoryUserRepository(),
   ownerRepository: new MemoryOwnerRepository(),
   venueRepository: new MemoryVenueRepository(),
-  courtRepository: new MemoryCourtRepository(),
-  timeSlotRepository: new MemoryTimeSlotRepository(),
+  courtRepository: courtRepo,
+  timeSlotRepository: slotRepo,
   bookingRepository: new MemoryBookingRepository(),
   paymentRepository: new MemoryPaymentRepository(),
   siteConfigRepository: new MemorySiteConfigRepository(),

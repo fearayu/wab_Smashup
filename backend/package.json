@@ -8,6 +8,8 @@
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
     "build:lambda": "esbuild src/lambda.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/lambda/index.mjs",
+    "smoke": "esbuild smoke-test.mjs --bundle --platform=node --target=node20 --format=esm --outfile=dist/smoke.mjs --log-level=warning && node dist/smoke.mjs",
+    "start:local": "esbuild serve-local.mjs --bundle --platform=node --target=node20 --format=esm --outfile=dist/serve-local.mjs --log-level=warning && node dist/serve-local.mjs",
     "db:migrate:local": "wrangler d1 migrations apply wab-smashup-db --local",
     "db:migrate:remote": "wrangler d1 migrations apply wab-smashup-db --remote",
     "cf-typegen": "wrangler types"

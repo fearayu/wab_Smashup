@@ -1,6 +1,6 @@
 const USERS_KEY = 'smashup_users_v1';
 const SESSION_KEY = 'smashup_session_v1';
-let registerMode = false;
+var registerMode = false;
 const form = document.querySelector('#authForm');
 const feedback = document.querySelector('#feedback');
 const emailField = document.querySelector('#emailField');
@@ -37,12 +37,11 @@ form.addEventListener('submit', async event => {
   }
   if (isDemoCustomer) {
     const normUsername = userKey;
+    const usersSeed=getUsers(); if(!usersSeed.some(u=>u.username.toLowerCase()===normUsername)){ usersSeed.push({id:normUsername,username:normUsername,name:normUsername,email:normUsername+'@smashup.local',passwordHash:'demo',role:'user',is_active:true,createdAt:new Date().toISOString()}); localStorage.setItem(USERS_KEY, JSON.stringify(usersSeed)); } else { const existing=usersSeed.find(u=>u.username.toLowerCase()===normUsername); if(existing && existing.is_active===false){ setFeedback('บัญชีนี้ถูกระงับสิทธิ์ ไม่สามารถเข้าสู่ระบบได้ กรุณาติดต่อผู้ดูแล','error'); return; } }
     localStorage.setItem(SESSION_KEY, JSON.stringify({ id: normUsername, name: normUsername, email: normUsername + '@smashup.local', role: 'user' }));
-    // seed into users list for admin view if not exists
-    const usersSeed=getUsers(); if(!usersSeed.some(u=>u.username.toLowerCase()===normUsername)){ usersSeed.push({id:normUsername,username:normUsername,name:normUsername,email:normUsername+'@smashup.local',passwordHash:'demo',role:'user',createdAt:new Date().toISOString()}); localStorage.setItem(USERS_KEY, JSON.stringify(usersSeed)); }
     setFeedback('เข้าสู่ระบบสำเร็จ กำลังพาไปหน้าแรก…', 'success');
     setTimeout(() => { location.href = nextPage(); }, 500);
     return;
   }
-  const users = getUsers(); const passwordHash = await hashPassword(password); if (registerMode) { if (users.some(user => user.username === username || user.email === email)) { setFeedback('username หรืออีเมลนี้มีบัญชีอยู่แล้ว', 'error'); return; } const user = { id: crypto.randomUUID(), username, name: username, email, passwordHash, createdAt: new Date().toISOString() }; users.push(user); localStorage.setItem(USERS_KEY, JSON.stringify(users)); localStorage.setItem(SESSION_KEY, JSON.stringify({ id: user.id, name: user.username, email: user.email, role: 'user' })); setFeedback('สร้างบัญชีเรียบร้อย กำลังพาไปหน้าแรก…', 'success'); } else { const user = users.find(item => (item.username === username || (!item.username && item.email === username)) && item.passwordHash === passwordHash); if (!user) { setFeedback('username หรือรหัสผ่านไม่ถูกต้อง', 'error'); return; } localStorage.setItem(SESSION_KEY, JSON.stringify({ id: user.id, name: user.username || user.name || user.email, email: user.email, role: user.role || 'user' })); setFeedback('เข้าสู่ระบบสำเร็จ กำลังพาไปต่อ…', 'success'); } setTimeout(() => { location.href = nextPage(); }, 500); });
+  const users = getUsers(); const passwordHash = await hashPassword(password); if (registerMode) { if (users.some(user => user.username === username || user.email === email)) { setFeedback('username หรืออีเมลนี้มีบัญชีอยู่แล้ว', 'error'); return; } const user = { id: crypto.randomUUID(), username, name: username, email, passwordHash, is_active: true, createdAt: new Date().toISOString() }; users.push(user); localStorage.setItem(USERS_KEY, JSON.stringify(users)); localStorage.setItem(SESSION_KEY, JSON.stringify({ id: user.id, name: user.username, email: user.email, role: 'user' })); setFeedback('สร้างบัญชีเรียบร้อย กำลังพาไปหน้าแรก…', 'success'); } else { const user = users.find(item => (item.username === username || (!item.username && item.email === username)) && item.passwordHash === passwordHash); if (!user) { setFeedback('username หรือรหัสผ่านไม่ถูกต้อง', 'error'); return; } if (user.is_active === false || user.deleted) { setFeedback('บัญชีนี้ถูกระงับสิทธิ์ ไม่สามารถเข้าสู่ระบบได้ กรุณาติดต่อผู้ดูแล', 'error'); return; } localStorage.setItem(SESSION_KEY, JSON.stringify({ id: user.id, name: user.username || user.name || user.email, email: user.email, role: user.role || 'user' })); setFeedback('เข้าสู่ระบบสำเร็จ กำลังพาไปต่อ…', 'success'); } setTimeout(() => { location.href = nextPage(); }, 500); });
 renderMode();

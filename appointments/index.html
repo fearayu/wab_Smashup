@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f4511e'/%3E%3Ctext x='32' y='42' font-size='28' font-family='Arial' font-weight='700' fill='%23fff' text-anchor='middle'%3ESU%3C/text%3E%3C/svg%3E">
   <title>จัดการนัดหมายและคำเชิญ | SMASHUP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,9 +56,27 @@
             </table>
           </div>
         </section>
+
+        <!-- Send invitation -->
+        <section class="send-form" style="margin-top:34px">
+          <h2 class="send-title">ส่งคำเชิญนัดหมาย</h2>
+          <p class="send-hint">ระบุชื่อผู้รับ (username หรือชื่อ), วัน-เวลา และสนาม เพื่อส่งคำเชิญให้คู่เล่น</p>
+          <form id="sendForm" class="send-grid" autocomplete="off">
+            <label>ชื่อผู้รับ<input type="text" name="receiverName" required placeholder="เช่น player01"></label>
+            <label>วันที่<input type="date" name="date" required></label>
+            <label>เวลา<input type="time" name="time" required></label>
+            <label>สนาม<input type="text" name="court" required placeholder="คอร์ต 1 • สาขาเมืองเชียงราย"></label>
+            <label class="send-note">หมายเหตุ<input type="text" name="note" placeholder="เช่น อยากซ้อมคู่ก่อนแข่ง"></label>
+            <div class="send-actions">
+              <button type="submit" class="btn-primary">ส่งคำเชิญ</button>
+            </div>
+          </form>
+          <p id="sendFormMessage" class="form-message" hidden></p>
+        </section>
       </div>
     </main>
   </div>
+  <script src="../shared/auth-ui.js"></script>
   <script src="appointments.js"></script>
 </body>
 </html>

@@ -104,11 +104,12 @@ $('#buffetForm')?.addEventListener('submit', (e)=>{
   unified.unshift(buffetBooking);
   saveBookings(unified);
 
-  // also push to buffet-queue waiting list if exists
+  // also push to buffet-queue waiting list
   try{
-    const w = JSON.parse(localStorage.getItem('smashup_buffet_queue')||'[]');
+    const QUEUE_KEY='smashup_buffet_queue_v2';
+    const w = JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]');
     w.push({ name: nick||session.name, slot, level });
-    localStorage.setItem('smashup_buffet_queue', JSON.stringify(w));
+    localStorage.setItem(QUEUE_KEY, JSON.stringify(w));
   }catch{}
   msg.innerHTML = `ลงทะเบียนสำเร็จ! คุณได้คิวที่ <strong>${String(queue.number).padStart(2,'0')}</strong> • รอบ ${slot} • <span style="color:#b7790f">รอยืนยัน</span> — ดูสถานะที่ <a href="../admin/index.html" style="color:var(--orange)">หลังบ้าน Admin</a>`;
   msg.className='form-message success';

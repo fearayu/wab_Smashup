@@ -25,6 +25,7 @@ export function createPaymentRouter() {
         404: { description: 'Booking not found', content: jsonContent(errorResponseSchema) },
       },
     }),
+    authMiddleware,
     (c) => c.get('container').paymentHandler.uploadSlip(c)
   )
 
