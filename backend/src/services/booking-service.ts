@@ -41,7 +41,7 @@ export class BookingService {
     }
 
     // Verify slots are consecutive
-    const sorted = slots.sort((a, b) => a.slotTime.localeCompare(b.slotTime))
+    const sorted = [...slots].sort((a, b) => a.slotTime.localeCompare(b.slotTime))
     for (let i = 1; i < sorted.length; i++) {
       const prev = sorted[i - 1]!
       const curr = sorted[i]!
@@ -100,6 +100,20 @@ export class BookingService {
 
   async updateStatus(id: string, input: UpdateBookingInput, ownerId: string): Promise<Booking> {
     const booking = await this.getById(id, ownerId)
+
+    // Validate state transitions
+    const validTransitions: Record<string, string[]> = {
+      pending: ['confirmed', 'cancelled'],
+      confirmed: ['cancelled', 'completed'],
+      cancelled: [],
+      completed: [],
+    }
+    if (input.status) {
+      const allowed = validTransitions[booking.status]
+      if (allowed && !allowed.includes(input.status)) {
+        throw new ValidationError(`Cannot transition from '${booking.status}' to '${input.status}'`)
+      }
+    }
 
     if (input.status === 'cancelled') {
       await this.timeSlotRepository.releaseSlots(id)

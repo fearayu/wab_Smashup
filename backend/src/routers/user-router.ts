@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute } from 'hono-openapi'
+import { authMiddleware } from '../middleware/auth'
 import {
   createUserSchema,
   updateUserSchema,
@@ -22,6 +23,7 @@ export function createUserRouter() {
         200: { description: 'All users', content: jsonContent(userListResponseSchema) },
       },
     }),
+    authMiddleware,
     (c) => c.get('container').userHandler.list(c)
   )
 
@@ -36,6 +38,7 @@ export function createUserRouter() {
         409: { description: 'Email already registered', content: jsonContent(errorResponseSchema) },
       },
     }),
+    authMiddleware,
     v('json', createUserSchema),
     (c) => c.get('container').userHandler.create(c)
   )
@@ -51,6 +54,7 @@ export function createUserRouter() {
         404: { description: 'User not found', content: jsonContent(errorResponseSchema) },
       },
     }),
+    authMiddleware,
     v('param', idParamSchema),
     (c) => c.get('container').userHandler.get(c)
   )
@@ -66,6 +70,7 @@ export function createUserRouter() {
         404: { description: 'User not found', content: jsonContent(errorResponseSchema) },
       },
     }),
+    authMiddleware,
     v('param', idParamSchema),
     v('json', updateUserSchema),
     (c) => c.get('container').userHandler.update(c)
@@ -81,6 +86,7 @@ export function createUserRouter() {
         404: { description: 'User not found', content: jsonContent(errorResponseSchema) },
       },
     }),
+    authMiddleware,
     v('param', idParamSchema),
     (c) => c.get('container').userHandler.delete(c)
   )

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f4511e'/%3E%3Ctext x='32' y='42' font-size='28' font-family='Arial' font-weight='700' fill='%23fff' text-anchor='middle'%3ESU%3C/text%3E%3C/svg%3E">
   <title>เข้าสู่ระบบ | SMASHUP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +18,7 @@
   <button type="button" class="demo-fill" data-user="player01" data-pass="player123" style="text-align:left;background:#fff;border:1px solid #e8e3dd;border-radius:8px;padding:8px 10px;margin:6px 0 0 0;cursor:pointer;font:500 13px Kanit">🏸 player01 / player123</button>
   <div style="margin-top:8px"><button type="button" id="clearSession" style="background:none;border:0;color:#77736f;cursor:pointer;font:400 12px Kanit;text-decoration:underline">ล้าง session แล้วลองใหม่</button></div>
 </div>
-<p class="demo-note">เวอร์ชันต้นแบบ: บัญชีถูกเก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น</p></section></main><script src="auth.js"></script>
+<p class="demo-note">เวอร์ชันต้นแบบ: บัญชีถูกเก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น</p></section></main><script src="../shared/utils.js"></script><script src="../shared/api.js"></script><script src="auth.js"></script>
 <script>
 document.querySelectorAll('.demo-fill').forEach(b=>b.addEventListener('click',()=>{
   document.getElementById('username').value=b.dataset.user;

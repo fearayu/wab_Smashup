@@ -14,8 +14,6 @@ import { jsonContent, v } from './route-utils'
 export function createCourtRouter() {
   const router = new Hono<AppEnv>()
 
-  router.use('*', authMiddleware)
-
   router.get(
     '/venues/:venue_id/courts',
     describeRoute({
@@ -25,6 +23,7 @@ export function createCourtRouter() {
         200: { description: 'Courts list', content: jsonContent(courtListResponseSchema) },
       },
     }),
+    authMiddleware,
     (c) => c.get('container').courtHandler.listByVenue(c)
   )
 
@@ -38,6 +37,7 @@ export function createCourtRouter() {
         400: { description: 'Invalid input', content: jsonContent(errorResponseSchema) },
       },
     }),
+    authMiddleware,
     v('json', createCourtSchema),
     (c) => c.get('container').courtHandler.create(c)
   )
@@ -53,6 +53,7 @@ export function createCourtRouter() {
         404: { description: 'Court not found', content: jsonContent(errorResponseSchema) },
       },
     }),
+    authMiddleware,
     v('json', updateCourtSchema),
     (c) => c.get('container').courtHandler.update(c)
   )
@@ -67,6 +68,7 @@ export function createCourtRouter() {
         404: { description: 'Court not found', content: jsonContent(errorResponseSchema) },
       },
     }),
+    authMiddleware,
     (c) => c.get('container').courtHandler.delete(c)
   )
 

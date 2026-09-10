@@ -1,57 +1,25 @@
-# Deploy Notes — Smashup
+# Deploy Notes — Smashup (สถานะเก่า สงวนไว้เป็นบันทึก)
 
-## ✅ Deployed (Auto)
+## ประกาศ (2026-09-08)
 
-| Component | Status | URL |
-|---|---|---|
-| Backend Worker | ✅ Live | https://wab-smashup-backend.aphichetaeimnor.workers.dev |
-| D1 Database | ✅ Created | `wab-smashup-db` |
-| KV Namespace | ✅ Created | `CACHE` |
-| Migrations | ✅ Applied | 0001 + 0002 |
-| Pages Project | ✅ Created | `wab-smashup-frontend` |
+เอกสารนี้มาจากเทมเพลต/รอบก่อนหน้าแล้ว**ไม่ตรงกับโค้ดปัจจุบัน** โปรดอ่านก่อนเชื่อข้อความด้านล่าง:
 
-## 🛠️ Backend Details
+- หน้าเว็บที่ใช้งานจริงในโปรเจกต์นี้เป็น **Static HTML/JS โหมดเดโม (localStorage)** ไม่มี `frontend/` (Vue) ซ้ำใน repo
+- URL ด้านล่าง (`*.workers.dev`, `*.pages.dev`) เป็นค่าจากช่วง deploy เก่า **ยังไม่มีการยืนยันว่าใช้งานได้** สำหรับรุ่นนี้ อย่าใช้อ้างอิงในการนำเสนอ
+- ยังไม่ได้ deploy backend รุ่นนี้ ขึ้นจริงต้องทำตามขั้นตอนในส่วน "ถ้าจะ deploy จริง"
 
-- **Account ID**: `<YOUR_ACCOUNT_ID>`
-- **D1 Database ID**: `<YOUR_D1_DATABASE_ID>`
-- **KV Namespace ID**: `<YOUR_KV_NAMESPACE_ID>`
-- **Backend URL**: `https://wab-smashup-backend.aphichetaeimnor.workers.dev`
+## ถ้าจะ deploy จริง (ต้องทำเอง)
 
-## 👤 Next Steps (Manual)
+1. `backend/wrangler.jsonc` มีค่า placeholder (`<REPLACE_WITH_...>`) ต้องแทนด้วย ID จริงจาก `npx wrangler d1 create` / `npx wrangler kv namespace create`
+2. ตั้ง secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `D1_DATABASE_ID`, `KV_NAMESPACE_ID`, `JWT_SECRET` (ไม่ commit secret ลง repo)
+3. `npm run db:migrate:local` ก่อนรันในเครื่อง แล้ว `npm run deploy` เมื่อพร้อม
+4. หน้าเว็บ static เปิดด้วย `python -m http.server` หรือ host บน Cloudflare Pages (ยังไม่ได้ตั้งค่า Git/CI ใน repo นี้)
 
-### Option A: GitHub Actions CI (Recommended)
-
-1. Add these **Repository Secrets** at:
-   `https://github.com/67021354-sudo/wab_Smashup/settings/secrets/actions`
-
-   | Secret | Value |
-   |---|---|
-   | `CLOUDFLARE_API_TOKEN` | `<YOUR_CF_API_TOKEN>` |
-   | `CLOUDFLARE_ACCOUNT_ID` | `<YOUR_ACCOUNT_ID>` |
-   | `D1_DATABASE_ID` | `<YOUR_D1_DATABASE_ID>` |
-   | `KV_NAMESPACE_ID` | `<YOUR_KV_NAMESPACE_ID>` |
-   | `PAGES_PROJECT_NAME` | `wab-smashup-frontend` |
-   | `VITE_BACKEND_URL` | `https://wab-smashup-backend.aphichetaeimnor.workers.dev` |
-
-2. Push any commit to `main` or go to **Actions tab** → **Run workflow**
-
-### Option B: Build Locally
+## วิธีเปิดใช้งานแบบเดโม (ไม่ต้อง deploy)
 
 ```bash
-cd frontend
-pnpm install --frozen-lockfile
-VITE_BACKEND_URL="https://wab-smashup-backend.aphichetaeimnor.workers.dev" pnpm build
-npx wrangler pages deploy dist --project-name=wab-smashup-frontend --branch=main
+python -m http.server 4173
+# http://localhost:4173/
 ```
 
-### Option C: Manual wrangler deploy (no build)
-
-If you have a pre-built `dist/` folder:
-
-```bash
-npx wrangler pages deploy dist --project-name=wab-smashup-frontend --branch=main
-```
-
----
-
-Generated: 2026-08-10 UTC
+> เก็บไว้เป็นข้อมูลประวัติเท่านั้น — เลิกอ้างอิงว่าเวอร์ชันนี้ deploy แล้ว

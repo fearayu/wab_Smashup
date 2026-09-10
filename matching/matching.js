@@ -23,6 +23,8 @@ document.head.append(themeStyle);
 const levelScript=document.createElement('script');levelScript.src='../shared/player-levels.js';levelScript.onload=initializeMatching;levelScript.onerror=()=>{document.getElementById('message').textContent='โหลดเกณฑ์ระดับไม่สำเร็จ กรุณาโหลดหน้าใหม่';};document.head.append(levelScript);
 function initializeMatching(){
 const levels=window.SmashLevels.levels;
+const escapeHtml=window.SmashUtils?.escapeHtml||((v)=>String(v==null?'':v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])));
+function escapeAttr(v){return escapeHtml(v)}
 document.getElementById('myLevel').innerHTML=levelOptions();
 const assessmentLink=document.createElement('p');assessmentLink.innerHTML='<a href="../auth/player-assessment.html">ประเมินทักษะ / ดูคำอธิบายระดับ</a> · ระดับที่เลือกเองยังไม่ใช่การรับรองฝีมือ';document.getElementById('myLevel').parentElement.after(assessmentLink);
 const STORAGE_KEY='smashup_matching_v1';
@@ -73,8 +75,6 @@ function calculateMatches(){
  resultList.innerHTML=scored.map((p,i)=>{const reason=p.gap===0?'ระดับเดียวกัน':'ระดับใกล้เคียงตามลำดับคำอธิบาย';return `<article class="result-card"><div class="rank">${String(i+1).padStart(2,'0')}</div><div><div class="result-name">${escapeHtml(p.name)}</div><div class="result-detail">${levels[p.level].label} · ${reason} · ข้อมูลที่กรอกเอง · เวลา ${escapeHtml(p.time||'ไม่ระบุ')} · ระยะ ${p.distance===''?'ไม่ระบุ':escapeHtml(p.distance)+' กม.'}</div></div><div class="score match-mid"><strong>${p.score}/100</strong><small>คะแนนเปรียบเทียบ</small></div></article>`}).join('')||'<p>ไม่พบผู้เล่นระดับเดียวกันหรือใกล้เคียง กรุณาทบทวนผู้เล่นที่กรอก ไม่ควรเปลี่ยนระดับเพื่อให้ได้ผลลัพธ์</p>';
  results.hidden=false;message.textContent=`พบ ${scored.length} จาก ${data.length} คน · น้ำหนักทดลอง ระดับ 70% + เวลา 15% + ระยะทาง 15% ไม่ใช่โอกาสจับคู่สำเร็จ เป้าหมายไม่เพิ่มคะแนน`;results.scrollIntoView({behavior:'smooth',block:'start'});
 }
-const escapeHtml=window.SmashUtils?.escapeHtml||((v)=>String(v==null?'':v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])));
-function escapeAttr(v){return escapeHtml(v)}
 calculate.addEventListener('click',calculateMatches);
 ['myLevel','playDate','playTime','maxDistance'].forEach(id=>document.getElementById(id).addEventListener('change',saveState));
 const filterLabel=document.createElement('label');filterLabel.textContent='กรองเป้าหมายผู้เล่น (ไม่เพิ่มคะแนนทักษะ)';const filter=document.createElement('select');filter.id='goalFilter';['','ออกกำลังกาย','พัฒนาฝีมือ','หาเพื่อนเล่น','แข่งขัน'].forEach(value=>{const option=document.createElement('option');option.value=value;option.textContent=value||'ทุกเป้าหมาย';filter.append(option)});filterLabel.append(filter);document.getElementById('maxDistance').parentElement.after(filterLabel);

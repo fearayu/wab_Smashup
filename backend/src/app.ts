@@ -23,6 +23,11 @@ export function createApp(containerFactory: (env: Partial<Bindings>) => Containe
   })
 
   app.get('/health', (c) => c.json({ status: 'ok' }))
+
+  // Public routes (no auth) — registered BEFORE the api router
+  app.get('/api/v1/public/venues/:slug/slots', (c) => c.get('container').timeSlotHandler.listPublic(c))
+  app.post('/api/v1/public/bookings', (c) => c.get('container').bookingHandler.createPublic(c))
+
   app.route('/api/v1', createApiRouter())
 
   // API docs: /docs renders the Scalar UI from the generated OpenAPI spec

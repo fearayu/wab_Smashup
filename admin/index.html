@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f4511e'/%3E%3Ctext x='32' y='42' font-size='28' font-family='Arial' font-weight='700' fill='%23fff' text-anchor='middle'%3ESU%3C/text%3E%3C/svg%3E">
   <title>แดชบอร์ดผู้ดูแลระบบ | SMASHUP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,19 +44,19 @@
         <section class="stat-grid stat-grid-4">
           <article class="stat-card">
             <div class="stat-icon orange">◎</div>
-            <div><small>ผู้ใช้งานทั้งหมด</small><strong id="statUsers">1,248</strong><span class="trend up">+18 ใหม่วันนี้</span></div>
+            <div><small>ผู้ใช้งานทั้งหมด</small><strong id="statUsers">—</strong><span class="trend">เฉพาะบัญชีที่สมัครจริง</span></div>
           </article>
           <article class="stat-card">
             <div class="stat-icon blue">▦</div>
-            <div><small>การจองคอร์ตวันนี้</small><strong id="statBookings">86</strong><span class="trend up">+8% จากเมื่อวาน</span></div>
+            <div><small>การจองคอร์ตวันนี้</small><strong id="statBookings">0</strong><span class="trend">จากข้อมูลจริง</span></div>
           </article>
           <article class="stat-card">
             <div class="stat-icon green">฿</div>
-            <div><small>รายได้ประจำวัน</small><strong id="statRevenue">฿ 12,480</strong><span class="trend up">ม็อคอัพสำหรับรายงาน</span></div>
+            <div><small>รายได้จากการจองยืนยัน</small><strong id="statRevenue">฿ 0</strong><span class="trend">คำนวณจากรายการยืนยันจริง</span></div>
           </article>
           <article class="stat-card">
             <div class="stat-icon amber">◈</div>
-            <div><small>คำขอรอดำเนินการ</small><strong id="statPending">14</strong><span class="trend down">ต้องตรวจสอบ</span></div>
+            <div><small>คำขอรอดำเนินการ</small><strong id="statPending">0</strong><span class="trend">ต้องตรวจสอบ</span></div>
           </article>
         </section>
 
@@ -65,7 +66,7 @@
             <h2>จัดการคำขอและการจอง <span>Booking Management</span></h2>
             <div class="table-actions">
               <input id="searchTable" type="search" placeholder="ค้นหาชื่อผู้จอง...">
-              <select id="filterStatus"><option value="">ทุกสถานะ</option><option value="รอยืนยัน">รอยืนยัน</option><option value="ยืนยันแล้ว">ยืนยันแล้ว</option><option value="ยกเลิก">ยกเลิก</option></select>
+              <select id="filterStatus"><option value="">ทุกสถานะ</option><option value="รอตรวจสอบ">รอตรวจสอบ</option><option value="รอยืนยัน">รอยืนยัน</option><option value="ยืนยันแล้ว">ยืนยันแล้ว</option><option value="ดำเนินการแล้ว">ดำเนินการแล้ว</option><option value="ยกเลิกแล้ว">ยกเลิกแล้ว</option></select>
             </div>
           </div>
           <div class="table-wrap">
@@ -78,6 +79,7 @@
       </div>
     </main>
   </div>
+  <script src="../shared/utils.js"></script><script src="../shared/api.js"></script><script src="../shared/auth-ui.js"></script>
   <script src="../shared/admin-guard.js"></script>
   <script src="admin.js"></script>
 </body>

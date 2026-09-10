@@ -65,4 +65,4 @@ Follow the `user` files as the template, in this order:
 - KV enforces a minimum TTL of 60 seconds — `KVCacheRepository.set` clamps for you.
 - `@cloudflare/workers-types` must be v5+ to satisfy wrangler v4's peer dependency.
 - Lambda has no D1/KV; `src/lambda.ts` uses memory repositories. Swap for DynamoDB/RDS implementations there without touching services.
-- CI (`.github/workflows/ci.yml`) deploys to Cloudflare on push to `main` (needs `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets). The Lambda deploy job is commented out.
+- CI: no `.github/workflows` pipeline exists yet. Deploy manually with `npm run deploy` (wrangler).

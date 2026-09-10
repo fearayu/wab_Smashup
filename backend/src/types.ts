@@ -11,8 +11,8 @@ export interface Bindings {
 
 export interface Variables {
   container: Container
-  ownerId: string
-  ownerRole: OwnerRole
+  ownerId: string | undefined
+  ownerRole: OwnerRole | undefined
 }
 
 export type AppEnv = {

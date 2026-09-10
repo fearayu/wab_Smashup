@@ -1,116 +1,47 @@
-# Smashup — Badminton Court Booking MVP
+# Smashup — สรุปการสาธิต (Demo Overview)
 
-## 🎯 สำหรับ Hackathon Demo
+เอกสารนี้แก้จากฉบับเก่าที่อ้างว่าเป็น "ระบบสร้างเว็บจองสนาม No-Code ใน 5 นาที" พร้อม QR/PromptPay และ URL ที่ deploy จริง ซึ่ง**ไม่ตรงกับโค้ดในโปรเจกต์นี้** ฉบับนี้บรรยายสิ่งที่สาธิตได้จริง
 
-ระบบสร้างเว็บไซต์จองสนามแบดมินตันแบบ No-Code ใน 5 นาที
+## สิ่งที่สาธิตได้จริง
 
----
+1. เปิดหน้าแรก → เข้าสู่ระบบ (สมัครสมาชิกใหม่หรือบัญชีสาธิต)
+2. **Flow A — จองสนาม**: เลือกวัน/คอร์ต/เวลา → ระบบตรวจคอร์ตซ้ำ → ดูรายการของฉัน → ยกเลิกตามเงื่อนไข
+3. **Flow B — หาคู่เล่น**: เลือกระดับ/รูปแบบ/ระยะทาง → ได้รายชื่อเรียงตามคะแนน + เหตุผล + ที่มาของระดับ → ส่งคำเชิญ → ตอบรับที่หน้า "นัดหมายของฉัน"
+4. **ผู้ดูแล**: ยืนยัน/ยกเลิกรายการ และดูสถิติจากข้อมูลจริง
+5. **ประเมินระดับ**: ตอบ 6 ด้าน → ผู้จัดสังเกตและยืนยันระดับ (ขั้นตอนเต็มยกเว้นการตรวจตัวบุคคลจริง)
 
-## 🚀 Live Demo
+## สิ่งที่ไม่ควรสาธิตเป็น "ระบบจริง"
 
-| ส่วน | URL |
-|------|-----|
-| **Landing Page** | https://9a94cade.wab-smashup-frontend.pages.dev |
-| **Demo Booking** | https://9a94cade.wab-smashup-frontend.pages.dev/demo |
-| **Backend API** | https://wab-smashup-backend.aphichetaeimnor.workers.dev |
+- เก็บข้อมูลใน localStorage ของเบราว์เซอร์เท่านั้น → โชว์ตัวเลขจริงแค่ในเครื่องสาธิตเครื่องเดียว
+- ไม่มีการชำระเงินจริง/QR/สลิป
+- คำเชิญนัดหมายไม่ใช่การจองคอร์ตจริง
+- ไม่มีการส่งอีเมล/LINE แจ้งเตือน
 
----
+## เทคโนโลยีที่ใช้จริง
 
-## 📱 หน้าที่สร้าง (Sitemap)
+| Layer | เทคโนโลยี |
+|---|---|
+| หน้าเว็บ | Static HTML/CSS/JS (ไม่ใช้ framework), ภาษาไทยหลัก |
+| กฎธุรกิจ/ข้อมูล | Shared Domain Modules รันได้ทั้งเบราว์เซอร์และ Node (`shared/*.js`) |
+| ทดสอบ | `node --test tests/*.test.cjs` (7 ชุด/116 จุดตรวจ) |
+| Backend (มีโค้ด ไม่เชื่อมหน้าเว็บ) | Hono + Cloudflare Workers/D1/KV ตรวจผ่าน typecheck/build/smoke |
+| จุดต่อ API (future) | `shared/api.js` seam |
 
-| หน้า | รายละเอียด | สถานะ |
-|------|-----------|--------|
-| `/` | Landing Page — ขายแนวคิด + CTA | ✅ |
-| `/demo` | **Demo Booking** — จองคอร์ทได้จริง! | ✅ |
-| `/login` | Login/Register | ✅ |
-| `/setup` | Onboarding — สร้างสนาม 3 ขั้นตอน | ✅ |
-| `/dashboard` | Owner Dashboard | ✅ |
-| `/book/:slug` | Public Booking (ตัวอย่าง) | ✅ |
+## วิธีเปิดสาธิต
 
----
-
-## 🛠 Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Vue 3 + Vuetify 3 + Vite |
-| Backend | Hono + Cloudflare Workers |
-| Database | Cloudflare D1 (SQLite) |
-| Cache | Cloudflare KV |
-| Deploy | Cloudflare Pages + Workers |
-
----
-
-## 🎬 โมเมนต์เดโม (30 วินาที)
-
-1. เปิด `/demo`
-2. เลือกวัน → เลือกคอร์ท → เลือกเวลา
-3. กด "จองคอร์ทเลย"
-4. แสดง QR Code สำหรับชำระเงิน
-5. ✅ **เดโมเสร็จ!**
-
----
-
-## 💡 จุดเด่นของระบบ
-
-- ✅ **สร้างเว็บใน 5 นาที** — ไม่ต้องเขียนโค้ด
-- ✅ **จองเรียลไทม์** — เห็นคอร์ทว่างทันที
-- ✅ **ป้องกันคิวชน** — ล็อกคิวอัตโนมัติ
-- ✅ **ชำระเงินอัตโนมัติ** — ตรวจสลิป PromptPay
-- ✅ **ใช้งานบนมือถือ** — Responsive design
-
----
-
-## 🏗 โครงสร้างโปรเจกต์
-
-```
-/tmp/wab_Smashup/
-├── backend/          # Hono API + D1 + KV
-│   ├── src/
-│   │   ├── server.ts
-│   │   └── routes/
-│   └── wrangler.jsonc
-├── frontend/         # Vue 3 + Vuetify
-│   ├── src/
-│   │   ├── pages/    # หน้าต่างๆ
-│   │   ├── stores/   # Pinia stores
-│   │   └── apis/     # API clients
-│   └── vite.config.ts
-└── docs/
-    └── README-MVP.md
+```bash
+python -m http.server 4173
+# เปิด http://localhost:4173/
 ```
 
----
+บัญชีเดโม: admin/12345, customer01/123456, player01/player123
 
-## 📝 ข้อมูลตัวอย่าง (Mock Data)
-
-Demo page มีข้อมูลสนามตัวอย่าง:
-- **สนาม**: สนามแบดมินตัน สมพร
-- **คอร์ท**: 4 คอร์ท (A, B, C Premium, D Premium)
-- **ราคา**: 250-350 บาท/ชม.
-- **เวลา**: 08:00-21:00
-
----
-
-## 🎨 Design System
-
-| Token | ค่า |
-|-------|-----|
-| Primary | `#1B5E20` (Court Green) |
-| Accent | `#FF6F00` (Shuttlecock Orange) |
-| Background | `#F0F7F0` (Light Green) |
-| Radius | `0.625rem` (10px) |
-
----
-
-## 👥 ทีมพัฒนา
+## ทีมพัฒนา
 
 - ธนภัทร แสนคำยวง
 - อภิเชษฐ์ เอี่ยมหน่อ
 - สุวิชาดา วงพีระ
 
 **อาจารย์ที่ปรึกษา**: ผู้ช่วยศาสตราจารย์ ดร.สุรางคนา ระวังยศ
-
----
 
 มหาวิทยาลัยพะเยา | คณะเทคโนโลยีสารสนเทศ | สาขาวิทยาการคอมพิวเตอร์

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f4511e'/%3E%3Ctext x='32' y='42' font-size='28' font-family='Arial' font-weight='700' fill='%23fff' text-anchor='middle'%3ESU%3C/text%3E%3C/svg%3E">
   <title>จองสนาม | SMASHUP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,11 +11,9 @@
   <link rel="stylesheet" href="../shared/app-shell.css">
   <link rel="stylesheet" href="booking.css">
   <style>
-    /* Override booking.css layout to work with app-shell */
-    html,body{height:auto;overflow:auto}
-    .app-shell main{height:auto;overflow:visible;margin-left:0}
+    /* Booking board as a full-height app page inside the shell */
     .content.booking-content{padding:0;background:transparent}
-    .reservation-board{height:auto;min-height:calc(100vh - 62px)}
+    .reservation-board{min-height:calc(100vh - 62px)}
     @media(max-width:860px){.reservation-board{min-height:auto}}
   </style>
 </head>
@@ -43,16 +42,121 @@
     <main class="content booking-content">
       <section class="reservation-board" aria-labelledby="board-title">
         <div class="board-heading"><h1 id="board-title">ตารางการจองสนาม</h1><strong>แสดงผล 7 วันล่วงหน้า</strong></div>
-        <div class="date-tabs"><button class="selected" type="button">วันนี้</button><button type="button">พรุ่งนี้</button><button type="button">+2 วัน</button><button type="button">+3 วัน</button><button type="button">+4 วัน</button><button type="button">+5 วัน</button><button type="button">+6 วัน</button></div>
-        <div class="schedule-scroll"><table><thead><tr><th>เวลา / คอร์ต</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>A</th><th>B</th></tr></thead><tbody><tr><th>11:00–12:00</th><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td></tr><tr><th>19:00–20:00</th><td class="reserved">จองแล้ว</td><td class="reserved">จองแล้ว</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td></tr><tr><th>22:00–23:00</th><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td><td class="free">130 บ.</td></tr></tbody></table></div>
-        <p class="board-note"><span class="legend free"></span>ว่าง <span class="legend reserved"></span>จองแล้ว — กดคอร์ตที่ว่างเพื่อทำการจอง ระบบจะแสดงรายละเอียดการจองภายใน 15 นาที</p>
+        <div class="date-tabs" id="dateTabs"></div>
+        <div class="schedule-scroll"><table>
+          <thead id="boardHead"></thead>
+          <tbody id="boardBody"></tbody>
+        </table></div>
+        <p id="boardMessage" class="board-message"></p>
+        <p class="board-note"><span class="legend free"></span>ว่าง <span class="legend reserved"></span>จองแล้ว — กดคอร์ตที่ว่างเพื่อทำการจอง คำขอจะถูกส่งให้ผู้ดูแลตรวจสอบภายใน 15 นาที</p>
         <a class="topic-button" href="form.html">จองสนามแบดมินตัน →</a>
       </section>
     </main>
   </div>
-  <script>
-    document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));
-  </script>
+
+  <dialog id="bookingDialog">
+    <div class="dialog-head"><span>ยืนยันการจอง</span><button type="button" class="dialog-close" id="dialogClose" aria-label="ปิด">×</button></div>
+    <div class="dialog-body">
+      <p class="dialog-summary" id="bookingSummary"></p>
+      <form id="bookingForm" novalidate>
+        <label>ชื่อผู้จอง<input id="bookName" required maxlength="60" placeholder="ชื่อ-สกุล"></label>
+        <label>เบอร์โทรศัพท์<input id="bookPhone" required inputmode="tel" placeholder="เช่น 0812345678"></label>
+        <div class="dialog-actions">
+          <button type="button" class="btn-cancel" id="dialogCancel">ปิด</button>
+          <button type="submit" class="btn-confirm" id="bookSubmit">ยืนยันการจอง</button>
+        </div>
+        <p class="dialog-error" id="bookError" role="alert"></p>
+      </form>
+    </div>
+  </dialog>
+
+  <script>document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));</script>
   <script src="../shared/auth-ui.js"></script>
+  <script src="../shared/service-rules.js"></script>
+  <script>
+  (function(){
+    const R=window.SmashRules;
+    const TIMES=[['11:00–12:00','11:00'],['19:00–20:00','19:00'],['22:00–23:00','22:00']];
+    const DAYS=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัส','ศุกร์','เสาร์'];
+    const MONTHS=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    const tabsEl=document.getElementById('dateTabs'),headEl=document.getElementById('boardHead'),bodyEl=document.getElementById('boardBody');
+    const msgEl=document.getElementById('boardMessage');
+    const dialog=document.getElementById('bookingDialog'),summaryEl=document.getElementById('bookingSummary');
+    const form=document.getElementById('bookingForm'),nameEl=document.getElementById('bookName'),phoneEl=document.getElementById('bookPhone'),errEl=document.getElementById('bookError');
+    let selectedDate=R.localDate();
+    let pending=null;
+
+    function thaiDate(iso){const d=new Date(iso+'T00:00:00');return pad(d.getDate())+' '+MONTHS[d.getMonth()]+' '+String(d.getFullYear()+543);}
+    function pad(n){return String(n).padStart(2,'0');}
+
+    function renderTabs(){
+      if(!tabsEl.dataset.bound){tabsEl.dataset.bound='1';}
+      tabsEl.innerHTML=R.courts.length?Array.from({length:7},(_,i)=>{
+        const d=new Date();d.setDate(d.getDate()+i);const iso=R.localDate(d);
+        const label=i===0?'วันนี้':i===1?'พรุ่งนี้':'+'+i+' วัน';
+        return '<button type="button" class="date-tab'+(iso===selectedDate?' selected':'')+'" data-date="'+iso+'">'+label+'<br><small>'+thaiDate(iso)+'</small></button>';
+      }).join(''):'';
+      tabsEl.querySelectorAll('.date-tab').forEach(b=>b.addEventListener('click',()=>{selectedDate=b.dataset.date;renderTabs();renderBoard();}));
+    }
+
+    function reservedAt(date,time,court){
+      const list=R.list(R.keys.court);
+      return list.some(r=>R.active(r)&&r.date===date&&String(r.court)===String(court)&&String(r.time).slice(0,5)===time.slice(0,5));
+    }
+
+    function renderBoard(){
+      headEl.innerHTML='<tr><th>เวลา / คอร์ต</th>'+R.courts.map(c=>'<th>'+c+'</th>').join('')+'</tr>';
+      bodyEl.innerHTML=TIMES.map(([label,time])=>{
+        const cells=R.courts.map(court=>{
+          const busy=reservedAt(selectedDate,time,court);
+          return '<td class="'+(busy?'reserved':'free-cell')+'">'+(busy?'จองแล้ว':'<button type="button" class="court-btn" data-time="'+time+'" data-court="'+R.escape(court)+'">130 บ.</button>')+'</td>';
+        }).join('');
+        return '<tr><th>'+label+'</th>'+cells+'</tr>';
+      }).join('');
+      bodyEl.querySelectorAll('.court-btn').forEach(btn=>btn.addEventListener('click',()=>openBooking(btn.dataset.time,btn.dataset.court)));
+      msgEl.textContent='ตารางประจำ '+(function(){const d=new Date(selectedDate+'T00:00:00');return DAYS[d.getDay()]+'ที่ '+pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+String(d.getFullYear()+543);})();
+    }
+
+    function openBooking(time,court){
+      const who=R.session();
+      pending={date:selectedDate,time,court};
+      summaryEl.textContent='คอร์ต '+court+' • '+time+' • ฿ 130';
+      if(!who){showError('กรุณา<a style="color:var(--orange,#f4511e)" href="../auth/index.html?next=../booking/index.html">เข้าสู่ระบบ</a>ก่อนจองสนาม');return;}
+      nameEl.value=who.name||'';
+      phoneEl.value='';
+      errEl.textContent='';errEl.innerHTML='';
+      dialog.showModal();nameEl.focus();
+    }
+
+    function showError(msg){errEl.textContent='';errEl.innerHTML=msg;if(!dialog.open)dialog.showModal();}
+
+    form.addEventListener('submit',async (ev)=>{
+      ev.preventDefault();
+      if(!pending)return;
+      errEl.textContent='';
+      const who=R.session();
+      if(!who||!pending){showError('กรุณาเข้าสู่ระบบก่อนจองสนาม');return;}
+      nameEl.disabled=true;phoneEl.disabled=true;
+      try{
+        await R.bookCourt({date:pending.date,time:pending.time,court:pending.court,name:nameEl.value,phone:phoneEl.value},who);
+        dialog.close();
+        form.reset();nameEl.disabled=false;phoneEl.disabled=false;
+        pending=null;
+        renderBoard();
+        msgEl.className='board-message';
+        msgEl.textContent='จองสำเร็จ — คอร์ตถูกส่งให้ผู้ดูแลตรวจสอบ (สถานะ: รอตรวจสอบ)';
+      }catch(e){
+        nameEl.disabled=false;phoneEl.disabled=false;
+        showError(R.escape(e.message));
+      }
+    });
+
+    document.getElementById('dialogClose').addEventListener('click',()=>dialog.close());
+    document.getElementById('dialogCancel').addEventListener('click',()=>dialog.close());
+    dialog.addEventListener('click',(e)=>{const r=dialog.getBoundingClientRect();if(e.target===dialog||e.clientY<r.top||e.clientY>r.bottom||e.clientX<r.left||e.clientX>r.right)dialog.close();});
+    window.addEventListener('storage',()=>{renderBoard();});
+    renderTabs();renderBoard();
+  })();
+  </script>
 </body>
 </html>

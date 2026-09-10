@@ -18,6 +18,13 @@ export class MemoryCacheRepository implements CacheRepository {
       value,
       expiresAt: ttlSeconds !== undefined ? Date.now() + ttlSeconds * 1000 : null,
     })
+    // Periodic cleanup when store grows large
+    if (this.store.size > 200) {
+      const now = Date.now()
+      for (const [k, entry] of this.store) {
+        if (entry.expiresAt !== null && entry.expiresAt < now) this.store.delete(k)
+      }
+    }
   }
 
   async delete(key: string): Promise<void> {

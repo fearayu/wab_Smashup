@@ -72,6 +72,7 @@ if (form && date && courts && estimate && success) {
       type: 'court',
       createdAt: new Date().toISOString(),
       userId: cur.id,
+      ownerId: cur.id,
       userName: cur.name
     };
     const list=getBookings();

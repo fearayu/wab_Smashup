@@ -2,8 +2,9 @@
 :root{--navy:#0f2f4a;--navy-2:#143a5e;--navy-active:#1e4f78;--orange:#f4511e;--orange-hover:#e34714;--cream:#f7f5f1;--line:#e8e3dd;--ink:#171717;--muted:#77736f;--green:#16a34a;--red:#ef4444}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
-body{font-family:'Kanit',sans-serif;color:var(--ink);background:var(--cream)}
+body{font-family:'Kanit','Segoe UI',Tahoma,sans-serif;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased}
 a{text-decoration:none;color:inherit}
+button{font-family:inherit}
 
 /* Topbar */
 .app-topbar{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:14px clamp(16px,3vw,28px)}
@@ -19,7 +20,7 @@ a{text-decoration:none;color:inherit}
 
 /* Shell layout */
 .app-shell{display:flex;min-height:calc(100vh - 62px)}
-.sidebar{width:280px;flex-shrink:0;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:18px 14px;gap:6px}
+.sidebar{width:280px;flex-shrink:0;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:18px 14px;gap:6px;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto}
 .sidebar-head{padding:10px 8px 14px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:6px}
 .sidebar-head strong{display:block;font:700 13px 'Space Grotesk',sans-serif;letter-spacing:.12em}
 .sidebar-head span{color:#9fb6ca;font-size:12px}
@@ -47,7 +48,14 @@ a{text-decoration:none;color:inherit}
   .menu-toggle{display:inline-flex}
   .topbar-nav{display:none}
   .app-shell{flex-direction:column}
-  .sidebar{width:100%;display:none}
+  .sidebar{width:100%;display:none;position:static;height:auto}
   .sidebar.open{display:flex}
   .content{padding:26px 16px 40px}
 }
+
+/* Font fallbacks so the UI stays readable offline (Google Fonts blocked) */
+.brand-mark,.brand strong,.brand small,.sidebar-head strong,.page-title,.eyebrow,.panel-title,.list-title h2,.reservation-board h1,.schedule-heading h2{font-family:'Space Grotesk','Arial Narrow','Segoe UI',sans-serif}
+.btn-primary,.btn-secondary,.btn-ghost,.menu-toggle,.sidebar a,.sidebar button{font-family:'Kanit','Segoe UI',Tahoma,sans-serif}
+
+/* Focus visibility + focus ring consistency */
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--orange);outline-offset:2px}

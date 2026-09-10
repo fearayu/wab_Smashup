@@ -10,16 +10,19 @@
   <link rel="stylesheet" href="topic.css">
   <link rel="stylesheet" href="regular-buffet-info.css">
   <link rel="stylesheet" href="regular-buffet-info-hero.css">
+  <link rel="stylesheet" href="../shared/app-shell.css">
+  <style>html,body{height:auto;overflow:auto}.app-shell main{height:auto;overflow:visible;margin-left:0}.content.booking-content{padding:0;background:transparent}.topic-main{margin-left:0!important;max-width:none!important;padding:48px clamp(20px,4vw,56px)!important}</style>
 </head>
 <body>
-  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a><a class="back" href="court-booking.html">← หน้าจองสนาม</a></header>
-  <main class="topic-main buffet-info-page">
+  <header class="app-topbar"><a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a><nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a class="active" href="index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a href="../appointments/index.html">นัดหมาย</a></nav><div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div></header>
+  <div class="app-shell"><aside class="sidebar" id="sidebar"><div class="sidebar-head"><strong>SMASHUP</strong><span>จองสนาม • Booking</span></div><nav><a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a><a class="active" href="index.html"><i class="icon">▦</i> จองสนาม</a><a href="../matching/index.html"><i class="icon">◎</i> หาคู่เล่น</a><a href="../appointments/index.html"><i class="icon">◈</i> นัดหมายของฉัน</a><a href="buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a></nav><div class="section-label">ช่วยเหลือ</div><nav><a href="rules.html"><i class="icon">▱</i> กฎการใช้สนาม</a><a href="shop.html"><i class="icon">♡</i> ร้านค้า</a></nav></aside>
+  <main class="content booking-content topic-main buffet-info-page">
     <div class="info-heading"><div><p class="eyebrow">04 / BUFFET INFORMATION</p><h1>ข้อมูลตี<br><em>บุฟเฟต์</em></h1><p>ตรวจสอบผู้ลงชื่อ รอบเล่น ระดับ และสถานะก่อนจัดคิวลงสนาม</p></div><a href="regular-buffet-booking.html">+ ลงชื่อบุฟเฟต์</a></div>
     <section class="info-tools"><label>วันที่เล่น<input id="infoDate" type="date"></label><label>ค้นหาชื่อผู้เล่น<input id="infoSearch" type="search" placeholder="พิมพ์ชื่อเล่น"></label><button id="clearInfo" type="button">ล้างตัวกรอง</button></section>
     <section class="buffet-stats"><article><span>ผู้ลงชื่อ</span><strong id="totalPlayers">0</strong><small>ตามวันที่เลือก</small></article><article><span>ยืนยันแล้ว</span><strong id="confirmedPlayers">0</strong><small>พร้อมจัดคิว</small></article><article><span>รอยืนยัน</span><strong id="pendingPlayers">0</strong><small>รอตรวจสอบรายการ</small></article></section>
     <section class="player-list"><div class="list-heading"><div><h2>รายชื่อผู้ลงทะเบียน</h2><p id="infoMessage" role="status"></p></div><a class="queue-link" href="regular-buffet-queue.html">ไปจัดคิว ↗</a></div><div class="table-scroll"><table><thead><tr><th>#</th><th>ชื่อผู้เล่น</th><th>รอบเวลา</th><th>ระดับ</th><th>ค่าลูก</th><th>สถานะ</th><th>ยอด</th></tr></thead><tbody id="buffetRows"></tbody></table></div><p id="buffetEmpty" class="empty-state" hidden>ยังไม่มีผู้ลงชื่อในรอบนี้</p></section>
-  </main>
-  <script src="topic-nav.js"></script>
+  </main></div>
+  <script>document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));</script>
   <script src="../shared/utils.js"></script><script src="regular-buffet-info.js"></script>
 </body>
 </html>

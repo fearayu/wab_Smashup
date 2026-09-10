@@ -1,21 +1,34 @@
 import type { SiteConfig, UpdateSiteConfigInput } from '../../domain/entities/site-config'
 import type { SiteConfigRepository } from '../../domain/repositories/site-config-repository'
+import type { VenueRepository } from '../../domain/repositories/venue-repository'
+import type { CourtRepository } from '../../domain/repositories/court-repository'
 
 export class MemorySiteConfigRepository implements SiteConfigRepository {
   private readonly configs = new Map<string, SiteConfig>()
-  private readonly venues = new Map<string, { id: string; name: string; slug: string; primaryColor: string; ownerId: string }>()
-  private readonly courts = new Map<string, { id: string; venueId: string; name: string; type: string; hourlyRate: number; isActive: boolean }>()
+  private venueRepository: VenueRepository | null = null
+  private courtRepository: CourtRepository | null = null
+
+  setVenueRepository(repo: VenueRepository) { this.venueRepository = repo }
+  setCourtRepository(repo: CourtRepository) { this.courtRepository = repo }
 
   async findByVenueId(venueId: string): Promise<SiteConfig | null> {
     return [...this.configs.values()].find((c) => c.venueId === venueId) ?? null
   }
 
   async findBySlug(slug: string): Promise<{ venue: { id: string; name: string; slug: string; primaryColor: string }; courts: { id: string; name: string; type: string; hourlyRate: number; isActive: boolean }[]; config: SiteConfig | null } | null> {
-    const venue = [...this.venues.values()].find((v) => v.slug === slug)
+    if (!this.venueRepository || !this.courtRepository) return null
+
+    const venue = await this.venueRepository.findBySlug(slug)
     if (!venue) return null
-    const courts = [...this.courts.values()].filter((c) => c.venueId === venue.id && c.isActive)
+
+    const courts = await this.courtRepository.findAllByVenueId(venue.id)
     const config = await this.findByVenueId(venue.id)
-    return { venue, courts, config }
+
+    return {
+      venue: { id: venue.id, name: venue.name, slug: venue.slug, primaryColor: venue.primaryColor },
+      courts: courts.filter(c => c.isActive).map(c => ({ id: c.id, name: c.name, type: c.type, hourlyRate: c.hourlyRate, isActive: c.isActive })),
+      config,
+    }
   }
 
   async createDefault(venueId: string): Promise<SiteConfig> {
@@ -46,8 +59,4 @@ export class MemorySiteConfigRepository implements SiteConfigRepository {
     this.configs.set(existing.id, updated)
     return updated
   }
-
-  // Helpers for demo
-  setVenue(v: { id: string; name: string; slug: string; primaryColor: string; ownerId: string }) { this.venues.set(v.id, v) }
-  setCourt(c: { id: string; venueId: string; name: string; type: string; hourlyRate: number; isActive: boolean }) { this.courts.set(c.id, c) }
 }

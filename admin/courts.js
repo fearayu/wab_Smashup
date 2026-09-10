@@ -4,6 +4,7 @@ $('#menuToggle')?.addEventListener('click',()=> $('#sidebar').classList.toggle('
 $('#adminLogout')?.addEventListener('click',(e)=>{e.preventDefault();localStorage.removeItem('smashup_session_v1');location.href='../auth/index.html';});
 
 const STORAGE='smashup_courts_v1';
+function escapeHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 const defaultCourts=[
   {id:'1',type:'มาตรฐาน',status:'ว่าง',price:130,hours:'11:00–23:00'},
   {id:'2',type:'มาตรฐาน',status:'ว่าง',price:130,hours:'11:00–23:00'},
@@ -39,11 +40,11 @@ function render(){
     const toggleLabel=c.status==='ว่าง'?'ปิดคอร์ต':'เปิดคอร์ต';
     const toggleClass=c.status==='ว่าง'?'':'off';
     return `<tr>
-      <td><strong>คอร์ต ${c.id}</strong></td>
-      <td>${c.type}</td>
-      <td><span class="status ${cls}">${c.status}</span></td>
-      <td class="price">฿ ${c.price}</td>
-      <td>${c.hours}</td>
+      <td><strong>คอร์ต ${escapeHtml(c.id)}</strong></td>
+      <td>${escapeHtml(c.type)}</td>
+      <td><span class="status ${cls}">${escapeHtml(c.status)}</span></td>
+      <td class="price">฿ ${escapeHtml(String(c.price))}</td>
+      <td>${escapeHtml(c.hours)}</td>
       <td><div class="actions"><button class="btn-toggle ${toggleClass}" data-toggle="${realIdx}">${toggleLabel}</button><button class="btn-edit" data-edit="${realIdx}">แก้ไข</button></div></td>
     </tr>`;
   }).join('') || `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:28px">ไม่พบคอร์ตที่ค้นหา</td></tr>`;

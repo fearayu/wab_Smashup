@@ -12,8 +12,8 @@ export function rateLimitAuth() {
   return createMiddleware<AppEnv>(async (c, next) => {
     const key =
       c.req.header('CF-Connecting-IP') ??
-      c.req.header('x-forwarded-for') ??
       c.req.header('x-real-ip') ??
+      c.req.header('x-forwarded-for')?.split(',')[0]?.trim() ??
       'unknown'
     const now = Date.now()
 
@@ -25,9 +25,12 @@ export function rateLimitAuth() {
     recent.push(now)
     buckets.set(key, recent)
 
-    if (buckets.size > 5_000) {
+    // Periodic cleanup: remove stale entries from all buckets
+    if (buckets.size > 100) {
       for (const [k, times] of buckets) {
-        if (times.length === 0) buckets.delete(k)
+        const fresh = times.filter((t) => now - t < WINDOW_MS)
+        if (fresh.length === 0) buckets.delete(k)
+        else buckets.set(k, fresh)
       }
     }
 

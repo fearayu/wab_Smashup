@@ -1,7 +1,7 @@
 /* SMASHUP — Sport Modern theme */
-:root{--navy:#0b3a5b;--navy-deep:#062b45;--blue:#1683b4;--blue-light:#e8f5fb;--orange:#f4511e;--orange-bright:#ff6b35;--cream:#f7f5f1;--ink:#12212b;--muted:#62717b;--line:#d7e1e7}
+:root{--navy:#0f2f4a;--navy-deep:#09233a;--blue:#1683b4;--blue-light:#e8f5fb;--orange:#f4511e;--orange-bright:#ff6b35;--cream:#f7f5f1;--ink:#12212b;--muted:#62717b;--line:#d7e1e7}
 body{background:var(--cream);color:var(--ink)}
-.site-header,.booking-header,.topbar{background:rgba(255,255,255,.97);border-bottom:3px solid var(--blue);box-shadow:0 5px 18px rgba(6,43,69,.08)}
+.site-header,.booking-header,.topbar{background:rgba(255,255,255,.97);border-bottom:1px solid var(--line);box-shadow:0 5px 18px rgba(15,47,74,.08)}
 .brand-mark{background:var(--orange)!important;border-radius:3px;box-shadow:3px 3px 0 var(--navy)}
 .brand strong{color:var(--navy);letter-spacing:.1em}.brand small{color:var(--muted)}
 .main-nav a:hover,.main-nav .active,.back,.back-link{color:var(--orange)}

@@ -71,6 +71,9 @@ export async function verifyJwt(token: string, secret: string): Promise<AuthToke
     if (typeof payload.sub !== 'string' || typeof payload.iat !== 'number' || typeof payload.exp !== 'number') {
       throw new UnauthorizedError('Invalid token')
     }
+    if (typeof payload.email !== 'string' || typeof payload.role !== 'string') {
+      throw new UnauthorizedError('Invalid token: missing email or role')
+    }
     if (payload.exp < now) throw new UnauthorizedError('Token expired')
     if (payload.iat > now + 60) throw new UnauthorizedError('Invalid token')
 

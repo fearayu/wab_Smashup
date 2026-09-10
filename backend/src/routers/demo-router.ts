@@ -7,7 +7,7 @@ import { jsonContent } from './route-utils'
 export function createDemoRouter() {
   const router = new Hono<AppEnv>()
 
-  router.get(
+  router.post(
     '/seed',
     describeRoute({
       tags: ['Demo'],
