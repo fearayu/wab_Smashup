@@ -27,5 +27,12 @@ const base={date,time:'17:00',court:'A',name:'ทดสอบ',phone:'081-234-56
  await assert.rejects(R.setStatus('service',item.id,'ดำเนินการแล้ว',u),/เฉพาะผู้ดูแล/);
  login(admin);await R.setStatus('service',item.id,'ดำเนินการแล้ว',admin);login(u);await assert.rejects(R.cancel('service',item.id,u),/ยกเลิกไม่ได้/);
  const raw=localStorage.getItem(R.keys.service);localStorage.setItem(R.keys.service,'broken');await assert.rejects(R.requestService({...shop,quantity:'1'},u),/เสียรูปแบบ/);assert.equal(localStorage.getItem(R.keys.service),'broken');localStorage.setItem(R.keys.service,raw);
- console.log('PASS: court conflicts, invalid dates/phone, fresh identity/ownership, cancel/rebook/expiry, confirmed level, overlapping buffet, service validation/duplicates, terminal states, malformed data retained');
+ const practice={service:'จองสนามซ้อม',name:'ทดสอบ',phone:'0812345678',date,time:'15:00–17:00',players:'4'};
+ await assert.rejects(R.requestService({...practice,time:'12:00–14:00'},u),/รอบซ้อม/);
+ await assert.rejects(R.requestService({...practice,players:'0'},u),/จำนวนเต็ม/);
+ await assert.rejects(R.requestService({...practice,players:'9'},u),/จำนวนเต็ม/);
+ await assert.rejects(R.requestService({...practice,players:'1.5'},u),/จำนวนเต็ม/);
+ for(const t of ['11:00–13:00','15:00–17:00','19:00–21:00']){const p=await R.requestService({...practice,time:t},u);assert(p.id&&p.time===t);}
+ await assert.rejects(R.requestService(practice,u),/รอบนี้/);
+ console.log('PASS: court conflicts, invalid dates/phone, fresh identity/ownership, cancel/rebook/expiry, confirmed level, overlapping buffet, service validation/duplicates, practice-court rules, terminal states, malformed data retained');
 })().catch(e=>{console.error(e);process.exit(1)});

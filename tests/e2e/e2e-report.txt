@@ -1,6 +1,6 @@
-SMASHUP E2E REPORT  8/9/2569 11:49:29
+SMASHUP E2E REPORT  14/9/2569 19:52:00
 BROWSER: headless Edge/Chrome via puppeteer-core
-TOTAL: 24  PASS: 24  FAIL: 0
+TOTAL: 33  PASS: 33  FAIL: 0
 
 PASS  A01 login player01 redirects to home
 PASS  A02 board renders 39 free cells (13 courts x 3 slots)
@@ -12,9 +12,9 @@ PASS  A07 my-bookings shows คอร์ต 2 · รอตรวจสอบ · 
 PASS  A08 cancel ผ่าน UI แล้วสถานะเป็นยกเลิกแล้ว
 PASS  A09 cancelled slot is free again on board
 PASS  A10 form.html success dialog shown
-PASS  A11 my-bookings shows form booking (คอร์ต 1 · รอยืนยัน · ฿130)
+PASS  A11 my-bookings shows form booking (คอร์ต 1 · รอตรวจสอบ · ฿130)
 PASS  A12 admin statUsers = real registered users
-PASS  A13 admin statPending = 1 (form booking รอยืนยัน)
+PASS  A13 admin statPending = 1 (form booking รอตรวจสอบ)
 PASS  A14 admin statRevenue starts ฿0 (no confirmed yet)
 PASS  A15 admin sees court request row with ยืนยัน button
 PASS  A16 confirm → status ยืนยันแล้ว in admin table
@@ -26,5 +26,14 @@ PASS  B03 invite button present on real card
 PASS  B04 invite sent → button shows ✓ ส่งคำเชิญแล้ว
 PASS  B05 pong_b receives invite from pong_a
 PASS  B06 accepted → schedule shows pong_a partner + ยืนยันแล้ว
+PASS  C01 bell on home shows unread badge for player01
+PASS  C02 bell panel lists booking/confirm notifications
+PASS  C03 non-admin bounced from admin/index.html to login
+PASS  C04 admin sub-page (courts) accessible + bell present in admin slot
+PASS  C05 admin bell badge renders
+PASS  D01 tournament created with 4 registrations (ชายเดี่ยว)
+PASS  D02 bracket renders rounds + matches (2+1)
+PASS  D03 top seed (A) sits in round-1 match slot 0
+PASS  D04 all 4 players appear across round 1
 
 ALL CHECKS PASSED

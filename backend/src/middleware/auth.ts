@@ -13,6 +13,7 @@ export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
   const payload = await verifyJwt(token, secret)
   c.set('ownerId', payload.sub)
   c.set('ownerRole', payload.role)
+  c.set('ownerEmail', payload.email)
   await next()
 })
 

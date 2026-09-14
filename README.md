@@ -18,7 +18,7 @@
 ## สถานะการเชื่อมต่อ Backend (ความจริง)
 
 - หน้าบ้านทั้งหมดเป็น Static HTML/JS รันบน **โหมดเดโม (localStorage ของเบราว์เซอร์)** — ยังไม่มีการเรียก API จากหน้าเว็บใด ๆ
-- `backend/` (Hono + Cloudflare Workers + D1 + KV) มีโค้ดครบและ **ตรวจผ่านแล้ว**: `npm run typecheck` ผ่าน, `npm run build:lambda` ผ่าน (783 KB), `npm run smoke` รันจริงแล้วผ่าน (health / register / login / auth/me / 401 ผิดรหัส) ด้วยหน่วยความจำชั่วคราว
+- `backend/` (Hono + Cloudflare Workers + D1 + KV): **smoke ผ่านแล้ว** (register / login / auth/me / 401 ผิดรหัส) ด้วยหน่วยความจำชั่วคราว — มี auth/users/venues/courts/slots/bookings/payments/**notifications** endpoints (ครบ D1 migration); **profiles อยู่ระหว่างพัฒนา** ทำให้ `npm run typecheck` ยังไม่ผ่านชั่วคราว (4 จุด) ดู `backend/STATUS.md`
 - จุดต่อระหว่างหน้าเว็บกับ backend คือ `shared/api.js` (seam API mode) — โหมด API จะ **ไม่เขียน localStorage เลย** และเมื่อเชื่อมต่อไม่ได้จะแจ้ง error ทันที ไม่ล้มทั้งอย่างเงียบ ๆ (ไม่มี silent fallback)
 - ยังไม่ได้: กำหนดค่าวิกฤตจริงให้หน้าเว็บใช้ API mode, D1 migrations บนเครื่องผู้ใช้, และการ deploy ขึ้น Cloudflare
 
@@ -28,21 +28,21 @@
 node --test tests/*.test.cjs
 ```
 
-ครอบคลุม `service-rules`, `player-levels`, `appointments`, `concurrency` (จองชนกัน), `access-control` (สิทธิ์ + สถานะ), `api-mode` (ไม่เขียน localStorage ในโหมด API), `match-core` (deterministic) — 7 ชุด/116 จุดตรวจ, ผ่านทั้งหมด
+ครอบคลุม `service-rules`, `notifications` (รวม clear รายคน), `tournament` (จัดสาย/อันดับ/กันยกเลิกหลังจัดสาย), `player-levels`, `appointments-expiry` (หมดอายุ 7 วัน), `appointments`, `concurrency` (จองชนกัน), `access-control` (สิทธิ์ + สถานะ), `api-mode` (ไม่เขียน localStorage ในโหมด API), `match-core` (deterministic) — **10 ชุด / 210 จุดตรวจ, ผ่านทั้งหมด**
 
 ## ทดสอบผ่านหน้าจอ (Browser E2E)
 
-รันล่วงหน้าจริงในเบราว์เซอร์ headless (Edge/Chrome) ผ่าน `tests/e2e/run-e2e.mjs` — ผลปัจจุบันบันทึกใน `tests/e2e/e2e-report.txt` (**24/24 ผ่าน**)
+รันในเบราว์เซอร์ headless (Edge/Chrome) ของเครื่อง — static server เปิดเองที่ `127.0.0.1:4173`, ไดรเวอร์ใช้ `puppeteer-core` (installed ที่ root) — ผลปัจจุบันบันทึกใน `tests/e2e/e2e-report.txt` (**33/33 ผ่าน**)
 
 ```bash
-python -m http.server 4173                    # เปิด server ก่อน
-npm i puppeteer-core                          # ติดตั้งในโฟลเดอร์ที่วางตัวสคริปต์ (ESM หา node_modules จากตำแหน่งตัวสคริปต์เอง)
-node tests/e2e/run-e2e.mjs                    # ต้องแก้ path EDGE/CHROME ในสคริปต์ตามเครื่อง
+npm i                                # ติดตั้ง puppeteer-core ที่ root
+npm run e2e                          # เปิด server + รัน 33 ตรวจ + เขียน e2e-report.txt
+npm run preview                      # เปิด server static คนเดียว เผื่อใช้คู่กับ unit test
 ```
 
-> วิธีง่ายสุด: สร้างโฟลเดอร์เปล่า `npm i puppeteer-core` แล้วคัดลอก `tests/e2e/run-e2e.mjs` ไปรันในนั้น
+> ใช้ Chrome แทน Edge: แก้ path `EDGE`/`CHROME` ใน `tests/e2e/run-e2e.mjs` (เลือกโดยอัตโนมัติจากที่มีจริง)
 
-ครอบคลุม: (A1) ล็อกอินแบบเดโม → จองคอร์ตบนตาราง → คอร์ตแสดง "จองแล้ว" → จองซ้ำถูกกัน → ยกเลิกแล้วคอร์ตว่างอีกครั้ง; (A2) ฟอร์ม `form.html` → แสดงในรายการของฉัน; (A3) ผู้ดูแล: สถิติจากข้อมูลจริง → ยืนยันรายการ → รายได้/รอดำเนินการเปลี่ยน; (B) สมัครผู้เล่นจริง 2 คน → ระบบแนะนำคู่ + Match % → ส่งคำเชิญ → อีกฝ่ายตอบรับ → ตารางนัดหมายยืนยันแล้ว
+ครอบคลุม: (A1) ล็อกอินแบบเดโม → จองคอร์ตบนตาราง → คอร์ตแสดง "จองแล้ว" → จองซ้ำถูกกัน → ยกเลิกแล้วคอร์ตว่างอีกครั้ง; (A2) ฟอร์ม `form.html` → แสดงในรายการของฉัน; (A3) ผู้ดูแล: สถิติจากข้อมูลจริง → ยืนยันรายการ → รายได้/รอดำเนินการเปลี่ยน; (B) สมัครผู้เล่นจริง 2 คน → ระบบแนะนำคู่ + Match % → ส่งคำเชิญ → อีกฝ่ายตอบรับ → ตารางนัดหมายยืนยันแล้ว; (C) แจ้งเตือน: ป้าย unread หน้าแรก, admin-guard กันผู้ไม่ใช่แอดมิน, ทุกหน้าย่อย admin (courts/users/reports/admin-dashboard.html) มีระฆัง; (D) สร้างทัวร์นาเมนต์ → สมัคร 4 คน → จัดสายตามระดับ seed → bracket ขึ้นคู่จริง
 
 ## โครงสร้างไฟล์สำคัญ
 
@@ -61,7 +61,7 @@ node tests/e2e/run-e2e.mjs                    # ต้องแก้ path EDGE/
 ├── matching/               # หาคู่เล่น (index.html + matchmaking.js)
 ├── appointments/           # นัดหมายของฉัน
 ├── admin/                  # แดชบอร์ดผู้ดูแล (แสดงข้อมูลจริง ไม่มีตัวเลขปลอม)
-├── tests/                  # node --test 7 ชุด/116 ตรวจ + tests/e2e (บราวเซอร์ E2E 24 ตรวจ)
+├── tests/                  # node --test 10 ชุดผ่านครบ (210 จุดตรวจ) + tests/e2e (บราวเซอร์ E2E 33 ตรวจ, `npm run e2e`)
 └── backend/                # Hono API (Clean Architecture, ยังไม่เชื่อมหน้าเว็บ)
 ```
 

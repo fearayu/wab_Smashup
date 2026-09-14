@@ -23,8 +23,8 @@
 |---|---|
 | หน้าเว็บ | Static HTML/CSS/JS (ไม่ใช้ framework), ภาษาไทยหลัก |
 | กฎธุรกิจ/ข้อมูล | Shared Domain Modules รันได้ทั้งเบราว์เซอร์และ Node (`shared/*.js`) |
-| ทดสอบ | `node --test tests/*.test.cjs` (7 ชุด/116 จุดตรวจ) |
-| Backend (มีโค้ด ไม่เชื่อมหน้าเว็บ) | Hono + Cloudflare Workers/D1/KV ตรวจผ่าน typecheck/build/smoke |
+| ทดสอบ | `node --test tests/*.test.cjs` (10 ชุด / 210 จุดตรวจผ่านครบ) + Browser E2E 33 ตรวจ (`npm run e2e`) |
+| Backend (มีโค้ด ไม่เชื่อมหน้าเว็บ) | Hono + Cloudflare Workers/D1/KV — smoke ผ่าน (มี notifications endpoints; profiles อยู่ระหว่างพัฒนา, typecheck ยังไม่ผ่านชั่วคราว) |
 | จุดต่อ API (future) | `shared/api.js` seam |
 
 ## วิธีเปิดสาธิต

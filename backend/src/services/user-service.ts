@@ -1,4 +1,4 @@
-import type { CreateUserInput, UpdateUserInput, User } from '../domain/entities/user'
+import type { CreateUserInput, UpdateProfileInput, UpdateUserInput, User } from '../domain/entities/user'
 import { ConflictError, NotFoundError, ValidationError } from '../domain/errors'
 import type { CacheRepository } from '../domain/repositories/cache-repository'
 import type { UserRepository } from '../domain/repositories/user-repository'
@@ -56,6 +56,34 @@ export class UserService {
     const deleted = await this.userRepository.delete(id)
     if (!deleted) throw new NotFoundError('User')
     await this.cache.delete(cacheKey(id))
+  }
+
+  /** Update profile-editable fields (displayName, phone, level, avatarUrl). */
+  async updateProfile(id: string, input: UpdateProfileInput): Promise<User> {
+    if (input.displayName !== undefined && !input.displayName.trim()) {
+      throw new ValidationError('displayName cannot be empty')
+    }
+
+    const updated = await this.userRepository.updateProfile(id, input)
+    if (!updated) throw new NotFoundError('User')
+    await this.cache.delete(cacheKey(id))
+    return updated
+  }
+
+  /**
+   * Get the user profile for an authenticated owner, auto-creating one
+   * on first access. This bridges the Owner ↔ User identity gap: auth
+   * creates Owners with a UUID, and profiles live in the User table.
+   */
+  async getOrCreateProfile(ownerId: string, email: string): Promise<User> {
+    const existing = await this.userRepository.findById(ownerId)
+    if (existing) return existing
+
+    return this.userRepository.create({
+      id: ownerId,
+      email,
+      name: 'Player',
+    })
   }
 
   private validateEmail(email: string): void {

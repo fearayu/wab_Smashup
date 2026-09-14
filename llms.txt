@@ -4,20 +4,26 @@ LLM map สำหรับ agent/indexer. โปรเจกต์นี้เ�
 
 ## เริ่มอ่านที่
 - [README.md](README.md): ภาพรวม, ระบบหลัก 2 กระแสงาน, สถานะ backend จริง, วิธีรัน + ทดสอบ, บัญชีเดโม
-- [PROJECT.md](PROJECT.md): ภาพรวมโครงการ/ขอบเขตที่ตรงกับโค้ด
+- [PROJECT.md](PROJECT.md): ภาพรวมโครงการ/ขอบเขตที่ตรงกับโค้ด + แผนแบ่งงาน 3 คน
 - [docs/requirements-audit.md](docs/requirements-audit.md): ตารางข้อกำหนดที่ทำได้จริง vs ยังต้องพัฒนา
+- [docs/user-flow.md](docs/user-flow.md): User Flow + Mermaid diagram ของแต่ละ Actor (ใช้สอบหัวข้อ)
 - [docs/player-assessment-policy.md](docs/player-assessment-policy.md): นโยบายระดับผู้เล่น
 - [docs/system-review-questions.md](docs/system-review-questions.md): คำถามตรวจระบบ + คำตอบตามโค้ดจริง
 - [backend/STATUS.md](backend/STATUS.md): สถานะ backend + ผล typecheck/build/smoke
 - [backend/AGENTS.md](backend/AGENTS.md): แนวทางแก้ backend (Clean Architecture)
 
 ## แฟ้มโค้ดหลัก
-- `shared/service-rules.js` — กฎกลางจองคอร์ต/บุฟเฟต์/บริการ + ตรวจเจ้าของ (`R.own`)
+- `shared/service-rules.js` — กฎกลางจองคอร์ต/บุฟเฟต์/บริการ + ตรวจเจ้าของ (`R.own`) + สร้างการแจ้งเตือน
 - `shared/player-levels.js` — ระดับ N–A/Pro + แบบประเมิน + ผู้จัดยืนยัน
 - `shared/match-core.js` — คะแนนจับคู่ deterministic (70/15/15)
-- `shared/appointments.js` — คำเชิญ/นัดหมายผูก id ผู้รับ
+- `shared/appointments.js` — คำเชิญ/นัดหมายผูก id ผู้รับ + แจ้งเตือนผู้รับ/ผู้ส่ง
+- `shared/tournament.js` — การแข่งขัน/จัดสาย single-elimination (สมัคร, สุ่มจับฉลาก, Bracket, บันทึกผล, อันดับ 1/2/3)
+- `shared/notifications.js` + `shared/notify-ui.js` — การแจ้งเตือนในแอป + ระฆังบน header
 - `shared/api.js` — seam demo/API (API mode ไม่เขียน localStorage)
-- `tests/*.test.cjs` — node --test 7 ชุด/111 จุดตรวจ
+- `tests/*.test.cjs` — node --test 10 ชุด / 210 จุดตรวจ ผ่านครบ
+- `tests/e2e/` — Browser E2E 33 ตรวจ รันด้วย `npm run e2e` (static server `serve.mjs` + orchestrator `_run.mjs` + harness `run-e2e.mjs`) ผลเขียนที่ `tests/e2e/e2e-report.txt`
+- `package.json` — scripts: `test` (unit 10 ชุด / 210 จุดตรวจ), `e2e` (33 ตรวจ), `preview` (static server 4173); devDep `puppeteer-core`
+- `.opencode/agent/` + `.opencode/command/smashup-check.md` — ทีมตรวจงาน (dev/reviewer/tests/docs/backend)
 
 ## สถานะที่สำคัญ (อย่า overclaim)
 - Frontend ใช้ localStorage โหมดเดโม; ไม่มี fetch ไป backend จากหน้าเว็บ

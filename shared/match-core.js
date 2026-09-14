@@ -5,10 +5,14 @@
   // Weights: skill 70%, free-time closeness 15%, distance 15% (experimental).
   const Levels = root.SmashLevels || null;
 
+  // Single-letter aliases used by tournament flows (B, B+, A, A+) collapse onto the
+  // combined ladder tiers B/B+ (8) and A/Pro (9) — otherwise they'd score as rank 0.
+  const ALIAS = { 'A': 'A/Pro', 'A+': 'A/Pro', 'B': 'B/B+', 'B+': 'B/B+' };
   function levelRank(code) {
-    if (Levels && Levels.levels && Levels.levels[code]) return Number(Levels.levels[code].value) || 0;
-    if (!code) return 0;
-    return { N: 1, 'S/BG': 2, 'P-': 3, P: 4, 'P+': 5, C: 6, 'C+': 7, 'B/B+': 8, 'A/Pro': 9 }[code] || 0;
+    const c = (code == null ? '' : ALIAS[code] || code);
+    if (Levels && Levels.levels && Levels.levels[c]) return Number(Levels.levels[c].value) || 0;
+    if (!c) return 0;
+    return { N: 1, 'S/BG': 2, 'P-': 3, P: 4, 'P+': 5, C: 6, 'C+': 7, 'B/B+': 8, 'A/Pro': 9 }[c] || 0;
   }
 
   // Coarse bucket used for the filter dropdown only.

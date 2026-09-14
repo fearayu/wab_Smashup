@@ -1,4 +1,4 @@
-import type { CreateUserInput, UpdateUserInput, User } from '../entities/user'
+import type { CreateUserInput, UpdateProfileInput, UpdateUserInput, User } from '../entities/user'
 
 export interface UserRepository {
   findAll(): Promise<User[]>
@@ -6,5 +6,6 @@ export interface UserRepository {
   findByEmail(email: string): Promise<User | null>
   create(input: CreateUserInput): Promise<User>
   update(id: string, input: UpdateUserInput): Promise<User | null>
+  updateProfile(id: string, input: UpdateProfileInput): Promise<User | null>
   delete(id: string): Promise<boolean>
 }
