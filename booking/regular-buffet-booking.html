@@ -4,58 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>จองตีบุฟเฟต์ | SMASHUP</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="topic.css">
-  <link rel="stylesheet" href="regular-buffet-booking.css">
-  <link rel="stylesheet" href="../shared/app-shell.css">
-  <style>html,body{height:auto;overflow:auto}.app-shell main{height:auto;overflow:visible;margin-left:0}.content.booking-content{padding:0;background:transparent}.topic-main{margin-left:0!important;max-width:none!important;padding:48px clamp(20px,4vw,56px)!important}</style>
+  <meta http-equiv="refresh" content="0; url=buffet-registration.html">
+  <style>
+    body{font-family:'Kanit',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#faf7f3;color:#241e18}
+    .box{text-align:center;padding:24px}
+    a{color:var(--orange,#f4511e);text-decoration:none;font-weight:600}
+    a:hover{text-decoration:underline}
+  </style>
 </head>
 <body>
-  <header class="app-topbar">
-    <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
-    <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a class="active" href="index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a href="../appointments/index.html">นัดหมาย</a></nav>
-    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
-  </header>
-  <div class="app-shell">
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-head"><strong>SMASHUP</strong><span>จองสนาม • Booking</span></div>
-      <nav><a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a><a class="active" href="index.html"><i class="icon">▦</i> จองสนาม</a><a href="../matching/index.html"><i class="icon">◎</i> หาคู่เล่น</a><a href="../appointments/index.html"><i class="icon">◈</i> นัดหมายของฉัน</a><a href="buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a></nav>
-      <div class="section-label">ช่วยเหลือ</div>
-      <nav><a href="rules.html"><i class="icon">▱</i> กฎการใช้สนาม</a><a href="shop.html"><i class="icon">♡</i> ร้านค้า</a></nav>
-    </aside>
-    <main class="content booking-content topic-main buffet-page">
-    <section class="buffet-hero">
-      <p class="eyebrow">03 / BUFFET BOOKING</p>
-      <h1>จองตี<br><em>บุฟเฟต์</em></h1>
-      <p>ลงชื่อเข้ารอบตีบุฟเฟต์ เลือกระดับที่ใกล้เคียงกัน เพื่อให้ทีมงานจัดคิวและคู่เล่นได้เหมาะสม</p>
-    </section>
-    <section class="buffet-layout">
-      <form id="buffetForm" class="buffet-form">
-        <div class="form-title"><div><span>รายละเอียดการลงชื่อ</span><h2>ข้อมูลผู้เล่น</h2></div><small>* จำเป็น</small></div>
-        <div class="form-grid">
-          <label>วันที่เล่น <b>*</b><input id="buffetDate" name="date" type="date" required></label>
-          <label>รอบเวลา <b>*</b><select name="session" required><option value="">เลือกรอบ</option><option value="11:00–14:00">รอบกลางวัน 11:00–14:00</option><option value="17:00–20:00">รอบเย็น 17:00–20:00</option><option value="19:00–22:00">รอบค่ำ 19:00–22:00</option></select></label>
-          <label>ชื่อเล่น / ชื่อผู้เล่น <b>*</b><input id="buffetName" name="name" placeholder="เช่น ต้น Smash" required></label>
-          <label>เบอร์โทรศัพท์ <b>*</b><input name="phone" type="tel" placeholder="08X-XXX-XXXX" required></label>
-          <label>ระดับการเล่น <b>*</b><select name="level" required><option value="">เลือกระดับ</option><option>มือใหม่</option><option>ระดับกลาง</option><option>ระดับสูง</option></select></label>
-          <label>ค่าลูกแบด <b>*</b><select name="shuttle" required><option value="">เลือกรายการ</option><option value="0">นำลูกมาเอง</option><option value="25">ซื้อเพิ่ม 25 บาท</option></select></label>
-        </div>
-        <label class="note-label">หมายเหตุเพิ่มเติม<textarea name="note" rows="3" placeholder="เช่น ต้องการเล่นคู่ หรือมีเพื่อนมาด้วย"></textarea></label>
-        <div class="price-box"><div><span>ค่าใช้บริการโดยประมาณ</span><strong id="buffetPrice">฿ 60</strong><small>ค่าตีก๊วน 60 บาท / คน</small></div><span class="price-tag">BUFFET</span></div>
-        <button type="submit">ยืนยันการลงชื่อ <span>↗</span></button>
-        <p id="buffetMessage" class="form-message" role="status"></p>
-      </form>
-      <aside class="buffet-side">
-        <div class="info-card"><span class="card-number">01</span><h2>รอบบุฟเฟต์</h2><p>ลงชื่อก่อนเข้ารอบ และเช็กคิวผ่านเมนู “คิวตีบุฟเฟต์”</p><ul><li>เปิดรอบตัวอย่าง 11:00–22:00 น.</li><li>จัดคิวตามเวลาลงชื่อ</li><li>แบ่งคู่ตามระดับการเล่น</li></ul></div>
-        <div class="info-card dark"><span class="card-number">02</span><h2>สิ่งที่ต้องเตรียม</h2><p>รองเท้าแบดมินตันและไม้แบดส่วนตัว</p><a href="regular-buffet-queue.html">ดูคิวตีบุฟเฟต์ ↗</a></div>
-      </aside>
-    </section>
-    </main>
+  <div class="box">
+    <p>กำลังนำทางไปหน้าที่ถูกต้อง...</p>
+    <p><a href="buffet-registration.html">คลิกที่นี่ถ้าหน้าไม่เปลี่ยนอัตโนมัติ</a></p>
   </div>
-  <script>document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));</script>
-  <script src="../shared/player-levels.js"></script>
-  <script src="../shared/utils.js"></script><script src="../shared/service-rules.js"></script><script src="regular-buffet-booking.js"></script>
+  <script>location.replace('buffet-registration.html');</script>
 </body>
 </html>

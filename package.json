@@ -1,0 +1,14 @@
+{
+  "name": "smashup",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SMASHUP badminton booking system — static prototype + demo backend seam",
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "e2e": "node tests/e2e/_run.mjs",
+    "preview": "node tests/e2e/serve.mjs"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^25.10.0"
+  }
+}

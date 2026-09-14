@@ -7,6 +7,7 @@ import { MemoryBookingRepository } from './src/infrastructure/memory/memory-book
 import { MemoryCacheRepository } from './src/infrastructure/memory/memory-cache-repository.ts'
 import { MemoryCourtRepository } from './src/infrastructure/memory/memory-court-repository.ts'
 import { MemoryDashboardRepository } from './src/infrastructure/memory/memory-dashboard-repository.ts'
+import { MemoryNotificationRepository } from './src/infrastructure/memory/memory-notification-repository.ts'
 import { MemoryOwnerRepository } from './src/infrastructure/memory/memory-owner-repository.ts'
 import { MemoryPaymentRepository } from './src/infrastructure/memory/memory-payment-repository.ts'
 import { MemorySiteConfigRepository } from './src/infrastructure/memory/memory-site-config-repository.ts'
@@ -40,6 +41,7 @@ const container = createContainer({
   paymentRepository: paymentRepo,
   siteConfigRepository: siteConfigRepo,
   dashboardRepository: new MemoryDashboardRepository(),
+  notificationRepository: new MemoryNotificationRepository(),
   cacheRepository: new MemoryCacheRepository(),
 }, jwtSecret)
 

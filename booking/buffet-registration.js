@@ -12,6 +12,17 @@ function saveBookings(list){ localStorage.setItem(BOOKINGS_KEY, JSON.stringify(l
 function getBuffetBookings(){ try{ return JSON.parse(localStorage.getItem(BUFFET_KEY))||[]; }catch{ return []; } }
 function saveBuffetBookings(list){ localStorage.setItem(BUFFET_KEY, JSON.stringify(list)); }
 
+// จำนวนรับสูงสุดต่อรอบ (ตรงกับที่แสดงบนหน้าลงทะเบียน)
+const SLOT_CAPS = {'18:00 - 21:00':20,'13:00 - 16:00':15,'09:00 - 12:00':15};
+
+function buffetSlotState(slot){
+  const date = new Date().toISOString().split('T')[0];
+  const sameSlot = getBuffetBookings().filter(b=> b.date===date && String(b.slot)===''+slot && b.status!=='ยกเลิก' && b.status!=='ยกเลิกแล้ว');
+  const all = getBookings().filter(b=> b.type==='buffet' && b.date===date && String(b.slot)===''+slot && b.status!=='ยกเลิก' && b.status!=='ยกเลิกแล้ว');
+  const cap = SLOT_CAPS[''+slot] || 20;
+  return { count: Math.max(sameSlot.length, all.length), cap, mine: sameSlot.length, date };
+}
+
 function formatDateThai(iso){
   try{
     const d=new Date(iso+'T00:00:00');
@@ -66,6 +77,7 @@ function renderQueue(){
     if(metaSlot) metaSlot.textContent='—';
     if(metaLevel) metaLevel.textContent='—';
     if(cancelBtn) cancelBtn.hidden=true;
+    refreshSlots();
     return;
   }
   if(numEl) { numEl.textContent = String(q.number).padStart(2,'0'); numEl.classList.add('has-queue'); }
@@ -76,6 +88,23 @@ function renderQueue(){
   if(cancelBtn) cancelBtn.hidden=false;
   // reflect status color
   if(stateEl) stateEl.style.color = q.status==='ยืนยันแล้ว' ? '#16a34a' : q.status==='ยกเลิก' ? '#dc2626' : '#ffcc8a';
+  refreshSlots();
+}
+
+// อัปเดตจำนวนว่างของรอบเวลาบนหน้าเป็นค่าจริงจากรายการจอง
+function refreshSlots(){
+  document.querySelectorAll('.slot-card').forEach(card=>{
+    const slot=card.dataset.slot;
+    const st=buffetSlotState(slot);
+    const capEl=card.querySelector('.slot-cap');
+    const badge=card.querySelector('.slot-badge');
+    if(capEl) capEl.innerHTML=`รับ ${st.cap} คน • ${st.count>=st.cap?'เต็ม':`ว่าง <strong>${Math.max(0,st.cap-st.count)}</strong> ที่`}`;
+    if(badge){
+      badge.classList.toggle('full', st.count>=st.cap);
+      badge.classList.toggle('muted', st.count>=st.cap);
+      badge.textContent = st.count>=st.cap?'เต็มแล้ว':(slot==='18:00 - 21:00'?'กำลังเปิดรับ':'รอบบ่าย');
+    }
+  });
 }
 
 $('#buffetForm')?.addEventListener('submit', (e)=>{
@@ -87,9 +116,13 @@ $('#buffetForm')?.addEventListener('submit', (e)=>{
   const msg = $('#formMessage');
   if(!session){ msg.innerHTML='กรุณา <a href="../auth/index.html?next=../booking/buffet-registration.html">เข้าสู่ระบบ</a> ก่อนลงทะเบียน'; msg.className='form-message error'; return; }
   if(!slot || !level){ msg.textContent='กรุณาเลือกรอบเวลาและระดับฝีมือ'; msg.className='form-message error'; return; }
+  const slotState=buffetSlotState(slot);
+  if(slotState.mine>0){ msg.textContent='คุณลงทะเบียนในรอบเวลานี้แล้ว — ดูสถานะคิวด้านขวา'; msg.className='form-message error'; return; }
+  if(slotState.count>=slotState.cap){ msg.textContent=`รอบ ${slot} เต็มแล้ว (${slotState.cap} คน) กรุณาเลือกรอบอื่น`; msg.className='form-message error'; return; }
   // queue number: count existing buffet bookings +1
   const buffetList=getBuffetBookings();
   const bookings=getBookings();
+  const number = buffetList.length + 1;
   const number = buffetList.length + 1;
   // ensure <=20 otherwise queue but allow
   const levelLabel = level==='beginner'?'มือใหม่': level==='intermediate'?'ระดับกลาง':'ระดับสูง';
@@ -108,11 +141,12 @@ $('#buffetForm')?.addEventListener('submit', (e)=>{
   try{
     const QUEUE_KEY='smashup_buffet_queue_v2';
     const w = JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]');
-    w.push({ name: nick||session.name, slot, level });
+    w.push({ id: queue.id, registrationId: queue.id, name: nick||session.name, slot, level, date: new Date().toISOString().split('T')[0] });
     localStorage.setItem(QUEUE_KEY, JSON.stringify(w));
   }catch{}
   msg.innerHTML = `ลงทะเบียนสำเร็จ! คุณได้คิวที่ <strong>${String(queue.number).padStart(2,'0')}</strong> • รอบ ${slot} • <span style="color:#b7790f">รอยืนยัน</span> — ดูสถานะที่ <a href="../admin/index.html" style="color:var(--orange)">หลังบ้าน Admin</a>`;
   msg.className='form-message success';
+  try{ if(window.SmashNotify && typeof window.SmashNotify.create==='function') window.SmashNotify.create({userId:session.id,title:'ลงทะเบียนตีบุฟเฟต์แล้ว','body':`คิวที่ ${String(queue.number).padStart(2,'0')} • รอบ ${slot} • ${levelLabel}` ,type:'booking',link:'../booking/my-bookings.html'}); }catch{}
   renderQueue();
 });
 

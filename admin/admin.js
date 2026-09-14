@@ -10,6 +10,8 @@ const USERS_KEY='smashup_users_v1';
 
 function readList(key){ try{ const v=JSON.parse(localStorage.getItem(key)); return Array.isArray(v)?v:[]; }catch{ return []; } }
 function escapeHtml(v){ return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function typeKey(type){ return type==='buffet'?BUFFET_KEY : type==='service'?SERVICE_KEY : BOOKINGS_KEY; }
+function adminSession(){ try{ return JSON.parse(localStorage.getItem('smashup_session_v1')); }catch{ return null; } }
 function getBookings(){ return readList(BOOKINGS_KEY); }
 function getBuffetBookings(){ return readList(BUFFET_KEY); }
 function getServiceRequests(){ return readList(SERVICE_KEY); }
@@ -34,7 +36,7 @@ function getAllRequests(){
   }));
   const buffet = getBuffetBookings().map(b=>({
     id:b.id, date:formatDateShort(b.date||b.createdAt), name:b.name||'—',
-    item:`ตีบุฟเฟต์ ${b.session||''}${b.level?' • ระดับ '+b.level:''}`,
+    item:`ตีบุฟเฟต์ ${b.session||b.slot||''}${b.level?' • ระดับ '+b.level:''}`,
     status:b.status, price:Number(b.amount||0), type:'buffet', raw:b
   }));
   const service = getServiceRequests().map(b=>({
@@ -80,29 +82,34 @@ function render(){
     return `<tr><td>${r.date}</td><td><strong>${escapeHtml(r.name)}</strong>${typeBadge}<br><small style="color:var(--muted);font-size:11px">${escapeHtml(r.id||'')}</small></td><td>${escapeHtml(r.item)}<br><small style="color:var(--muted)">฿${r.price||0}</small></td><td><span class="status ${cls}">${escapeHtml(r.status)}</span></td><td>${actions}</td></tr>`;
   }).join('') || `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:28px">ยังไม่มีรายการ — ข้อมูลจะปรากฏเมื่อผู้ใช้จองคอร์ต บุฟเฟต์ หรือส่งคำขอบริการ</td></tr>`;
 
-  body.querySelectorAll('[data-approve]').forEach(b=> b.addEventListener('click', ()=>{
+  body.querySelectorAll('[data-approve]').forEach(b=> b.addEventListener('click', async ()=>{
     const id=b.dataset.approve || b.dataset.id;
-    const key = b.dataset.type==='buffet'?BUFFET_KEY : b.dataset.type==='service'?SERVICE_KEY : BOOKINGS_KEY;
-    const list=readList(key); const target=list.find(x=>x.id===id);
-    if(!target){ alert('ไม่พบรายการจริงในพื้นที่จัดเก็บ — ข้อมูลสาธิตไม่ถูกแสดงอีกต่อไป'); updateStats(); render(); return; }
-    if(target.status==='ดำเนินการแล้ว'){ alert('รายการดำเนินการเสร็จแล้ว'); return; }
-    target.status = b.dataset.type==='service' ? 'ดำเนินการแล้ว' : 'ยืนยันแล้ว';
-    target.history=[...(target.history||[]),{action:'status',from:'',to:target.status,actor:'admin',at:new Date().toISOString()}];
-    localStorage.setItem(key, JSON.stringify(list));
-    window.dispatchEvent(new Event('smashup-data'));
-    updateStats(); render();
+    const type=b.dataset.type||'court';
+    const s=adminSession();
+    const Rules=window.SmashRules;
+    if(!s || !Rules){ alert('โหลดโมดูลระบบไม่สมบูรณ์ กรุณาโหลดหน้าใหม่'); return; }
+    try{
+      const target=readList(typeKey(type)).find(x=>x.id===id);
+      if(!target){ alert('ไม่พบรายการจริงในพื้นที่จัดเก็บ — ข้อมูลสาธิตไม่ถูกแสดงอีกต่อไป'); updateStats(); render(); return; }
+      if(target.status==='ดำเนินการแล้ว'){ alert('รายการดำเนินการเสร็จแล้ว'); return; }
+      await Rules.setStatus(type, id, type==='service'?'ดำเนินการแล้ว':'ยืนยันแล้ว', s);
+      window.dispatchEvent(new Event('smashup-data'));
+      updateStats(); render();
+    }catch(err){ alert(err.message); updateStats(); render(); }
   }));
-  body.querySelectorAll('[data-cancel]').forEach(b=> b.addEventListener('click', ()=>{
+  body.querySelectorAll('[data-cancel]').forEach(b=> b.addEventListener('click', async ()=>{
     const id=b.dataset.cancel || b.dataset.id;
-    const key = b.dataset.type==='buffet'?BUFFET_KEY : b.dataset.type==='service'?SERVICE_KEY : BOOKINGS_KEY;
-    const list=readList(key); const target=list.find(x=>x.id===id);
-    if(!target){ alert('ไม่พบรายการจริงในพื้นที่จัดเก็บ — ข้อมูลสาธิตไม่ถูกแสดงอีกต่อไป'); updateStats(); render(); return; }
-    target.status='ยกเลิกแล้ว';
-    target.cancelReason='ผู้ดูแลยกเลิก';
-    target.history=[...(target.history||[]),{action:'status',from:'',to:'ยกเลิกแล้ว',actor:'admin',at:new Date().toISOString()}];
-    localStorage.setItem(key, JSON.stringify(list));
-    window.dispatchEvent(new Event('smashup-data'));
-    updateStats(); render();
+    const type=b.dataset.type||'court';
+    const s=adminSession();
+    const Rules=window.SmashRules;
+    if(!s || !Rules){ alert('โหลดโมดูลระบบไม่สมบูรณ์ กรุณาโหลดหน้าใหม่'); return; }
+    try{
+      const target=readList(typeKey(type)).find(x=>x.id===id);
+      if(!target){ alert('ไม่พบรายการจริงในพื้นที่จัดเก็บ — ข้อมูลสาธิตไม่ถูกแสดงอีกต่อไป'); updateStats(); render(); return; }
+      await Rules.setStatus(type, id, 'ยกเลิกแล้ว', s);
+      window.dispatchEvent(new Event('smashup-data'));
+      updateStats(); render();
+    }catch(err){ alert(err.message); updateStats(); render(); }
   }));
 }
 

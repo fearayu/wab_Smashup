@@ -14,6 +14,7 @@ function fmtDateThai(date) {
     return `${String(d.getDate()).padStart(2, '0')} ${months[d.getMonth()]} ${d.getFullYear() + 543}`;
   } catch { return date; }
 }
+function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 
 let App = null;
 
@@ -27,11 +28,11 @@ function renderInvites() {
   count.textContent = String(invites.length);
   $('#inviteEmpty').hidden = invites.length !== 0;
   list.innerHTML = invites.map(inv => {
-    return `<article class="invite-card" data-id="${inv.id}">
-      <div class="invite-avatar">${(inv.senderName || '?').charAt(0).toUpperCase()}</div>
-      <div class="invite-info"><strong>${App.escape ? App.escape(inv.senderName || '') : inv.senderName || ''}</strong>
-        <span>${fmtDateThai(inv.date)} • ${App.escape ? App.escape(inv.time || '') : inv.time || ''}</span>
-        <div class="invite-meta"><span>📍 ${App.escape ? App.escape(inv.court || '') : inv.court || ''}</span>${inv.note ? `<span>📝 ${App.escape ? App.escape(inv.note) : inv.note}</span>` : ''}</div></div>
+    return `<article class="invite-card" data-id="${esc(inv.id)}">
+      <div class="invite-avatar">${esc((inv.senderName || '?').charAt(0).toUpperCase())}</div>
+      <div class="invite-info"><strong>${esc(inv.senderName || '')}</strong>
+        <span>${fmtDateThai(inv.date)} • ${esc(inv.time || '')}</span>
+        <div class="invite-meta"><span>📍 ${esc(inv.court || '')}</span>${inv.note ? `<span>📝 ${esc(inv.note)}</span>` : ''}</div></div>
       <div class="invite-actions"><button class="btn-primary" data-action="accept">ตอบรับ</button><button class="btn-secondary" data-action="decline">ปฏิเสธ</button></div>
     </article>`;
   }).join('');
@@ -68,7 +69,7 @@ function renderSchedule() {
   tbody.innerHTML = rows.map(row => {
     const me = (() => { try { return JSON.parse(localStorage.getItem('smashup_session_v1')); } catch { return null; } })();
     const partner = row.senderId === me?.id ? row.receiverName : row.senderName;
-    return `<tr><td>${fmtDateThai(row.date)}</td><td>${row.time}</td><td>${row.court}</td><td>${partner || ''}</td><td>${scheduleStatusBadge(row.status)}</td></tr>`;
+    return `<tr><td>${fmtDateThai(row.date)}</td><td>${esc(row.time)}</td><td>${esc(row.court)}</td><td>${esc(partner || '')}</td><td>${scheduleStatusBadge(row.status)}</td></tr>`;
   }).join('') || `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:28px">ยังไม่มีนัดหมาย — ส่งคำเชิญจากแบบฟอร์มด้านล่าง</td></tr>`;
 }
 

@@ -12,6 +12,8 @@ function getBookings(){return readList(BOOKINGS_KEY)}
 function getBuffetBookings(){return readList(BUFFET_KEY)}
 function getServiceRequests(){return readList(SERVICE_KEY)}
 function getUsers(){return readList(USERS_KEY)}
+function escapeHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function adminSession(){try{return JSON.parse(localStorage.getItem('smashup_session_v1'))}catch{return null}}
 
 function updateStats(){
   const allBookings=getBookings();
@@ -32,31 +34,31 @@ function renderBookings(){
   body.innerHTML=list.map(b=>{
     const pending=['รอยืนยัน','รอตรวจสอบ','รอตรวจสอบการชำระเงิน','รอชำระเงิน'].includes(b.status);
     const cls=pending?'pending':b.status==='ยืนยันแล้ว'?'confirmed':'cancelled';
-    const actions=pending?`<div class="actions"><button class="btn-approve" data-approve="${b.id}">ยืนยัน</button><button class="btn-cancel" data-cancel="${b.id}">ยกเลิก</button></div>`:`<span class="status ${cls}" style="font-size:12px">${b.status}</span>`;
-    return `<tr><td>${b.dateThai||b.date||'—'}</td><td>คอร์ต ${b.courts||b.court||''} ${b.time||''}</td><td>${b.name||'—'}</td><td>${b.phone||'—'}</td><td>฿${b.amount||b.price||0}</td><td><span class="status ${cls}">${b.status}</span></td><td>${actions}</td></tr>`;
+    const actions=pending?`<div class="actions"><button class="btn-approve" data-approve="${b.id}">ยืนยัน</button><button class="btn-cancel" data-cancel="${b.id}">ยกเลิก</button></div>`:`<span class="status ${cls}" style="font-size:12px">${escapeHtml(b.status)}</span>`;
+    return `<tr><td>${escapeHtml(b.dateThai||b.date||'—')}</td><td>คอร์ต ${escapeHtml(b.courts||b.court||'')} ${escapeHtml(b.time||'')}</td><td>${escapeHtml(b.name||'—')}</td><td>${escapeHtml(b.phone||'—')}</td><td>฿${escapeHtml(b.amount||b.price||0)}</td><td><span class="status ${cls}">${escapeHtml(b.status)}</span></td><td>${actions}</td></tr>`;
   }).join('')||`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:28px">ยังไม่มีรายการจองสนาม</td></tr>`;
   body.querySelectorAll('[data-approve]').forEach(btn=>btn.addEventListener('click',()=>{
-    const id=btn.dataset.approve;const list=readList(BOOKINGS_KEY);const t=list.find(x=>x.id===id);
-    if(t){t.status='ยืนยันแล้ว';t.history=[...(t.history||[]),{action:'status',to:'ยืนยันแล้ว',actor:'admin',at:new Date().toISOString()}];localStorage.setItem(BOOKINGS_KEY,JSON.stringify(list));}
-    renderBookings();updateStats();
+    const id=btn.dataset.approve;const s=adminSession();const Rules=window.SmashRules;
+    if(!s||!Rules){alert('โหลดโมดูลระบบไม่สมบูรณ์ กรุณาโหลดหน้าใหม่');return;}
+    Rules.setStatus('court',id,'ยืนยันแล้ว',s).then(()=>{renderBookings();updateStats()}).catch(err=>{alert(err.message);renderBookings();updateStats()});
   }));
   body.querySelectorAll('[data-cancel]').forEach(btn=>btn.addEventListener('click',()=>{
-    const id=btn.dataset.cancel;const list=readList(BOOKINGS_KEY);const t=list.find(x=>x.id===id);
-    if(t){t.status='ยกเลิกแล้ว';t.cancelReason='ผู้ดูแลยกเลิก';t.history=[...(t.history||[]),{action:'status',to:'ยกเลิกแล้ว',actor:'admin',at:new Date().toISOString()}];localStorage.setItem(BOOKINGS_KEY,JSON.stringify(list));}
-    renderBookings();updateStats();
+    const id=btn.dataset.cancel;const s=adminSession();const Rules=window.SmashRules;
+    if(!s||!Rules){alert('โหลดโมดูลระบบไม่สมบูรณ์ กรุณาโหลดหน้าใหม่');return;}
+    Rules.setStatus('court',id,'ยกเลิกแล้ว',s).then(()=>{renderBookings();updateStats()}).catch(err=>{alert(err.message);renderBookings();updateStats()});
   }));
 }
 
 function renderBuffet(){
   const body=$('#adminBuffetRows');if(!body)return;
   const items=getBuffetBookings();
-  body.innerHTML=items.map(b=>`<div class="managed-record"><span>${b.name||'—'} — ${b.session||''}${b.level?' ระดับ '+b.level:''}</span><span class="status">${b.status}</span></div>`).join('')||`<p style="text-align:center;color:var(--muted);padding:28px">ยังไม่มีรายการตีบุฟเฟต์</p>`;
+  body.innerHTML=items.map(b=>`<div class="managed-record"><span>${escapeHtml(b.name||'—')} — ${escapeHtml(b.session||b.slot||'')}${b.level?' ระดับ '+escapeHtml(b.level):''}</span><span class="status">${escapeHtml(b.status)}</span></div>`).join('')||`<p style="text-align:center;color:var(--muted);padding:28px">ยังไม่มีรายการตีบุฟเฟต์</p>`;
 }
 
 function renderServices(){
   const body=$('#adminServiceRows');if(!body)return;
   const items=getServiceRequests();
-  body.innerHTML=items.map(b=>`<div class="managed-record"><span>${b.name||'—'} — ${b.service||''} ${b.event||b.item||b.category||''}</span><span class="status">${b.status}</span></div>`).join('')||`<p style="text-align:center;color:var(--muted);padding:28px">ยังไม่มีคำขอบริการ</p>`;
+  body.innerHTML=items.map(b=>`<div class="managed-record"><span>${escapeHtml(b.name||'—')} — ${escapeHtml(b.service||'')} ${escapeHtml(b.event||b.item||b.category||'')}</span><span class="status">${escapeHtml(b.status)}</span></div>`).join('')||`<p style="text-align:center;color:var(--muted);padding:28px">ยังไม่มีคำขอบริการ</p>`;
 }
 
 function renderEmployees(){

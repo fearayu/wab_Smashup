@@ -8,12 +8,17 @@ import { MemoryBookingRepository } from './infrastructure/memory/memory-booking-
 import { MemoryCacheRepository } from './infrastructure/memory/memory-cache-repository'
 import { MemoryCourtRepository } from './infrastructure/memory/memory-court-repository'
 import { MemoryDashboardRepository } from './infrastructure/memory/memory-dashboard-repository'
+import { MemoryNotificationRepository } from './infrastructure/memory/memory-notification-repository'
 import { MemoryOwnerRepository } from './infrastructure/memory/memory-owner-repository'
 import { MemoryPaymentRepository } from './infrastructure/memory/memory-payment-repository'
 import { MemorySiteConfigRepository } from './infrastructure/memory/memory-site-config-repository'
 import { MemoryTimeSlotRepository } from './infrastructure/memory/memory-time-slot-repository'
 import { MemoryUserRepository } from './infrastructure/memory/memory-user-repository'
 import { MemoryVenueRepository } from './infrastructure/memory/memory-venue-repository'
+import { MemoryAppointmentRepository } from './infrastructure/memory/memory-appointment-repository'
+import { MemoryMatchmakingRepository } from './infrastructure/memory/memory-matchmaking-repository'
+import { MemoryTournamentRepository } from './infrastructure/memory/memory-tournament-repository'
+import { MemoryBuffetRepository } from './infrastructure/memory/memory-buffet-repository'
 
 const processEnv =
   (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env ?? {}
@@ -32,6 +37,11 @@ const container = createContainer({
   paymentRepository: new MemoryPaymentRepository(),
   siteConfigRepository: new MemorySiteConfigRepository(),
   dashboardRepository: new MemoryDashboardRepository(),
+  notificationRepository: new MemoryNotificationRepository(),
+  appointmentRepository: new MemoryAppointmentRepository(),
+  matchmakingRepository: new MemoryMatchmakingRepository(),
+  tournamentRepository: new MemoryTournamentRepository(),
+  buffetRepository: new MemoryBuffetRepository(),
   cacheRepository: new MemoryCacheRepository(),
 }, processEnv.JWT_SECRET ?? '')
 

@@ -15,13 +15,22 @@
     .content.booking-content{padding:0;background:transparent}
     .reservation-board{min-height:calc(100vh - 62px)}
     @media(max-width:860px){.reservation-board{min-height:auto}}
+    .login-banner{display:flex;align-items:center;gap:12px;background:#fff8f3;border:1px solid #f4dcc9;border-radius:12px;padding:10px 14px;margin:0 0 14px}
+    .login-banner>span{font-size:18px}
+    .login-banner div{display:flex;flex-direction:column;gap:2px;flex:1}
+    .login-banner strong{font:600 13px 'Kanit',sans-serif;color:#241e18}
+    .login-banner div span{font:400 12px 'Kanit',sans-serif;color:#7a746d}
+    .login-banner a{background:var(--orange,#f4511e);color:#fff;text-decoration:none;font:600 13px 'Kanit',sans-serif;padding:8px 14px;border-radius:8px;white-space:nowrap}
+    .login-banner a:hover{background:var(--orange-hover,#e34714)}
+    @media(max-width:600px){.login-banner{flex-wrap:wrap}.login-banner a{width:100%;text-align:center}}
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">ข้ามไปยังเนื้อหาหลัก</a>
   <header class="app-topbar">
     <a class="brand" href="../index.html"><span class="brand-mark">SU</span><span><strong>SMASHUP</strong><small>BADMINTON PROJECT</small></span></a>
     <nav class="topbar-nav"><a href="../index.html">หน้าแรก</a><a class="active" href="index.html">จองสนาม</a><a href="../matching/index.html">หาคู่เล่น</a><a href="../appointments/index.html">นัดหมาย</a></nav>
-    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button">☰ เมนู</button></div>
+    <div class="topbar-right"><button class="menu-toggle" id="menuToggle" type="button" aria-controls="sidebar" aria-expanded="false">☰ เมนู</button></div>
   </header>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
@@ -39,23 +48,29 @@
         <a href="shop.html"><i class="icon">♡</i> ร้านค้า</a>
       </nav>
     </aside>
-    <main class="content booking-content">
+    <main class="content booking-content" id="main-content" tabindex="-1">
       <section class="reservation-board" aria-labelledby="board-title">
         <div class="board-heading"><h1 id="board-title">ตารางการจองสนาม</h1><strong>แสดงผล 7 วันล่วงหน้า</strong></div>
+        <div class="login-banner" id="loginBanner" role="note">
+          <span>🔒</span>
+          <div><strong>ยังไม่ได้เข้าสู่ระบบ</strong><span>ดูตารางได้ก่อน — เมื่อกดคอร์ตที่ว่าง ระบบจะให้เข้าสู่ระบบก่อนจึงจะจองได้</span></div>
+          <a href="../auth/index.html?next=../booking/index.html">เข้าสู่ระบบ / สมัคร</a>
+        </div>
         <div class="date-tabs" id="dateTabs"></div>
         <div class="schedule-scroll"><table>
+          <caption class="visually-hidden">ตารางคอร์ตว่างสำหรับจองสนามในช่วง 7 วันข้างหน้า</caption>
           <thead id="boardHead"></thead>
           <tbody id="boardBody"></tbody>
         </table></div>
         <p id="boardMessage" class="board-message"></p>
-        <p class="board-note"><span class="legend free"></span>ว่าง <span class="legend reserved"></span>จองแล้ว — กดคอร์ตที่ว่างเพื่อทำการจอง คำขอจะถูกส่งให้ผู้ดูแลตรวจสอบภายใน 15 นาที</p>
+        <p class="board-note"><span class="legend free"></span>ว่าง <span class="legend reserved"></span>จองแล้ว — ราคา 130 บาท/คอร์ต/รอบ ขั้นตอน: <b>1.</b> เลือกคอร์ตที่ว่าง <b>2.</b> กรอกข้อมูลและยืนยัน <b>3.</b> รอผู้ดูแลตรวจสอบ (ประมาณ 15 นาที) <b>4.</b> หลังได้รับยืนยันจึงชำระเงินและลงสนาม</p>
         <a class="topic-button" href="form.html">จองสนามแบดมินตัน →</a>
       </section>
     </main>
   </div>
 
-  <dialog id="bookingDialog">
-    <div class="dialog-head"><span>ยืนยันการจอง</span><button type="button" class="dialog-close" id="dialogClose" aria-label="ปิด">×</button></div>
+  <dialog id="bookingDialog" aria-labelledby="bookingDialogTitle" aria-describedby="bookingSummary">
+    <div class="dialog-head"><span id="bookingDialogTitle">ยืนยันการจอง</span><button type="button" class="dialog-close" id="dialogClose" aria-label="ปิดหน้าต่างยืนยันการจอง">×</button></div>
     <div class="dialog-body">
       <p class="dialog-summary" id="bookingSummary"></p>
       <form id="bookingForm" novalidate>
@@ -70,9 +85,12 @@
     </div>
   </dialog>
 
-  <script>document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));</script>
+  <script>document.getElementById('menuToggle')?.addEventListener('click',()=>{const button=document.getElementById('menuToggle');const sidebar=document.getElementById('sidebar');const open=sidebar.classList.toggle('open');button.setAttribute('aria-expanded',String(open));});</script>
   <script src="../shared/auth-ui.js"></script>
+  <script src="../shared/notifications.js"></script>
+  <script src="../shared/notify-ui.js"></script>
   <script src="../shared/service-rules.js"></script>
+  <script src="../shared/api.js"></script>
   <script>
   (function(){
     const R=window.SmashRules;
@@ -81,6 +99,7 @@
     const MONTHS=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
     const tabsEl=document.getElementById('dateTabs'),headEl=document.getElementById('boardHead'),bodyEl=document.getElementById('boardBody');
     const msgEl=document.getElementById('boardMessage');
+    const bannerEl=document.getElementById('loginBanner');
     const dialog=document.getElementById('bookingDialog'),summaryEl=document.getElementById('bookingSummary');
     const form=document.getElementById('bookingForm'),nameEl=document.getElementById('bookName'),phoneEl=document.getElementById('bookPhone'),errEl=document.getElementById('bookError');
     let selectedDate=R.localDate();
@@ -142,9 +161,9 @@
         dialog.close();
         form.reset();nameEl.disabled=false;phoneEl.disabled=false;
         pending=null;
-        renderBoard();
+        renderBoard();renderLoginBanner();
         msgEl.className='board-message';
-        msgEl.textContent='จองสำเร็จ — คอร์ตถูกส่งให้ผู้ดูแลตรวจสอบ (สถานะ: รอตรวจสอบ)';
+        msgEl.textContent='จองสำเร็จ — คำขอถูกส่งให้ผู้ดูแลตรวจสอบ ขั้นตอนถัดไป: 1) รอผู้ดูแลยืนยัน (ประมาณ 15 นาที) 2) ชำระเงินหลังได้รับยืนยัน 3) ลงสนามตามวันเวลาที่จอง';
       }catch(e){
         nameEl.disabled=false;phoneEl.disabled=false;
         showError(R.escape(e.message));
@@ -154,7 +173,9 @@
     document.getElementById('dialogClose').addEventListener('click',()=>dialog.close());
     document.getElementById('dialogCancel').addEventListener('click',()=>dialog.close());
     dialog.addEventListener('click',(e)=>{const r=dialog.getBoundingClientRect();if(e.target===dialog||e.clientY<r.top||e.clientY>r.bottom||e.clientX<r.left||e.clientX>r.right)dialog.close();});
-    window.addEventListener('storage',()=>{renderBoard();});
+    function renderLoginBanner(){const who=R.session();bannerEl.hidden=!!who;}
+    renderLoginBanner();
+    window.addEventListener('storage',()=>{renderLoginBanner();renderBoard();});
     renderTabs();renderBoard();
   })();
   </script>

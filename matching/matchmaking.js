@@ -69,20 +69,21 @@ function render(list) {
   if (count) count.textContent = `${list.length} คน`;
   grid.innerHTML = list.map(p => {
     const src = p.levelSource ? (p.levelSource.source === 'organizer-confirmed' ? 'ผู้จัดยืนยัน' : 'ประเมินเอง') : 'ยังไม่ยืนยัน';
-    const reasons = (p.reasons || []).map(r => `<span class="chip">${r}</span>`).join('');
+    const name = esc(p.name);
+    const reasons = (p.reasons || []).map(r => `<span class="chip">${esc(r)}</span>`).join('');
     const badge = p.fake ? `<div class="match-badge"><strong>สาธิต</strong><small style="font:400 10px Kanit">ข้อมูลตัวอย่าง</small></div>`
       : `<div class="match-badge ${badgeClass(p)}">${p.m}%<br><small style="font:400 10px Kanit">ตรงกัน</small></div>`;
     return `
-    <article class="player-card" data-id="${p.id}">
+    <article class="player-card" data-id="${esc(p.id)}">
       <div class="card-top">
-        <div class="avatar">${p.name.charAt(0)}</div>
-        <div class="card-meta"><strong>${p.name}</strong><small>${p.label || ''}${p.level ? ' • ' + p.level : ''} • ${p.levelSource ? src : 'ยังไม่ยืนยันระดับ'}${p.fake ? ' • สาธิต' : ''}</small></div>
+        <div class="avatar">${esc(p.name.charAt(0))}</div>
+        <div class="card-meta"><strong>${name}</strong><small>${esc(p.label || '')}${p.level ? ' • ' + esc(p.level) : ''} • ${p.levelSource ? src : 'ยังไม่ยืนยันระดับ'}${p.fake ? ' • สาธิต' : ''}</small></div>
         ${badge}
       </div>
       <div class="card-details">
-        ${p.level ? `<span class="chip level">${p.level} — ${p.bucketLabel || ''}</span>` : ''}
-        <span class="chip">เวลา ${p.time || 'ไม่ระบุ'}</span>
-        <span class="chip">${p.distanceLabel}</span>
+        ${p.level ? `<span class="chip level">${esc(p.level)} — ${esc(p.bucketLabel || '')}</span>` : ''}
+        <span class="chip">เวลา ${esc(p.time || 'ไม่ระบุ')}</span>
+        <span class="chip">${esc(p.distanceLabel)}</span>
         <span class="chip">${p.format === 'single' ? 'เดี่ยว' : 'คู่'}</span>
         ${reasons}
         <span class="chip muted">${SCORE_HINT}</span>

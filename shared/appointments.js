@@ -97,6 +97,11 @@
     };
     records.push(appointment);
     write(records);
+    try {
+      if (root.SmashNotify && typeof root.SmashNotify.create === 'function') {
+        root.SmashNotify.create({ userId: receiver.id, title: 'คุณได้รับคำเชิญเล่นแบด', body: s.name + ' ชวนเล่น ' + date + ' เวลา ' + time + ' ที่ ' + court, type: 'invite', link: '../appointments/index.html' });
+      }
+    } catch {}
     return appointment;
   }
 
@@ -122,6 +127,12 @@
       throw Error('การกระทำไม่ถูกต้อง');
     }
     write(records);
+    try {
+      if (root.SmashNotify && typeof root.SmashNotify.create === 'function') {
+        const verb = action === 'accept' ? 'ตอบรับ' : 'ปฏิเสธ';
+        root.SmashNotify.create({ userId: a.senderId, title: 'คำเชิญถูก' + verb, body: (s.name || s.id) + ' ' + verb + 'คำเชิญเล่น ' + a.date + ' ' + a.time + ' ที่ ' + a.court, type: 'invite', link: '../appointments/index.html' });
+      }
+    } catch {}
     return records[idx];
   }
 

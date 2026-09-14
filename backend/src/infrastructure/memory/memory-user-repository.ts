@@ -1,4 +1,4 @@
-import type { CreateUserInput, UpdateUserInput, User } from '../../domain/entities/user'
+import type { CreateUserInput, UpdateProfileInput, UpdateUserInput, User } from '../../domain/entities/user'
 import type { UserRepository } from '../../domain/repositories/user-repository'
 
 // Reference implementation for runtimes without D1 (AWS Lambda, local tests).
@@ -19,11 +19,13 @@ export class MemoryUserRepository implements UserRepository {
   }
 
   async create(input: CreateUserInput): Promise<User> {
+    const now = new Date().toISOString()
     const user: User = {
-      id: crypto.randomUUID(),
+      id: input.id ?? crypto.randomUUID(),
       email: input.email,
       name: input.name,
-      createdAt: new Date().toISOString(),
+      createdAt: now,
+      updatedAt: now,
     }
     this.users.set(user.id, user)
     return user
@@ -36,6 +38,22 @@ export class MemoryUserRepository implements UserRepository {
       ...existing,
       email: input.email ?? existing.email,
       name: input.name ?? existing.name,
+      updatedAt: new Date().toISOString(),
+    }
+    this.users.set(id, updated)
+    return updated
+  }
+
+  async updateProfile(id: string, input: UpdateProfileInput): Promise<User | null> {
+    const existing = this.users.get(id)
+    if (!existing) return null
+    const updated: User = {
+      ...existing,
+      displayName: input.displayName ?? existing.displayName ?? existing.name,
+      phone: input.phone !== undefined ? input.phone : existing.phone,
+      level: input.level !== undefined ? input.level : existing.level,
+      avatarUrl: input.avatarUrl !== undefined ? input.avatarUrl : existing.avatarUrl,
+      updatedAt: new Date().toISOString(),
     }
     this.users.set(id, updated)
     return updated

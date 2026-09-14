@@ -44,6 +44,21 @@ assert.deepEqual(core.levelSource({}).source, 'none');
 const exact = core.scoreCandidate('P', '19:00', '10', { level: 'P', time: '19:00', distanceKm: 0 });
 assert.equal(exact.total, 100, 'perfect match scores 100');
 
+// 8. Single-letter tournament aliases (B, B+, A, A+) map onto the combined ladder tiers,
+// so they never score as rank 0 (regression: A/B/B+/A+ previously returned 0).
+assert.equal(core.levelRank('B'), 8, 'B collapses onto B/B+ tier');
+assert.equal(core.levelRank('B+'), 8, 'B+ collapses onto B/B+ tier');
+assert.equal(core.levelRank('A'), 9, 'A collapses onto A/Pro tier');
+assert.equal(core.levelRank('A+'), 9, 'A+ collapses onto A/Pro tier');
+assert.equal(core.levelRank('B/B+'), 8, 'combined code still maps directly');
+assert.equal(core.levelRank('A/Pro'), 9, 'combined code still maps directly');
+assert.equal(core.skillScore('B', 'B'), 100, 'same alias level scores 100');
+assert.equal(core.skillScore('A', 'A/Pro'), 100, 'alias and combined form of the same tier score 100');
+assert.equal(core.bucket('A'), 'advanced', 'A is advanced, not beginner');
+assert.equal(core.bucket('B+'), 'advanced', 'B+ is advanced, not beginner');
+const aliasScore = core.scoreCandidate('A', '19:00', '10', { level: 'B', time: '19:00', distanceKm: 0 });
+assert.equal(aliasScore.gap, 1, 'A vs B differ by exactly one tier');
+
 console.log('PASS: deterministic scoring, weights, reasons, level source, buckets');
 // explicitly exit 0
 process.exit(0);

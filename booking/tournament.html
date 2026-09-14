@@ -3,13 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>การสมัครแข่งขัน | SMASHUP</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f4511e'/%3E%3Ctext x='32' y='42' font-size='28' font-family='Arial' font-weight='700' fill='%23fff' text-anchor='middle'%3ESU%3C/text%3E%3C/svg%3E">
+  <title>การแข่งขัน | SMASHUP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../shared/app-shell.css">
-  <link rel="stylesheet" href="topic.css">
-  <style>html,body{height:auto;overflow:auto}.app-shell main{height:auto;overflow:visible;margin-left:0}.content.booking-content{padding:0;background:transparent}.topic-main{margin-left:0!important;max-width:none!important;padding:48px clamp(20px,4vw,56px)!important}</style>
+  <style>
+    :root{--orange:#f4511e;--green:#16a34a;--blue:#2563eb;--gray:#8f8880;--border:#eee7e0;--bg:#faf7f3;--text:#241e18;--muted:#7a746d}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font:400 14px/1.5 'Kanit',sans-serif;background:var(--bg);color:var(--text)}
+    .page-header{background:#fff;border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    .page-header h1{font:700 20px 'Space Grotesk',sans-serif;color:var(--text);margin:0}
+    .page-header h1 em{color:var(--orange);font-style:normal}
+    .tabs{display:flex;gap:6px;margin-left:auto}
+    .tab{background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:8px 16px;font:600 13px 'Kanit',sans-serif;cursor:pointer;color:var(--text);white-space:nowrap}
+    .tab:hover{border-color:var(--orange);color:var(--orange)}
+    .tab.active{background:var(--orange);border-color:var(--orange);color:#fff}
+    .main{padding:24px;max-width:1100px;margin:0 auto}
+    .card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:20px}
+    .card h2{font:600 16px 'Space Grotesk',sans-serif;margin-bottom:12px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+    @media(max-width:600px){.form-row{grid-template-columns:1fr}}
+    .form-row label{display:flex;flex-direction:column;gap:4px;font:500 12px 'Kanit',sans-serif;color:var(--muted)}
+    .form-row input,.form-row select{border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font:400 14px 'Kanit',sans-serif;color:var(--text);background:#fff}
+    .form-row input:focus,.form-row select:focus{outline:none;border-color:var(--orange)}
+    .btn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:10px;padding:10px 20px;font:600 14px 'Kanit',sans-serif;cursor:pointer;white-space:nowrap}
+    .btn-primary{background:var(--orange);color:#fff}.btn-primary:hover{background:#e34714}
+    .btn-secondary{background:#fff;color:var(--text);border:1.5px solid var(--border)}.btn-secondary:hover{border-color:var(--orange)}
+    .btn-sm{padding:6px 12px;font-size:12px;border-radius:6px}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .msg{font:400 13px 'Kanit',sans-serif;padding:8px 12px;border-radius:8px;margin-top:10px}
+    .msg.success{background:#e6f6ea;color:var(--green)}
+    .msg.error{background:#fdecea;color:#dc2626}
+    .empty{text-align:center;padding:48px 20px;color:var(--muted)}
+    .empty strong{display:block;font:600 16px 'Space Grotesk',sans-serif;color:var(--text);margin-bottom:6px}
+    /* Tournament list */
+    .t-card{border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:12px;display:flex;align-items:center;gap:16px;background:#fff}
+    .t-card .t-info{flex:1}
+    .t-card .t-info h3{font:600 15px 'Space Grotesk',sans-serif;margin-bottom:2px}
+    .t-card .t-info span{font:400 12px 'Kanit',sans-serif;color:var(--muted)}
+    .badge{display:inline-block;padding:3px 10px;border-radius:99px;font:600 11px 'Kanit',sans-serif;text-transform:uppercase;letter-spacing:.3px}
+    .badge.open{background:#e6f6ea;color:var(--green)}
+    .badge.live{background:#dbeafe;color:var(--blue)}
+    .badge.done{background:#f0ebe5;color:var(--gray)}
+    /* Registration list */
+    .reg-table{width:100%;border-collapse:collapse;margin-top:12px}
+    .reg-table th,.reg-table td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);font:400 13px 'Kanit',sans-serif}
+    .reg-table th{font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase}
+    .reg-table tr:last-child td{border:0}
+    /* Bracket */
+    .bracket-container{overflow-x:auto;padding:20px 0}
+    .bracket{display:flex;gap:24px;align-items:stretch;min-width:max-content}
+    .bracket-round{display:flex;flex-direction:column;gap:0;justify-content:center;min-width:180px}
+    .bracket-round-title{text-align:center;font:600 12px 'Kanit',sans-serif;color:var(--muted);margin-bottom:8px;text-transform:uppercase}
+    .match{border:1.5px solid var(--border);border-radius:10px;padding:0;margin:6px 0;background:#fff;width:170px}
+    .match.complete{border-color:#c5dfd2}
+    .match-player{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;font:400 13px 'Kanit',sans-serif;border-bottom:1px solid #f0ebe5;cursor:pointer;transition:background .1s}
+    .match-player:last-child{border-bottom:0}
+    .match-player:hover{background:#fcf8f3}
+    .match-player.winner{background:#e6f6ea;font-weight:600;color:var(--green)}
+    .match-player.bye{color:#b3aca3;font-style:italic}
+    .match-player .name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .match-player .level{font-size:10px;background:#f0ebe5;padding:2px 6px;border-radius:4px;margin-left:6px;color:var(--muted);white-space:nowrap}
+    .match-player.winner .level{background:#c5dfd2;color:var(--green)}
+    .match-score{font:600 10px 'Space Grotesk',sans-serif;color:var(--gray);text-align:center;padding:2px 0}
+    /* Rankings */
+    .rank-list{list-style:none;margin-top:12px}
+    .rank-list li{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--border)}
+    .rank-list li:last-child{border:0}
+    .rank-num{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font:700 16px 'Space Grotesk',sans-serif;color:#fff;flex-shrink:0}
+    .rank-num.r1{background:#f59e0b}
+    .rank-num.r2{background:#94a3b8}
+    .rank-num.r3{background:#a16207}
+    .rank-info{flex:1}
+    .rank-info strong{font:600 14px 'Kanit',sans-serif}
+    .rank-info span{display:block;font:400 12px 'Kanit',sans-serif;color:var(--muted)}
+    /* Modal */
+    .modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,47,74,.45);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px}
+    .modal[hidden]{display:none}
+    .modal-content{background:#fff;border-radius:16px;padding:24px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.16)}
+    .modal h3{font:700 16px 'Space Grotesk',sans-serif;margin-bottom:12px}
+    .modal-actions{display:flex;gap:10px;margin-top:16px}
+    .status-msg{font:400 12px 'Kanit',sans-serif;margin-bottom:12px;padding:10px 14px;border-radius:8px;background:#f0ebe5;color:var(--text)}
+  </style>
 </head>
 <body>
   <header class="app-topbar">
@@ -19,30 +96,272 @@
   </header>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-head"><strong>SMASHUP</strong><span>จองสนาม • Booking</span></div>
+      <div class="sidebar-head"><strong>SMASHUP</strong><span>แข่งขัน • Tournament</span></div>
       <nav>
         <a href="../index.html"><i class="icon">⌂</i> หน้าแรก</a>
-        <a class="active" href="index.html"><i class="icon">▦</i> จองสนาม</a>
+        <a href="index.html"><i class="icon">▦</i> จองสนาม</a>
         <a href="../matching/index.html"><i class="icon">◎</i> หาคู่เล่น</a>
-        <a href="../appointments/index.html"><i class="icon">◈</i> นัดหมายของฉัน</a>
-        <a href="buffet-registration.html"><i class="icon">≡</i> ตีบุฟเฟต์</a>
+        <a class="active" href="tournament.html"><i class="icon">🏆</i> แข่งขัน</a>
+        <a href="../appointments/index.html"><i class="icon">◈</i> นัดหมาย</a>
       </nav>
-      <div class="section-label">ช่วยเหลือ</div>
+      <div class="section-label">ข้อมูล</div>
       <nav>
         <a href="rules.html"><i class="icon">▱</i> กฎการใช้สนาม</a>
         <a href="shop.html"><i class="icon">♡</i> ร้านค้า</a>
       </nav>
     </aside>
     <main class="content booking-content">
-      <div class="topic-main">
-        <p class="eyebrow">06 / TOURNAMENT</p>
-        <h1>การสมัคร<br><em>แข่งขัน</em></h1>
-        <p>เลือกงานแข่งขันก่อนเริ่มขั้นตอนสมัครและตรวจรายชื่อผู้สมัคร</p>
-        <section class="topic-content"><h2>โปรดเลือกงานแข่ง</h2><ul><li>CHIANGRAI CHAMPIONSHIP #2</li><li>กรอกรายละเอียดผู้สมัครให้ครบถ้วนก่อนดำเนินการต่อ</li><li>ตรวจสอบรายชื่อผู้สมัครจากเมนูการแข่งขันได้</li></ul><a class="topic-button" href="index.html">ดำเนินการต่อ ↗</a></section>
+      <div class="page-header">
+        <h1>การแข่งขัน <em>SMASHUP</em></h1>
+        <div class="tabs">
+          <button class="tab active" data-tab="list">รายการแข่งขัน</button>
+          <button class="tab" data-tab="register">สมัครแข่งขัน</button>
+          <button class="tab" data-tab="bracket">สายการแข่ง</button>
+          <button class="tab" data-tab="rankings">อันดับ</button>
+        </div>
+      </div>
+      <div class="main">
+        <!-- Panel: Tournament List -->
+        <div class="tab-panel" id="panel-list">
+          <div id="tList"></div>
+          <div id="tEmpty" class="empty"><strong>ยังไม่มีรายการแข่งขัน</strong>กดปุ่มด้านล่างเพื่อสร้างการแข่งขันใหม่</div>
+          <button class="btn btn-primary" id="btnCreate" type="button">+ สร้างการแข่งขัน</button>
+        </div>
+        <!-- Panel: Registration -->
+        <div class="tab-panel" id="panel-register" hidden>
+          <div class="card" id="regSelectCard">
+            <h2>เลือกรายการแข่งขัน</h2>
+            <select id="regEventSelect" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:8px;font:400 14px 'Kanit',sans-serif"></select>
+          </div>
+          <div class="card">
+            <h2>ลงชื่อสมัครแข่งขัน</h2>
+            <div class="form-row">
+              <label>ประเภทการแข่ง<select id="regCategory"><option value="">เลือกประเภท</option><option>ชายเดี่ยว</option><option>หญิงเดี่ยว</option><option>คู่ผสม</option></select></label>
+              <label>ระดับฝีมือ (ถ้ามี)<select id="regLevel"><option value="">ไม่ระบุ</option><option>N</option><option>D</option><option>C</option><option>C+</option><option>B</option><option>B+</option><option>A</option><option>A+</option><option>A/Pro</option></select></label>
+            </div>
+            <div class="form-row" id="partnerRow" hidden>
+              <label>ชื่อคู่เล่น (คู่ผสม)<input id="regPartner" placeholder="ชื่อ-สกุล หรือ username คู่เล่น"></label>
+            </div>
+            <button class="btn btn-primary" id="btnRegister" type="button">สมัครเข้าร่วม</button>
+            <div class="msg" id="regMsg" hidden></div>
+            <div id="regList"></div>
+          </div>
+        </div>
+        <!-- Panel: Bracket -->
+        <div class="tab-panel" id="panel-bracket" hidden>
+          <div class="card">
+            <h2>สายการแข่งขัน</h2>
+            <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+              <select id="bracketEvent" style="flex:1;min-width:180px;padding:10px;border:1.5px solid var(--border);border-radius:8px;font:400 14px 'Kanit',sans-serif"></select>
+              <select id="bracketCategory" style="padding:10px;border:1.5px solid var(--border);border-radius:8px;font:400 14px 'Kanit',sans-serif"><option value="">เลือกประเภท</option><option>ชายเดี่ยว</option><option>หญิงเดี่ยว</option><option>คู่ผสม</option></select>
+              <select id="bracketLevel" style="padding:10px;border:1.5px solid var(--border);border-radius:8px;font:400 14px 'Kanit',sans-serif"><option value="">เลือกระดับฝีมือ</option><option>N</option><option>D</option><option>C</option><option>C+</option><option>B</option><option>B+</option><option>A</option><option>A+</option><option>A/Pro</option></select>
+              <button class="btn btn-primary btn-sm" id="btnGenBracket" type="button">จัดสายระดับนี้</button>
+            </div>
+            <div id="bracketView" class="bracket-container"></div>
+            <div class="status-msg" id="bracketStatus"></div>
+          </div>
+        </div>
+        <!-- Panel: Rankings -->
+        <div class="tab-panel" id="panel-rankings" hidden>
+          <div class="card">
+            <h2>อันดับการแข่งขัน</h2>
+            <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+              <select id="rankEvent" style="flex:1;min-width:180px;padding:10px;border:1.5px solid var(--border);border-radius:8px;font:400 14px 'Kanit',sans-serif"></select>
+              <select id="rankCategory" style="padding:10px;border:1.5px solid var(--border);border-radius:8px;font:400 14px 'Kanit',sans-serif"><option value="">เลือกประเภท</option><option>ชายเดี่ยว</option><option>หญิงเดี่ยว</option><option>คู่ผสม</option></select>
+            </div>
+            <div id="rankView"></div>
+          </div>
+        </div>
       </div>
     </main>
   </div>
+  <!-- Modal: Pick Winner -->
+  <div class="modal" id="winnerModal" hidden>
+    <div class="modal-content">
+      <h3 id="winnerTitle">เลือกผู้ชนะ</h3>
+      <p id="winnerDesc" style="font:400 13px 'Kanit',sans-serif;color:var(--muted);margin-bottom:8px"></p>
+      <div id="winnerOptions"></div>
+      <div style="margin-top:8px"><label style="font:500 12px 'Kanit',sans-serif;color:var(--muted)">คะแนน (ถ้ามี)<input id="winnerScore" style="width:100%;margin-top:4px;padding:8px;border:1.5px solid var(--border);border-radius:6px;font:400 13px 'Kanit',sans-serif" placeholder="เช่น 21-15, 21-18"></label></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="winnerCancel" type="button">ยกเลิก</button>
+        <button class="btn btn-primary" id="winnerConfirm" type="button">ยืนยันผู้ชนะ</button>
+      </div>
+    </div>
+  </div>
   <script>document.getElementById('menuToggle')?.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));</script>
   <script src="../shared/auth-ui.js"></script>
+  <script src="../shared/notifications.js"></script><script src="../shared/notify-ui.js"></script>
+  <script src="../shared/tournament.js"></script>
+  <script>
+  (function(){
+    const T=window.SmashTournament;const R=window.SmashRules||{};const $=s=>document.querySelector(s);const $$=s=>document.querySelectorAll(s);
+    function currentUser(){try{return JSON.parse(localStorage.getItem('smashup_session_v1'))}catch{return null}}
+    function msg(el,text,type){el.hidden=false;el.textContent=text;el.className='msg '+(type||'')}
+
+    // Tab switching
+    $$('.tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        $$('.tab').forEach(t=>{t.classList.remove('active');t.setAttribute('aria-selected','false')});
+        tab.classList.add('active');tab.setAttribute('aria-selected','true');
+        $$('.tab-panel').forEach(p=>p.hidden=true);
+        const target=tab.dataset.tab;
+        const panel=$('#panel-'+target);panel.hidden=false;
+        if(target==='list')renderTList();
+        if(target==='register')renderRegForm();
+        if(target==='bracket')renderBracketForm();
+        if(target==='rankings')renderRankingsForm();
+      });
+    });
+
+    // Tournament List
+    function renderTList(){
+      const list=T.active();
+      const el=$('#tList');const empty=$('#tEmpty');
+      if(!list.length){el.innerHTML='';empty.hidden=false;return;}
+      empty.hidden=true;
+      el.innerHTML=list.map(t=>{
+        const status=t.status==='registration'?'open':t.status==='in-progress'?'live':'done';
+        const label=t.status==='registration'?'เปิดรับสมัคร':t.status==='in-progress'?'กำลังแข่ง':'เสร็จสิ้น';
+        const regs=t.registrations.filter(r=>r.status!=='cancelled').length;
+        return `<div class="t-card"><div class="t-info"><h3>${esc(t.name)}</h3><span>${esc(t.event)} • ${regs} คนสมัคร • ${t.categories.join(', ')}</span></div><span class="badge ${status}">${label}</span></div>`;
+      }).join('');
+    }
+    function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+    // Create tournament
+    $('#btnCreate').addEventListener('click',()=>{
+      const name=prompt('ชื่อการแข่งขัน เช่น SMASHUP CHAMPIONSHIP #1');
+      if(!name)return;
+      const event=prompt('เลือกรายการ: SMASHUP CHAMPIONSHIP #1 หรือ OPEN DOUBLES DAY');
+      if(!event||!T.EVENTS.includes(event)){alert('รายการไม่ถูกต้อง');return}
+      try{const t=T.create({name,event});alert('สร้างการแข่งขันสำเร็จ!');renderTList();}catch(e){alert(e.message)}
+    });
+
+    // Register panel
+    function renderRegForm(){
+      const selects=$('#regEventSelect');
+      const tournaments=T.active().filter(t=>t.status==='registration');
+      if(!tournaments.length){selects.innerHTML='<option value="">ไม่มีรายการที่เปิดรับสมัคร</option>';return}
+      selects.innerHTML=tournaments.map(t=>`<option value="${t.id}">${esc(t.name)} (${t.registrations.filter(r=>r.status!=='cancelled').length} คน)</option>`).join('');
+    }
+    $('#regCategory').addEventListener('change',()=>{$('#partnerRow').hidden=$('#regCategory').value!=='คู่ผสม'});
+    $('#btnRegister').addEventListener('click',()=>{
+      const user=currentUser();if(!user){alert('กรุณาเข้าสู่ระบบก่อน');return}
+      const tid=$('#regEventSelect').value;const category=$('#regCategory').value;const level=$('#regLevel').value;const partner=$('#regPartner').value;
+      if(!tid||!category){alert('กรุณาเลือกรายการและประเภท');return}
+      const tournament=T.getById(tid);if(!tournament){alert('ไม่พบรายการ');return}
+      try{T.register(tid,{category,level,partner},user);alert('สมัครสำเร็จ!');renderRegList(tid);renderTList();}catch(e){alert(e.message)}
+    });
+    function renderRegList(tid){
+      const t=T.getById(tid);if(!t)return;
+      const regs=t.registrations.filter(r=>r.status!=='cancelled');
+      const el=$('#regList');
+      if(!regs.length){el.innerHTML='';return}
+      el.innerHTML=`<table class="reg-table"><thead><tr><th>#</th><th>ชื่อ</th><th>ประเภท</th><th>ระดับ</th><th>คู่</th><th></th></tr></thead><tbody>${regs.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${esc(r.category)}</td><td>${esc(r.level||'-')}</td><td>${esc(r.partner||'-')}</td><td><button class="btn btn-secondary btn-sm reg-cancel" data-id="${r.id}">ยกเลิก</button></td></tr>`).join('')}</tbody></table>`;
+      el.querySelectorAll('.reg-cancel').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const user=currentUser();if(!user)return;
+          if(!confirm('ยืนยันยกเลิกการสมัคร?'))return;
+          try{T.cancelRegistration(tid,btn.dataset.id,user);renderRegList(tid);renderTList();}catch(e){alert(e.message)}
+        });
+      });
+    }
+    // auto-select event when switching to register tab
+    const regWatch=new MutationObserver(()=>{const sel=$('#regEventSelect');if(sel&&sel.options.length){renderRegList(sel.value);sel.addEventListener('change',()=>renderRegList(sel.value))}});
+    regWatch.observe($('#panel-register'),{attributes:true,attributeFilter:['hidden']});
+
+    // Bracket panel
+    function renderBracketForm(){
+      const tournaments=T.active();
+      const sel=$('#bracketEvent');
+      sel.innerHTML='<option value="">เลือกการแข่งขัน</option>'+tournaments.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+    }
+    $('#btnGenBracket').addEventListener('click',()=>{
+      const tid=$('#bracketEvent').value;const cat=$('#bracketCategory').value;const level=$('#bracketLevel').value;
+      if(!tid||!cat||!level){alert('เลือกรายการ ประเภท และระดับฝีมือ');return}
+      try{T.buildBracket(tid,cat,level);renderBracketView(tid,cat,level);renderTList();}catch(e){alert(e.message)}
+    });
+    $('#bracketEvent').addEventListener('change',()=>{const tid=$('#bracketEvent').value;if(tid){renderBracketView(tid,$('#bracketCategory').value,$('#bracketLevel').value)}});
+    $('#bracketCategory').addEventListener('change',()=>{const tid=$('#bracketEvent').value;if(tid)renderBracketView(tid,$('#bracketCategory').value,$('#bracketLevel').value)});
+    $('#bracketLevel').addEventListener('change',()=>{const tid=$('#bracketEvent').value;if(tid)renderBracketView(tid,$('#bracketCategory').value,$('#bracketLevel').value)});
+    function renderBracketView(tid,cat,level){
+      const t=T.getById(tid);const el=$('#bracketView');const status=$('#bracketStatus');
+      const key=T.bracketKey(cat,level);
+      if(!t||!t.brackets||!t.brackets[key]){el.innerHTML='';status.textContent='ยังไม่ได้จัดสายระดับนี้ — เลือกระดับแล้วกดปุ่ม "จัดสายระดับนี้" เพื่อเริ่ม';return}
+      const rounds=t.brackets[key];
+      const statusLabel=t.status==='in-progress'?'กำลังแข่งขัน':t.status==='completed'?'การแข่งขันเสร็จสิ้น':'';
+      status.textContent=statusLabel;
+      el.innerHTML='<div class="bracket">'+rounds.map((r,rIdx)=>{
+        return `<div class="bracket-round"><div class="bracket-round-title">${esc(r.name)}</div>${r.matches.map((m,mIdx)=>{
+          const p1=m.player1,m2=m.player2;
+          const w=m.winnerSlot;const isBye=m.score==='BYE';
+          const cls1=w===1?'winner':w===2&&isBye?'bye':'';
+          const cls2=w===2?'winner':w===1&&isBye?'bye':'';
+          const click1=(!isBye&&p1&&m2)?`data-tid="${tid}" data-cat="${key}" data-r="${rIdx}" data-m="${mIdx}" data-w="1"`:'';
+          const click2=(!isBye&&m2&&p1)?`data-tid="${tid}" data-cat="${key}" data-r="${rIdx}" data-m="${mIdx}" data-w="2"`:'';
+          return `<div class="match${w?' complete':''}"><div class="match-player ${cls1}" ${click1}><span class="name">${p1?esc(p1.name):'TBA'}</span>${p1?`<span class="level">${esc(p1.level||'')}</span>`:''}</div><div class="match-player ${cls2}" ${click2}><span class="name">${m2?esc(m2.name):isBye?'BYE':'TBA'}</span>${m2&&!isBye?`<span class="level">${esc(m2.level||'')}</span>`:''}</div></div>`;
+        }).join('')}</div>`;
+      }).join('')+'</div>';
+      // click handlers on match players
+      el.querySelectorAll('.match-player[data-tid]').forEach(p=>{
+        p.addEventListener('click',()=>{
+          const {tid:rTid,cat:rCat,r:round,m:pos,w:slot}=p.dataset;
+          const rd=Number(round),mIdx=Number(pos),winnerSlot=Number(slot);
+          showWinnerModal(rTid,rCat,rd,mIdx,winnerSlot);
+        });
+      });
+      if(t.status==='completed'){
+        const finalMatch=rounds[rounds.length-1].matches[0];
+        const winner=finalMatch&&finalMatch.winnerSlot===1?finalMatch.player1:finalMatch.player2;
+        if(winner)status.innerHTML='🏆 ผู้ชนะ: <strong>'+esc(winner.name)+'</strong>';
+      }
+    }
+    let pendingMatch={};
+    function showWinnerModal(tid,cat,round,position,slot){
+      const t=T.getById(tid);if(!t)return;
+      const m=t.brackets[cat][round].matches[position];
+      if(!m||!m.player1||!m.player2)return;
+      pendingMatch={tid,cat,round,position};
+      $('#winnerTitle').textContent='เลือกผู้ชนะ — '+t.brackets[cat][round].name;
+      $('#winnerDesc').textContent=m.player1.name+' vs '+m.player2.name;
+      $('#winnerScore').value=m.score&&m.score!=='BYE'?m.score:'';
+      $('#winnerOptions').innerHTML=`<div style="display:flex;gap:10px">
+        <button class="btn btn-secondary pick-winner" data-slot="1" style="flex:1">${esc(m.player1.name)} ${m.player1.level?'('+esc(m.player1.level)+')':''}</button>
+        <button class="btn btn-secondary pick-winner" data-slot="2" style="flex:1">${esc(m.player2.name)} ${m.player2.level?'('+esc(m.player2.level)+')':''}</button>
+      </div>`;
+      $('#winnerModal').hidden=false;
+      $$('.pick-winner').forEach(b=>{
+        b.addEventListener('click',()=>{
+          pendingMatch.winnerSlot=Number(b.dataset.slot);
+          $$('.pick-winner').forEach(x=>x.style.borderColor='var(--border)');
+          b.style.borderColor='var(--orange)';
+        });
+      });
+    }
+    $('#winnerCancel').addEventListener('click',()=>{$('#winnerModal').hidden=true});
+    $('#winnerConfirm').addEventListener('click',()=>{
+      if(!pendingMatch.winnerSlot){alert('เลือกผู้ชนะก่อน');return}
+      try{T.setWinner(pendingMatch.tid,pendingMatch.cat,pendingMatch.round,pendingMatch.position,pendingMatch.winnerSlot,$('#winnerScore').value);$('#winnerModal').hidden=true;renderBracketView(pendingMatch.tid,pendingMatch.cat);renderTList();}catch(e){alert(e.message)}
+    });
+
+    // Rankings panel
+    function renderRankingsForm(){
+      const sel=$('#rankEvent');
+      sel.innerHTML='<option value="">เลือกการแข่งขัน</option>'+T.listAll().filter(t=>t.status!=='deleted').map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+    }
+    $('#rankEvent').addEventListener('change',()=>renderRankingList());
+    $('#rankCategory').addEventListener('change',()=>renderRankingList());
+    function renderRankingList(){
+      const tid=$('#rankEvent').value;const cat=$('#rankCategory').value;const el=$('#rankView');
+      if(!tid||!cat){el.innerHTML='';return}
+      const ranks=T.rankings(tid,cat);
+      if(!ranks.length){el.innerHTML='<div class="empty"><strong>ยังไม่มีผลการแข่งขัน</strong>รอให้แข่งจนจบรอบชิงชนะเลิศ</div>';return}
+      el.innerHTML=`<ul class="rank-list">${ranks.map(r=>`<li><span class="rank-num r${r.rank}">${r.rank}</span><div class="rank-info"><strong>${esc(r.name)}</strong><span>ระดับ ${esc(r.level||'-')}</span></div></li>`).join('')}</ul>`;
+    }
+
+    // Init
+    renderTList();
+  })();
+  </script>
 </body>
 </html>

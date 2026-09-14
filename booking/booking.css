@@ -10,38 +10,44 @@
 
 /* Base fallback so standalone booking pages (no app-shell.css) still read well */
 body{font-family:'Kanit','Segoe UI',Tahoma,sans-serif;background:var(--cream);color:var(--ink);margin:0;min-height:100%}
+.skip-link{position:absolute;left:12px;top:-48px;z-index:100;background:var(--navy);color:#fff;padding:10px 14px;border-radius:0 0 6px 6px;font-weight:600;transition:top .15s}
+.skip-link:focus{top:0}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 /* ---------- Reservation board ---------- */
-.reservation-board{background:#fff;padding:38px clamp(18px,4vw,44px)}
-.board-heading{display:flex;align-items:baseline;gap:14px;justify-content:space-between;flex-wrap:wrap}
-.board-heading h1{margin:0;font:700 26px 'Space Grotesk',sans-serif}
-.board-heading strong{color:var(--orange);font-size:14px;font-weight:600}
+.reservation-board{background:linear-gradient(180deg,#fff 0%,#fbfdfe 100%);padding:clamp(28px,4vw,48px) clamp(18px,4vw,52px)}
+.board-heading{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap}
+.board-heading h1{margin:0;font:700 clamp(25px,3vw,34px) 'Space Grotesk',sans-serif;letter-spacing:-.03em}
+.board-heading strong{border-left:3px solid var(--orange);color:var(--orange);font-size:13px;font-weight:600;padding:6px 10px;background:#fff3ed;border-radius:3px}
 .board-message{margin:12px 0 2px;font:500 14px 'Kanit',sans-serif;color:var(--green)}
 .board-message.error{color:var(--red)}
-.date-tabs{display:flex;gap:8px;margin:22px 0 14px;overflow-x:auto;padding-bottom:4px}
-.date-tabs button{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:10px;padding:8px 12px;font:600 13px 'Kanit',sans-serif;cursor:pointer;line-height:1.35;transition:.15s}
+.date-tabs{display:flex;gap:8px;margin:26px 0 16px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:thin}
+.date-tabs button{flex:0 0 auto;min-width:76px;border:1px solid #d7e3e9;background:#fff;color:var(--navy);border-radius:8px;padding:9px 12px;font:600 13px 'Kanit',sans-serif;cursor:pointer;line-height:1.35;transition:border-color .15s,background .15s,transform .15s}
 .date-tabs button small{display:block;color:var(--muted);font-size:11px;font-weight:400}
 .date-tabs button:hover{border-color:var(--orange);color:var(--orange)}
-.date-tabs button.selected{background:var(--navy);border-color:var(--navy);color:#fff}
+.date-tabs button.selected{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 4px 0 #09233a}
+.date-tabs button:active{transform:translateY(2px)}
 .date-tabs button.selected small{color:#bcd0e0}
-.schedule-scroll{border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:520px}
+.schedule-scroll{border:1px solid #cbdce5;border-radius:12px;overflow:auto;max-height:520px;box-shadow:0 8px 24px rgba(15,47,74,.06)}
 .reservation-board table{border-collapse:separate;border-spacing:0;min-width:860px;width:100%}
-.reservation-board th,.reservation-board td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:9px 8px;text-align:center;font-size:13px}
+.reservation-board th,.reservation-board td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:10px 8px;text-align:center;font-size:13px}
 .reservation-board th:last-child,.reservation-board td:last-child{border-right:0}
-.reservation-board thead th{position:sticky;top:0;z-index:2;background:#eef2f6;color:var(--navy);font-weight:600}
-.reservation-board tbody th{background:#f8fafb;color:var(--navy);font-weight:600;min-width:118px;white-space:nowrap}
+.reservation-board thead th{position:sticky;top:0;z-index:2;background:#dceaf2;color:var(--navy);font-weight:700}
+.reservation-board thead th:first-child{left:0;z-index:3}
+.reservation-board tbody th{position:sticky;left:0;z-index:1;background:#f4f8fa;color:var(--navy);font-weight:700;min-width:118px;white-space:nowrap}
 .reservation-board .reserved{background:#fdecea;color:#b3372b;font-weight:600}
 .reservation-board .busy{background:#fdecea;color:#b3372b}
-td.free-cell{padding:5px}
-.court-btn{width:100%;border:1px solid #bfe0c6;background:#eaf7ec;color:#1c6b34;border-radius:8px;padding:9px 4px;cursor:pointer;font:600 12px 'Kanit',sans-serif;transition:transform .05s,background .15s}
-.court-btn:hover{background:#d3edd9;transform:scale(1.04)}
+td.free-cell{padding:6px;background:#fff}
+.court-btn{width:100%;min-height:44px;border:1px solid #a9d5b2;background:#eaf7ec;color:#17632f;border-radius:7px;padding:8px 4px;cursor:pointer;font:600 12px 'Kanit',sans-serif;transition:transform .05s,background .15s,box-shadow .15s}
+.court-btn:hover{background:#d3edd9;box-shadow:0 3px 0 #a9d5b2;transform:translateY(-1px)}
 .court-btn:active{transform:scale(.97)}
-.board-note{color:var(--muted);font-size:12px;margin:14px 0 4px}
+.board-note{color:#657985;font-size:12px;line-height:1.7;margin:16px 0 4px}
 .legend{display:inline-block;width:10px;height:10px;margin:0 5px 0 15px;border-radius:2px}
 .legend.free{background:#bfe0c6}
 .legend.reserved{background:#fdecea}
-.topic-button{background:var(--orange);color:#fff;border-radius:10px;display:inline-block;padding:11px 18px;font:600 14px 'Kanit',sans-serif;text-decoration:none;margin-top:12px}
+.topic-button{background:var(--orange);color:#fff;border-radius:8px;display:inline-block;padding:12px 20px;font:600 14px 'Kanit',sans-serif;text-decoration:none;margin-top:14px;box-shadow:0 4px 0 #bf3613;transition:transform .15s,box-shadow .15s,background .15s}
 .topic-button:hover{background:var(--orange-hover)}
+.topic-button:active{box-shadow:0 1px 0 #bf3613;transform:translateY(3px)}
 
 /* ---------- Booking dialog (board) ---------- */
 #bookingDialog{border:0;border-radius:14px;padding:0;box-shadow:0 18px 50px rgba(15,47,74,.25);max-width:380px;width:92%}

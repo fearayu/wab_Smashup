@@ -13,6 +13,7 @@ export interface Variables {
   container: Container
   ownerId: string | undefined
   ownerRole: OwnerRole | undefined
+  ownerEmail: string | undefined
 }
 
 export type AppEnv = {

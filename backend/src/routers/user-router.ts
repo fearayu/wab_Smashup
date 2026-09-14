@@ -1,8 +1,12 @@
 import { Hono } from 'hono'
 import { describeRoute } from 'hono-openapi'
-import { authMiddleware } from '../middleware/auth'
+import { authMiddleware, requireRole } from '../middleware/auth'
 import {
   createUserSchema,
+  profileListResponseSchema,
+  profileMeResponseSchema,
+  publicProfileResponseSchema,
+  updateMeSchema,
   updateUserSchema,
   userListResponseSchema,
   userResponseSchema,
@@ -89,6 +93,84 @@ export function createUserRouter() {
     authMiddleware,
     v('param', idParamSchema),
     (c) => c.get('container').userHandler.delete(c)
+  )
+
+  return router
+}
+
+export function createProfileRouter() {
+  const router = new Hono<AppEnv>()
+
+  // ── GET /profiles/me ───────────────────────────────────────────────
+  router.get(
+    '/me',
+    describeRoute({
+      tags: ['Profiles'],
+      summary: 'Get own profile',
+      description: 'Returns the full profile of the authenticated user.',
+      responses: {
+        200: { description: 'Own profile', content: jsonContent(profileMeResponseSchema) },
+        401: { description: 'Unauthorized', content: jsonContent(errorResponseSchema) },
+      },
+    }),
+    authMiddleware,
+    (c) => c.get('container').userHandler.getMe(c)
+  )
+
+  // ── PUT /profiles/me ───────────────────────────────────────────────
+  router.put(
+    '/me',
+    describeRoute({
+      tags: ['Profiles'],
+      summary: 'Update own profile',
+      description: 'Update displayName, phone, level, or avatarUrl. Email and role cannot be changed.',
+      responses: {
+        200: { description: 'Profile updated', content: jsonContent(profileMeResponseSchema) },
+        400: { description: 'Invalid input', content: jsonContent(errorResponseSchema) },
+        401: { description: 'Unauthorized', content: jsonContent(errorResponseSchema) },
+      },
+    }),
+    authMiddleware,
+    v('json', updateMeSchema),
+    (c) => c.get('container').userHandler.updateMe(c)
+  )
+
+  // ── GET /profiles ──────────────────────────────────────────────────
+  // Admin only — list all user profiles.
+  router.get(
+    '/',
+    describeRoute({
+      tags: ['Profiles'],
+      summary: 'List all user profiles (admin only)',
+      description: 'Returns limited profile fields for every registered user.',
+      responses: {
+        200: { description: 'Profile list', content: jsonContent(profileListResponseSchema) },
+        401: { description: 'Unauthorized', content: jsonContent(errorResponseSchema) },
+        403: { description: 'Forbidden — requires admin role', content: jsonContent(errorResponseSchema) },
+      },
+    }),
+    authMiddleware,
+    requireRole('admin'),
+    (c) => c.get('container').userHandler.listProfiles(c)
+  )
+
+  // ── GET /profiles/:id ──────────────────────────────────────────────
+  // Public profile — limited fields.
+  router.get(
+    '/:id',
+    describeRoute({
+      tags: ['Profiles'],
+      summary: 'Get public profile by id',
+      description: 'Returns limited fields (id, displayName, level, avatarUrl). No email or phone.',
+      responses: {
+        200: { description: 'Public profile', content: jsonContent(publicProfileResponseSchema) },
+        401: { description: 'Unauthorized', content: jsonContent(errorResponseSchema) },
+        404: { description: 'User not found', content: jsonContent(errorResponseSchema) },
+      },
+    }),
+    authMiddleware,
+    v('param', idParamSchema),
+    (c) => c.get('container').userHandler.getPublicProfile(c)
   )
 
   return router

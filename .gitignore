@@ -16,3 +16,6 @@ Desktop.ini
 dist/
 build/
 node_modules/
+
+# E2E ใช้ระบบ server อัตโนมัติ; รายงานผลสร้างใหม่ทุกครั้งที่รัน npm run e2e
+tests/e2e/e2e-report.txt
